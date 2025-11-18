@@ -14,6 +14,9 @@ public class Main extends Application {
         Parent root = FXMLLoader.load(getClass().getResource("/com/example/testing2/SignupPage.fxml"));
         primaryStage.setTitle("Inventory System");
         primaryStage.setScene(new Scene(root));
+        primaryStage.setMinHeight(600);
+        primaryStage.setMinWidth(800);
+        primaryStage.setMaximized(true);
         primaryStage.show();
     }
 
