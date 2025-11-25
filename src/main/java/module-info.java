@@ -11,6 +11,7 @@ module com.example.testing2 {
     requires org.kordamp.ikonli.javafx;
     requires org.kordamp.ikonli.core;
     requires org.kordamp.bootstrapfx.core;
+    requires io.github.cdimascio.dotenv.java;
 
     // Packages opened to JavaFX FXML for injection
     opens com.example.testing2 to javafx.fxml;

@@ -6,13 +6,15 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1279.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.testing2.controllers.CustomerMainPageController">
+<AnchorPane maxHeight="Infinity" maxWidth="Infinity" minHeight="-Infinity" minWidth="-Infinity" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.testing2.controllers.CustomerMainPageController">
 
-    <!-- Sidebar -->
-    <AnchorPane layoutX="-4.0" prefHeight="720.0" prefWidth="249.0" style="-fx-background-color: #e5dae6; -fx-border-color: black;">
+    <!-- Sidebar (fixed width, full height) -->
+    <AnchorPane prefWidth="249.0" style="-fx-background-color: #e5dae6; -fx-border-color: black;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+
         <children>
             <ImageView fitHeight="187.0" fitWidth="191.0" layoutX="31.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
                 <image>
@@ -20,14 +22,14 @@
                 </image>
             </ImageView>
 
-            <!-- Sidebar Buttons with more spacing -->
-            <Button fx:id="btnItems" layoutX="3.0" layoutY="230.0" mnemonicParsing="false" prefHeight="49.0" prefWidth="243.0" style="-fx-background-color: #826478;" text="Items" textFill="WHITE">
+            <!-- Sidebar Buttons -->
+            <Button fx:id="btnItems" layoutX="3.0" layoutY="230.0" mnemonicParsing="false" prefHeight="49.0" prefWidth="243.0" style="-fx-background-color: #826478;" text="Items" textFill="WHITE" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0">
                 <font>
                     <Font name="System Bold" size="26.0" />
                 </font>
             </Button>
 
-            <Button fx:id="btnOrders" layoutX="4.0" layoutY="330.0" mnemonicParsing="false" prefHeight="49.0" prefWidth="243.0" style="-fx-background-color: #826478;" text="Orders" textFill="WHITE">
+            <Button fx:id="btnOrders" layoutX="4.0" layoutY="330.0" mnemonicParsing="false" prefHeight="49.0" prefWidth="243.0" style="-fx-background-color: #826478;" text="Orders" textFill="WHITE" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0">
                 <font>
                     <Font name="System Bold" size="26.0" />
                 </font>
@@ -35,52 +37,62 @@
         </children>
     </AnchorPane>
 
-    <!-- Main content -->
-    <AnchorPane fx:id="mainContent" layoutX="245.0" prefHeight="720.0" prefWidth="1037.0" style="-fx-background-color: #cad6de;">
+    <!-- Main Content (fills remaining space) -->
+    <AnchorPane fx:id="mainContent" style="-fx-background-color: #cad6de;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="249.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+
         <children>
+         <AnchorPane prefHeight="90.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <children>
+      
+                  <!-- Search bar -->
+                  <TextField fx:id="txtSearch" promptText="Search..." style="-fx-border-radius: 10; -fx-border-width: 5;" AnchorPane.leftAnchor="80.0" AnchorPane.rightAnchor="80.0" AnchorPane.topAnchor="26.6">
+                      <font>
+                          <Font size="16.0" />
+                      </font>
+                  </TextField>
+      
+                  <ImageView fitHeight="36.6" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="45.0" AnchorPane.topAnchor="28.0">
+                      <image>
+                          <Image url="@images/icon-removebg-preview.png" />
+                      </image>
+                  </ImageView>
+            </children>
+         </AnchorPane>
 
-            <!-- Search bar: moved slightly down -->
-            <TextField fx:id="txtSearch" layoutX="187.0" layoutY="40.0" prefHeight="35.0" prefWidth="623.0" promptText="Search..." style="-fx-border-radius: 10; -fx-border-width: 5;">
-                <font>
-                    <Font size="16.0" />
-                </font>
-            </TextField>
+            <!-- Scrollable container -->
+            <ScrollPane fx:id="scrollPane" fitToWidth="true" pannable="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="90.0">
 
-            <ImageView fitHeight="35.0" fitWidth="32.0" layoutX="146.0" layoutY="40.0" pickOnBounds="true" preserveRatio="true">
-                <image>
-                    <Image url="@images/icon-removebg-preview.png" />
-                </image>
-            </ImageView>
-
-            <!-- Scrollable container: same background color -->
-            <ScrollPane fx:id="scrollPane" fitToWidth="true" layoutX="0.0" layoutY="90.0" pannable="true" prefHeight="630.0" prefWidth="1037.0" style="-fx-background-color: #cad6de;">
                 <content>
-                    <AnchorPane fx:id="itemsContainer" prefWidth="1037.0" style="-fx-background-color: #cad6de;" />
+                    <VBox fx:id="categoriesContainer" spacing="20" style="-fx-background-color: #cad6de;" />
                 </content>
             </ScrollPane>
 
-            <!-- Hidden template card -->
-            <AnchorPane fx:id="itemCard" layoutX="0.0" layoutY="0.0" prefHeight="224.0" prefWidth="205.0" style="-fx-background-color: #e5dae6;" visible="false">
-                <!-- Image on top -->
-                <ImageView fx:id="imgItem" fitHeight="112.0" fitWidth="205.0" layoutX="0.0" pickOnBounds="true" preserveRatio="false" />
 
-                <!-- Lower pane with name + price -->
-                <AnchorPane layoutX="0.0" layoutY="114.0" prefHeight="110.0" prefWidth="205.0" style="-fx-background-color: #f4f1f7;">
-                    <children>
-                        <Text fx:id="txtItemName" fill="#826478" layoutX="8.0" layoutY="59.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Item Name">
-                            <font>
-                                <Font size="15.0" />
-                            </font>
-                        </Text>
-                        <Text fx:id="txtPrice" fill="#826478" layoutX="139.0" layoutY="59.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Rs 0">
-                            <font>
-                                <Font size="16.0" />
-                            </font>
-                        </Text>
-                    </children>
-                </AnchorPane>
+            <!-- Hidden template card -->
+            <AnchorPane fx:id="itemCard" prefHeight="224.0" prefWidth="205.0" style="-fx-background-color: #e5dae6;" visible="false" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0">
+
+                <children>
+                    <ImageView fx:id="imgItem" fitHeight="112.0" fitWidth="205.0" layoutX="0.0" pickOnBounds="true" preserveRatio="false" />
+
+                    <AnchorPane layoutX="0.0" layoutY="114.0" prefHeight="110.0" prefWidth="205.0" style="-fx-background-color: #f4f1f7;">
+                        <children>
+                            <Text fx:id="txtItemName" fill="#826478" layoutX="8.0" layoutY="59.0" text="Item Name">
+                                <font>
+                                    <Font size="15.0" />
+                                </font>
+                            </Text>
+                            <Text fx:id="txtPrice" fill="#826478" layoutX="139.0" layoutY="59.0" text="Rs 0">
+                                <font>
+                                    <Font size="16.0" />
+                                </font>
+                            </Text>
+                        </children>
+                    </AnchorPane>
+                </children>
+
             </AnchorPane>
 
         </children>
     </AnchorPane>
+
 </AnchorPane>

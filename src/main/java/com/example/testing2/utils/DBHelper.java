@@ -1,31 +1,26 @@
 package com.example.testing2.utils;
 
+import io.github.cdimascio.dotenv.Dotenv;
 import java.sql.*;
 
-/**
- * DBHelper: Utility class for NeonDB (PostgreSQL) connections and procedure/function calls.
- * Uses hardcoded credentials for testing.
- */
 public class DBHelper {
 
-    // 🔥 Hardcoded NeonDB credentials (replace when needed)
-    private static final String HOST = "ep-bold-feather-ahvtkpm2-pooler.c-3.us-east-1.aws.neon.tech";
-    private static final String USER = "neondb_owner";
-    private static final String PASSWORD = "npg_Sx1EknRHBrT7";
-    private static final String DATABASE = "neondb";
-    private static final String PORT = "5432";
+    private static final Dotenv dotenv = Dotenv.load();
 
-    // JDBC URL with SSL
+    private static final String HOST = dotenv.get("DB_HOST");
+    private static final String PORT = dotenv.get("DB_PORT");
+    private static final String DATABASE = dotenv.get("DB_NAME");
+    private static final String USER = dotenv.get("DB_USER");
+    private static final String PASSWORD = dotenv.get("DB_PASSWORD");
+    private static final String SSLMODE = dotenv.get("DB_SSLMODE");
+
     private static final String URL = String.format(
-            "jdbc:postgresql://%s:%s/%s?sslmode=require",
-            HOST, PORT, DATABASE
+            "jdbc:postgresql://%s:%s/%s?sslmode=%s",
+            HOST, PORT, DATABASE, SSLMODE
     );
 
     private static Connection connection;
 
-    /**
-     * Get a singleton connection to NeonDB
-     */
     public static Connection getConnection() throws SQLException {
         if (connection == null || connection.isClosed()) {
             connection = DriverManager.getConnection(URL, USER, PASSWORD);
@@ -34,9 +29,6 @@ public class DBHelper {
         return connection;
     }
 
-    /**
-     * Execute a stored procedure (PostgreSQL ≥11) without returning a result
-     */
     public static void executeProcedure(String procName, Object... params) throws SQLException {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < params.length; i++) {
@@ -54,9 +46,6 @@ public class DBHelper {
         }
     }
 
-    /**
-     * Execute a PostgreSQL function that returns rows (ResultSet)
-     */
     public static ResultSet executeFunction(String funcName, Object... params) throws SQLException {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < params.length; i++) {
@@ -74,9 +63,6 @@ public class DBHelper {
         return stmt.executeQuery();
     }
 
-    /**
-     * Close the singleton connection
-     */
     public static void closeConnection() {
         if (connection != null) {
             try {
