@@ -14,7 +14,8 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.control.Button;
 import javafx.scene.layout.StackPane;
-
+import javafx.animation.ScaleTransition;
+import javafx.util.Duration;
 
 import java.net.URL;
 import java.sql.ResultSet;
@@ -39,6 +40,14 @@ public class CustomerMainPageController implements Initializable {
     @FXML
     private TextField txtSearch;
 
+    @FXML
+    private Button btnAddToCart;
+
+    @FXML
+    private Button btnCart; // also needed for the animation
+    @FXML
+    private Label cartBadge;
+
     private final Image placeholderImage = new Image(getClass().getResource("/com/example/testing2/images/placeholder.jpg").toExternalForm());
     private final Map<TilePane, List<AnchorPane>> categoryProductsMap = new HashMap<>();
     @FXML private StackPane itemDetailsPanel;
@@ -50,6 +59,7 @@ public class CustomerMainPageController implements Initializable {
     @FXML private Button btnIncrease;
     @FXML private Button btnDecrease;
     @FXML private Button btnCloseModal;
+    private final Map<Integer, Integer> cart = new HashMap<>();
 
     private int currentQuantity = 1;
 
@@ -76,6 +86,10 @@ public class CustomerMainPageController implements Initializable {
                 txtQuantity.setText(String.valueOf(currentQuantity));
             }
         });
+        btnAddToCart.setOnAction(e -> {
+            addToCart();
+        });
+
 
     }
 
@@ -165,6 +179,49 @@ public class CustomerMainPageController implements Initializable {
         }
     }
 
+    private void animateCartButton() {
+        ScaleTransition st = new ScaleTransition(Duration.millis(200), btnCart);
+        st.setFromX(1.0);
+        st.setFromY(1.0);
+        st.setToX(1.3);
+        st.setToY(1.3);
+        st.setCycleCount(2);
+        st.setAutoReverse(true);
+        st.play();
+    }
+    private void addToCart() {
+        try {
+            int productId = (int) itemDetailsPanel.getUserData();
+
+            // Add quantity to cart
+            cart.put(productId, cart.getOrDefault(productId, 0) + currentQuantity);
+
+            System.out.println("Cart contents: " + cart);
+
+            // Animate cart button
+            animateCartButton();
+
+            // Update badge
+            updateCartBadge();
+
+            // Reset quantity and close modal
+            currentQuantity = 1;
+            txtQuantity.setText("1");
+            itemDetailsPanel.setVisible(false);
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    private void updateCartBadge() {
+        int totalItems = cart.values().stream().mapToInt(Integer::intValue).sum();
+        cartBadge.setText(String.valueOf(totalItems));
+        cartBadge.setVisible(totalItems > 0);
+    }
+
+
+
     private AnchorPane createItemCard(int productId, String name, double price) {
         AnchorPane clone = new AnchorPane();
         clone.setPrefWidth(itemCard.getPrefWidth());
@@ -204,14 +261,13 @@ public class CustomerMainPageController implements Initializable {
                 modalItemName.setText(rs.getString("name"));
                 modalItemPrice.setText("Rs " + rs.getDouble("price"));
                 modalItemDescription.setText(rs.getString("description"));
-
-                // For now, placeholder image
                 modalItemImage.setImage(placeholderImage);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
+        itemDetailsPanel.setUserData(productId); // <--- important
         currentQuantity = 1;
         txtQuantity.setText("1");
         itemDetailsPanel.setVisible(true);

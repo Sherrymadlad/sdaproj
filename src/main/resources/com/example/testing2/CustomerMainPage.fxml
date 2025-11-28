@@ -11,6 +11,9 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 <?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.Label?>
+
 
 <AnchorPane maxHeight="Infinity" maxWidth="Infinity" minHeight="-Infinity" minWidth="-Infinity" style="-fx-background-color: #d7e3ee;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.testing2.controllers.CustomerMainPageController">
 
@@ -99,7 +102,7 @@
     <!-- CENTERED MODAL OVERLAY -->
     <?import javafx.geometry.Pos?>
 
-    <!-- DARK OVERLAY -->
+    <!-- CENTERED MODAL OVERLAY -->
     <StackPane fx:id="itemDetailsPanel"
                alignment="CENTER"
                visible="false"
@@ -109,65 +112,81 @@
                AnchorPane.leftAnchor="0.0"
                AnchorPane.rightAnchor="0.0">
 
-
+        <!-- White Modal Box -->
         <!-- White Modal Box -->
         <AnchorPane fx:id="modalBox"
                     prefWidth="500" prefHeight="620"
                     maxWidth="500" maxHeight="620"
                     style="-fx-background-color: white; -fx-background-radius: 20;">
 
-            <!-- Close button -->
+            <!-- Close Button: put this first so it's on top -->
             <Button fx:id="btnCloseModal" text="✕"
                     layoutX="445" layoutY="15"
                     prefWidth="40" prefHeight="40"
                     style="-fx-background-color: transparent; -fx-font-size: 22px; -fx-text-fill: #444;" />
 
-            <!-- Item Image -->
-            <ImageView fx:id="modalItemImage"
-                       fitWidth="450" fitHeight="260"
-                       layoutX="25" layoutY="20"
-                       preserveRatio="true"
-                       style="-fx-background-radius: 15;" />
+            <!-- Modal Content -->
+            <VBox layoutX="25" layoutY="60" spacing="15">
 
-            <!-- Item Name -->
-            <Text fx:id="modalItemName"
-                  layoutX="25" layoutY="320"
-                  style="-fx-font-size: 26px; -fx-font-weight: bold; -fx-fill: #6d4c7d;" />
+                <!-- Item Image -->
+                <ImageView fx:id="modalItemImage"
+                           fitWidth="450" fitHeight="260"
+                           preserveRatio="true"
+                           style="-fx-background-radius: 15;" />
 
-            <!-- Price -->
-            <Text fx:id="modalItemPrice"
-                  layoutX="25" layoutY="360"
-                  style="-fx-font-size: 22px; -fx-fill: #8a6699;" />
+                <!-- Name and Price -->
+                <HBox spacing="20" alignment="CENTER_LEFT">
+                    <Text fx:id="modalItemName"
+                          style="-fx-font-size: 26px; -fx-font-weight: bold; -fx-fill: #6d4c7d;" />
+                    <Text fx:id="modalItemPrice"
+                          style="-fx-font-size: 22px; -fx-fill: #8a6699;" />
+                </HBox>
 
-            <!-- Description -->
-            <Text fx:id="modalItemDescription"
-                  wrappingWidth="450"
-                  layoutX="25" layoutY="400"
-                  style="-fx-font-size: 16px; -fx-fill: #333;" />
+                <!-- Description -->
+                <Text fx:id="modalItemDescription"
+                      wrappingWidth="450"
+                      style="-fx-font-size: 16px; -fx-fill: #333;" />
 
-            <!-- Quantity Selector -->
-            <AnchorPane layoutX="25" layoutY="500"
-                        prefWidth="220" prefHeight="50">
-
-                <children>
+                <!-- Quantity Selector -->
+                <HBox spacing="15" alignment="CENTER_LEFT">
                     <Button fx:id="btnDecrease" text="−"
                             prefWidth="50" prefHeight="50"
                             style="-fx-font-size: 24px; -fx-background-color: #e6d9f0; -fx-background-radius: 10;" />
-
                     <Text fx:id="txtQuantity" text="1"
-                          layoutX="100" layoutY="32"
                           style="-fx-font-size: 24px;" />
-
-                    <Button fx:id="btnIncrease" text="+"
-                            layoutX="150" prefWidth="50" prefHeight="50"
+                    <Button fx:id="btnIncrease" text="+" prefWidth="50" prefHeight="50"
                             style="-fx-font-size: 24px; -fx-background-color: #e6d9f0; -fx-background-radius: 10;" />
-                </children>
+                </HBox>
 
-            </AnchorPane>
-
+                <!-- Add to Cart Button -->
+                <Button fx:id="btnAddToCart" text="Add to Cart"
+                        prefWidth="450" prefHeight="50"
+                        style="-fx-background-color: #8b6fa1; -fx-text-fill: white; -fx-font-size: 20px; -fx-background-radius: 10;" />
+            </VBox>
         </AnchorPane>
 
     </StackPane>
+
+    <Button fx:id="btnCart"
+            layoutX="0" layoutY="0"
+            prefWidth="70" prefHeight="70"
+            style="-fx-background-radius: 35; -fx-background-color: #8b6fa1; -fx-cursor: hand;"
+            AnchorPane.bottomAnchor="20.0"
+            AnchorPane.rightAnchor="20.0">
+        <graphic>
+            <StackPane>
+                <ImageView fx:id="cartIcon" fitWidth="35" fitHeight="35" pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="@images/carticon.png"/>
+                    </image>
+                </ImageView>
+                <Label fx:id="cartBadge" text="0"
+                       style="-fx-background-color: red; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px; -fx-background-radius: 10; -fx-padding: 2 6 2 6;"
+                       StackPane.alignment="TOP_RIGHT"
+                       visible="false" />
+            </StackPane>
+        </graphic>
+    </Button>
 
 
 
