@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
@@ -9,11 +10,12 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
+<?import javafx.scene.layout.StackPane?>
 
-<AnchorPane maxHeight="Infinity" maxWidth="Infinity" minHeight="-Infinity" minWidth="-Infinity" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.testing2.controllers.CustomerMainPageController">
+<AnchorPane maxHeight="Infinity" maxWidth="Infinity" minHeight="-Infinity" minWidth="-Infinity" style="-fx-background-color: #d7e3ee;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.testing2.controllers.CustomerMainPageController">
 
     <!-- Sidebar (fixed width, full height) -->
-    <AnchorPane prefWidth="249.0" style="-fx-background-color: #e5dae6; -fx-border-color: black;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+    <AnchorPane prefWidth="249.0" style="-fx-background-color: #f3e6f7; -fx-border-color: black;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
 
         <children>
             <ImageView fitHeight="187.0" fitWidth="191.0" layoutX="31.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
@@ -23,13 +25,13 @@
             </ImageView>
 
             <!-- Sidebar Buttons -->
-            <Button fx:id="btnItems" layoutX="3.0" layoutY="230.0" mnemonicParsing="false" prefHeight="49.0" prefWidth="243.0" style="-fx-background-color: #826478;" text="Items" textFill="WHITE" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0">
+            <Button fx:id="btnItems" layoutX="3.0" layoutY="230.0" mnemonicParsing="false" prefHeight="49.0" prefWidth="243.0" style="-fx-background-color: #8b6fa1;" text="Items" textFill="WHITE" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0">
                 <font>
                     <Font name="System Bold" size="26.0" />
                 </font>
             </Button>
 
-            <Button fx:id="btnOrders" layoutX="4.0" layoutY="330.0" mnemonicParsing="false" prefHeight="49.0" prefWidth="243.0" style="-fx-background-color: #826478;" text="Orders" textFill="WHITE" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0">
+            <Button fx:id="btnOrders" layoutX="4.0" layoutY="330.0" mnemonicParsing="false" prefHeight="49.0" prefWidth="243.0" style="-fx-background-color: #8b6fa1;" text="Orders" textFill="WHITE" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0">
                 <font>
                     <Font name="System Bold" size="26.0" />
                 </font>
@@ -38,20 +40,20 @@
     </AnchorPane>
 
     <!-- Main Content (fills remaining space) -->
-    <AnchorPane fx:id="mainContent" style="-fx-background-color: #cad6de;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="249.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+    <AnchorPane fx:id="mainContent" style="-fx-background-color: #d7e3ee;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="249.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
 
         <children>
          <AnchorPane prefHeight="90.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
-      
+
                   <!-- Search bar -->
-                  <TextField fx:id="txtSearch" promptText="Search..." style="-fx-border-radius: 10; -fx-border-width: 5;" AnchorPane.leftAnchor="80.0" AnchorPane.rightAnchor="80.0" AnchorPane.topAnchor="26.6">
+                  <TextField fx:id="txtSearch" promptText="Search..." style="-fx-border-radius: 10; -fx-border-width: 5;" AnchorPane.leftAnchor="80.0" AnchorPane.rightAnchor="80.0" AnchorPane.topAnchor="45">
                       <font>
                           <Font size="16.0" />
                       </font>
                   </TextField>
-      
-                  <ImageView fitHeight="36.6" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="45.0" AnchorPane.topAnchor="28.0">
+
+                  <ImageView fitHeight="36.6" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="45.0" AnchorPane.topAnchor="45">
                       <image>
                           <Image url="@images/icon-removebg-preview.png" />
                       </image>
@@ -63,18 +65,18 @@
             <ScrollPane fx:id="scrollPane" fitToWidth="true" pannable="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="90.0">
 
                 <content>
-                    <VBox fx:id="categoriesContainer" spacing="20" style="-fx-background-color: #cad6de;" />
+                    <VBox fx:id="categoriesContainer" spacing="20" style="-fx-background-color: #d7e3ee;" />
                 </content>
             </ScrollPane>
 
 
             <!-- Hidden template card -->
-            <AnchorPane fx:id="itemCard" prefHeight="224.0" prefWidth="205.0" style="-fx-background-color: #e5dae6;" visible="false" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0">
+            <AnchorPane fx:id="itemCard" prefHeight="224.0" prefWidth="205.0" style="-fx-background-color: #f7ecfa;" visible="false" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0">
 
                 <children>
-                    <ImageView fx:id="imgItem" fitHeight="112.0" fitWidth="205.0" layoutX="0.0" pickOnBounds="true" preserveRatio="false" />
+                    <ImageView fx:id="imgItem" fitHeight="112.0" fitWidth="250.0" layoutX="0.0" pickOnBounds="true" preserveRatio="false" />
 
-                    <AnchorPane layoutX="0.0" layoutY="114.0" prefHeight="110.0" prefWidth="205.0" style="-fx-background-color: #f4f1f7;">
+                    <AnchorPane layoutX="0.0" layoutY="114.0" prefHeight="110.0" prefWidth="205.0" style="-fx-background-color: #fbf8ff;">
                         <children>
                             <Text fx:id="txtItemName" fill="#826478" layoutX="8.0" layoutY="59.0" text="Item Name">
                                 <font>
@@ -94,5 +96,80 @@
 
         </children>
     </AnchorPane>
+    <!-- CENTERED MODAL OVERLAY -->
+    <?import javafx.geometry.Pos?>
+
+    <!-- DARK OVERLAY -->
+    <StackPane fx:id="itemDetailsPanel"
+               alignment="CENTER"
+               visible="false"
+               style="-fx-background-color: rgba(0,0,0,0.6);"
+               AnchorPane.topAnchor="0.0"
+               AnchorPane.bottomAnchor="0.0"
+               AnchorPane.leftAnchor="0.0"
+               AnchorPane.rightAnchor="0.0">
+
+
+        <!-- White Modal Box -->
+        <AnchorPane fx:id="modalBox"
+                    prefWidth="500" prefHeight="620"
+                    maxWidth="500" maxHeight="620"
+                    style="-fx-background-color: white; -fx-background-radius: 20;">
+
+            <!-- Close button -->
+            <Button fx:id="btnCloseModal" text="✕"
+                    layoutX="445" layoutY="15"
+                    prefWidth="40" prefHeight="40"
+                    style="-fx-background-color: transparent; -fx-font-size: 22px; -fx-text-fill: #444;" />
+
+            <!-- Item Image -->
+            <ImageView fx:id="modalItemImage"
+                       fitWidth="450" fitHeight="260"
+                       layoutX="25" layoutY="20"
+                       preserveRatio="true"
+                       style="-fx-background-radius: 15;" />
+
+            <!-- Item Name -->
+            <Text fx:id="modalItemName"
+                  layoutX="25" layoutY="320"
+                  style="-fx-font-size: 26px; -fx-font-weight: bold; -fx-fill: #6d4c7d;" />
+
+            <!-- Price -->
+            <Text fx:id="modalItemPrice"
+                  layoutX="25" layoutY="360"
+                  style="-fx-font-size: 22px; -fx-fill: #8a6699;" />
+
+            <!-- Description -->
+            <Text fx:id="modalItemDescription"
+                  wrappingWidth="450"
+                  layoutX="25" layoutY="400"
+                  style="-fx-font-size: 16px; -fx-fill: #333;" />
+
+            <!-- Quantity Selector -->
+            <AnchorPane layoutX="25" layoutY="500"
+                        prefWidth="220" prefHeight="50">
+
+                <children>
+                    <Button fx:id="btnDecrease" text="−"
+                            prefWidth="50" prefHeight="50"
+                            style="-fx-font-size: 24px; -fx-background-color: #e6d9f0; -fx-background-radius: 10;" />
+
+                    <Text fx:id="txtQuantity" text="1"
+                          layoutX="100" layoutY="32"
+                          style="-fx-font-size: 24px;" />
+
+                    <Button fx:id="btnIncrease" text="+"
+                            layoutX="150" prefWidth="50" prefHeight="50"
+                            style="-fx-font-size: 24px; -fx-background-color: #e6d9f0; -fx-background-radius: 10;" />
+                </children>
+
+            </AnchorPane>
+
+        </AnchorPane>
+
+    </StackPane>
+
+
+
 
 </AnchorPane>

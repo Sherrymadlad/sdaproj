@@ -5,33 +5,84 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.scene.control.Button;
+import javafx.scene.layout.StackPane;
+
 
 import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ResourceBundle;
+import java.util.*;
+import javafx.scene.Node;
+import java.util.Locale;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.HashMap;
+
 
 public class CustomerMainPageController implements Initializable {
 
     @FXML
-    private AnchorPane itemCard; // Template card (hidden in FXML)
+    private AnchorPane itemCard;
 
     @FXML
-    private VBox categoriesContainer; // VBox inside ScrollPane to hold categories
+    private VBox categoriesContainer;
+
+    @FXML
+    private TextField txtSearch;
+
+    private final Image placeholderImage = new Image(getClass().getResource("/com/example/testing2/images/placeholder.jpg").toExternalForm());
+    private final Map<TilePane, List<AnchorPane>> categoryProductsMap = new HashMap<>();
+    @FXML private StackPane itemDetailsPanel;
+    @FXML private ImageView modalItemImage;
+    @FXML private Text modalItemName;
+    @FXML private Text modalItemPrice;
+    @FXML private Text modalItemDescription;
+    @FXML private Text txtQuantity;
+    @FXML private Button btnIncrease;
+    @FXML private Button btnDecrease;
+    @FXML private Button btnCloseModal;
+
+    private int currentQuantity = 1;
+
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        itemCard.setVisible(false); // hide template
+        itemCard.setVisible(false);
+        categoriesContainer.setPadding(new Insets(70, 0, 0, 0));
+
         loadCategoriesWithProducts();
+
+        // Client-side search
+        txtSearch.textProperty().addListener((obs, oldText, newText) -> filterProducts(newText));
+        btnCloseModal.setOnAction(e -> itemDetailsPanel.setVisible(false));
+
+        btnIncrease.setOnAction(e -> {
+            currentQuantity++;
+            txtQuantity.setText(String.valueOf(currentQuantity));
+        });
+
+        btnDecrease.setOnAction(e -> {
+            if (currentQuantity > 1) {
+                currentQuantity--;
+                txtQuantity.setText(String.valueOf(currentQuantity));
+            }
+        });
+
     }
 
     private void loadCategoriesWithProducts() {
+        categoriesContainer.getChildren().clear();
+        categoryProductsMap.clear();
+
         try {
             ResultSet rs = DBHelper.executeFunction("GetAllCategories");
 
@@ -39,33 +90,42 @@ public class CustomerMainPageController implements Initializable {
                 int categoryId = rs.getInt("categoryid");
                 String categoryName = rs.getString("name");
 
-                // --- Category label ---
+                // --- Outer VBox for category ---
+                VBox categoryBox = new VBox(5);
+                categoryBox.setPadding(new Insets(0,0,0,0));
+
+                // Category label
                 Label categoryLabel = new Label(categoryName);
+                categoryLabel.setPadding(new Insets(0, 0, 0, 60));
                 categoryLabel.setStyle("-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #826478;");
+                categoryBox.getChildren().add(categoryLabel);
 
-                // Add category label to VBox
-                categoriesContainer.getChildren().add(categoryLabel);
-
-                // --- TilePane for products ---
+                // TilePane for products
                 TilePane productPane = new TilePane();
                 productPane.setHgap(20);
                 productPane.setVgap(20);
-                productPane.setPadding(new Insets(10, 0, 10, 0));
-                productPane.setPrefColumns(4); // number of cards per row
+                productPane.setPadding(new Insets(10, 0, 10, 60));
+                productPane.setPrefColumns(4);
+                productPane.setPrefTileWidth(210);
+                productPane.setPrefTileHeight(224);
 
-                // Load products for this category
+                List<AnchorPane> productCards = new ArrayList<>();
+
                 ResultSet products = DBHelper.executeFunction("GetProductsByCategory", categoryId);
-
                 while (products.next()) {
+                    int productId = products.getInt("productid");
                     String productName = products.getString("name");
                     double price = products.getDouble("price");
 
-                    AnchorPane card = createItemCard(productName, price);
+                    AnchorPane card = createItemCard(productId, productName, price);
                     productPane.getChildren().add(card);
+                    productCards.add(card);
                 }
 
-                // Add TilePane under category label
-                categoriesContainer.getChildren().add(productPane);
+                categoryProductsMap.put(productPane, productCards);
+
+                categoryBox.getChildren().add(productPane);
+                categoriesContainer.getChildren().add(categoryBox);
             }
 
         } catch (SQLException e) {
@@ -73,38 +133,89 @@ public class CustomerMainPageController implements Initializable {
         }
     }
 
-    private AnchorPane createItemCard(String name, double price) {
+
+    private void filterProducts(String query) {
+        query = query.toLowerCase(Locale.ROOT);
+
+        for (Node node : categoriesContainer.getChildren()) {
+            if (!(node instanceof VBox categoryBox)) continue;
+
+            TilePane productPane = (TilePane) categoryBox.getChildren().get(1);
+            List<AnchorPane> cards = categoryProductsMap.get(productPane);
+
+            // Filter cards that match the query
+            List<AnchorPane> filteredCards = new ArrayList<>();
+            for (AnchorPane card : cards) {
+                Text nameText = (Text) card.getChildren().stream()
+                        .filter(n -> n instanceof Text)
+                        .findFirst().orElse(null);
+
+                if (nameText != null && nameText.getText().toLowerCase(Locale.ROOT).contains(query)) {
+                    filteredCards.add(card);
+                }
+            }
+
+            // Update the TilePane to only show matching cards
+            productPane.getChildren().setAll(filteredCards);
+
+            // Show/hide the whole category depending on if any cards match
+            boolean anyVisible = !filteredCards.isEmpty();
+            categoryBox.setVisible(anyVisible);
+            categoryBox.setManaged(anyVisible);
+        }
+    }
+
+    private AnchorPane createItemCard(int productId, String name, double price) {
         AnchorPane clone = new AnchorPane();
         clone.setPrefWidth(itemCard.getPrefWidth());
         clone.setPrefHeight(itemCard.getPrefHeight());
-        clone.setStyle(itemCard.getStyle()); // copy background/style
+        clone.setStyle(itemCard.getStyle());
 
-        // --- Product Image ---
-        ImageView img = new ImageView();
+        ImageView img = new ImageView(placeholderImage);
         img.setFitWidth(205);
         img.setFitHeight(112);
         img.setLayoutX(0);
         img.setLayoutY(0);
 
-        try {
-            img.setImage(new Image(getClass().getResource("/com/example/testing2/images/placeholder.jpg").toExternalForm()));
-        } catch (Exception e) {
-            System.out.println("Image missing: " + e.getMessage());
-        }
-
-        // --- Product Name ---
         Text itemName = new Text(name);
         itemName.setStyle("-fx-font-size: 15px; -fx-fill: #826478;");
         itemName.setLayoutX(8);
         itemName.setLayoutY(160);
 
-        // --- Product Price ---
         Text itemPrice = new Text("Rs " + price);
         itemPrice.setStyle("-fx-font-size: 15px; -fx-fill: #826478;");
         itemPrice.setLayoutX(140);
         itemPrice.setLayoutY(160);
 
         clone.getChildren().addAll(img, itemName, itemPrice);
+
+        // Store productId in userData
+        clone.setUserData(productId);
+
+        // CLICK LISTENER TO OPEN MODAL
+        clone.setOnMouseClicked(e -> openItemModal(productId));
+
         return clone;
     }
+    private void openItemModal(int productId) {
+        try {
+            ResultSet rs = DBHelper.executeFunction("GetProductDetails", productId);
+            if (rs.next()) {
+                modalItemName.setText(rs.getString("name"));
+                modalItemPrice.setText("Rs " + rs.getDouble("price"));
+                modalItemDescription.setText(rs.getString("description"));
+
+                // For now, placeholder image
+                modalItemImage.setImage(placeholderImage);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        currentQuantity = 1;
+        txtQuantity.setText("1");
+        itemDetailsPanel.setVisible(true);
+    }
+
+
 }
