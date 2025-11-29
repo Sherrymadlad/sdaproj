@@ -3,6 +3,7 @@ package com.example.testing2.controllers;
 import com.example.testing2.utils.DBHelper;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.AnchorPane;
@@ -15,19 +16,20 @@ public class CustomerOrdersPageController {
 
     @FXML private VBox ordersContainer;
     @FXML private ScrollPane scrollOrders;
-    @FXML private javafx.scene.control.Button btnCurrentOrders;
-    @FXML private javafx.scene.control.Button btnPastOrders;
+    @FXML private Button btnCurrentOrders;
+    @FXML private Button btnPastOrders;
+    @FXML private Button btnRefundedOrders;
 
     private final int currentUserId = 1; // hardcoded for testing
 
     @FXML
     public void initialize() {
         highlightCurrentOrders();
-        showCurrentOrders(); // load current orders by default
+        showCurrentOrders(); // default
 
         btnCurrentOrders.setOnAction(e -> showCurrentOrders());
         btnPastOrders.setOnAction(e -> showPastOrders());
-        showCurrentOrders();
+        btnRefundedOrders.setOnAction(e -> showRefundedOrders());
     }
 
     // -------------------------------
@@ -36,11 +38,19 @@ public class CustomerOrdersPageController {
     private void highlightCurrentOrders() {
         btnCurrentOrders.setStyle("-fx-background-color: #6d4c7d; -fx-text-fill: white; -fx-font-size: 20;");
         btnPastOrders.setStyle("-fx-background-color: #8b6fa1; -fx-text-fill: white; -fx-font-size: 20;");
+        btnRefundedOrders.setStyle("-fx-background-color: #8b6fa1; -fx-text-fill: white; -fx-font-size: 20;");
     }
 
     private void highlightPastOrders() {
         btnPastOrders.setStyle("-fx-background-color: #6d4c7d; -fx-text-fill: white; -fx-font-size: 20;");
         btnCurrentOrders.setStyle("-fx-background-color: #8b6fa1; -fx-text-fill: white; -fx-font-size: 20;");
+        btnRefundedOrders.setStyle("-fx-background-color: #8b6fa1; -fx-text-fill: white; -fx-font-size: 20;");
+    }
+
+    private void highlightRefundedOrders() {
+        btnRefundedOrders.setStyle("-fx-background-color: #6d4c7d; -fx-text-fill: white; -fx-font-size: 20;");
+        btnCurrentOrders.setStyle("-fx-background-color: #8b6fa1; -fx-text-fill: white; -fx-font-size: 20;");
+        btnPastOrders.setStyle("-fx-background-color: #8b6fa1; -fx-text-fill: white; -fx-font-size: 20;");
     }
 
     // -------------------------------
@@ -48,57 +58,27 @@ public class CustomerOrdersPageController {
     // -------------------------------
     public void showCurrentOrders() {
         highlightCurrentOrders();
-        ordersContainer.getChildren().clear();
-
-        try {
-            // Get all current orders for user 1
-            ResultSet rsOrders = DBHelper.executeFunction("ViewCurrentOrders", currentUserId);
-            boolean hasOrders = false;
-
-            while (rsOrders.next()) {
-                hasOrders = true;
-                int orderIdInt = rsOrders.getInt("orderid");
-                String orderId = "Order #" + orderIdInt;
-                String status = rsOrders.getString("status");
-
-                // Get all items for this order
-                StringBuilder itemsList = new StringBuilder();
-                ResultSet rsItems = DBHelper.executeFunction("ViewOrderItems", orderIdInt);
-                while (rsItems.next()) {
-                    String productName = rsItems.getString("productname"); // make sure your SP returns productname
-                    int qty = rsItems.getInt("quantity");
-                    itemsList.append(productName).append(" x").append(qty).append(", ");
-                }
-                rsItems.close();
-
-                // Remove trailing comma
-                if (itemsList.length() > 0) {
-                    itemsList.setLength(itemsList.length() - 2);
-                } else {
-                    itemsList.append("No items");
-                }
-
-                addOrderPanel(orderId, itemsList.toString(), status);
-            }
-
-            rsOrders.close();
-
-            if (!hasOrders) {
-                addOrderPanel("No Orders", "You have no current orders", "");
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-            addOrderPanel("Error", "Could not load orders", "");
-        }
+        loadOrders("ViewCurrentOrders", false); // no refund button
     }
 
     public void showPastOrders() {
         highlightPastOrders();
+        loadOrders("ViewPastOrderHistory", true); // refund button only for Delivered
+    }
+
+    public void showRefundedOrders() {
+        highlightRefundedOrders();
+        loadOrders("ViewRefundedOrders", false); // no refund button
+    }
+
+    // -------------------------------
+    // LOAD ORDERS HELPER
+    // -------------------------------
+    private void loadOrders(String functionName, boolean showRefundButton) {
         ordersContainer.getChildren().clear();
 
         try {
-            ResultSet rsOrders = DBHelper.executeFunction("ViewPastOrderHistory", currentUserId);
+            ResultSet rsOrders = DBHelper.executeFunction(functionName, currentUserId);
             boolean hasOrders = false;
 
             while (rsOrders.next()) {
@@ -107,7 +87,7 @@ public class CustomerOrdersPageController {
                 String orderId = "Order #" + orderIdInt;
                 String status = rsOrders.getString("status");
 
-                // Get items for this order
+                // Get items
                 StringBuilder itemsList = new StringBuilder();
                 ResultSet rsItems = DBHelper.executeFunction("ViewOrderItems", orderIdInt);
                 while (rsItems.next()) {
@@ -123,27 +103,27 @@ public class CustomerOrdersPageController {
                     itemsList.append("No items");
                 }
 
-                addOrderPanel(orderId, itemsList.toString(), status);
+                addOrderPanel(orderId, itemsList.toString(), status, showRefundButton, orderIdInt);
             }
 
             rsOrders.close();
 
             if (!hasOrders) {
-                addOrderPanel("No Orders", "You have no past orders", "");
+                addOrderPanel("No Orders", "You have no orders", "", false, 0);
             }
 
         } catch (SQLException e) {
             e.printStackTrace();
-            addOrderPanel("Error", "Could not load past orders", "");
+            addOrderPanel("Error", "Could not load orders", "", false, 0);
         }
     }
 
     // -------------------------------
     // CREATE ORDER PANEL
     // -------------------------------
-    private void addOrderPanel(String orderId, String items, String status) {
+    private void addOrderPanel(String orderId, String items, String status, boolean showRefundButton, int orderIdInt) {
         AnchorPane panel = new AnchorPane();
-        panel.setPrefHeight(140);
+        panel.setPrefHeight(160);
         panel.setStyle("-fx-background-color: white; -fx-background-radius: 12; -fx-border-color: #cbbcd9; -fx-border-radius: 12;");
         panel.setPadding(new Insets(20));
 
@@ -163,6 +143,95 @@ public class CustomerOrdersPageController {
         lblStatus.setLayoutY(95);
 
         panel.getChildren().addAll(lblOrderId, lblItems, lblStatus);
+
+        // --------------------------
+        // REFUND BUTTON for Past Orders
+        // --------------------------
+        if (showRefundButton && status.equals("Delivered")) {
+            Button btnRefund = new Button("Request Refund");
+            btnRefund.setLayoutX(20);
+            btnRefund.setLayoutY(125);
+            btnRefund.setStyle("-fx-background-color: #d46a6a; -fx-text-fill: white; -fx-font-size: 16px;");
+
+            btnRefund.setOnAction(e -> {
+                javafx.scene.control.Alert confirm = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.CONFIRMATION);
+                confirm.setTitle("Confirm Refund");
+                confirm.setHeaderText(null);
+                confirm.setContentText("Are you sure you want to request a refund for this order?");
+
+                var result = confirm.showAndWait();
+                if (result.isPresent() && result.get() == javafx.scene.control.ButtonType.OK) {
+                    try {
+                        DBHelper.executeFunction("UpdateCustomerOrderStatus", orderIdInt, "Refund Pending");
+
+                        javafx.scene.control.Dialog<Void> dialog = new javafx.scene.control.Dialog<>();
+                        dialog.setTitle("Refund Requested");
+                        dialog.getDialogPane().setContent(new Label("Hold tight while we prepare your refund :)"));
+                        dialog.getDialogPane().getButtonTypes().add(javafx.scene.control.ButtonType.OK);
+                        dialog.showAndWait();
+
+                        // Refresh past orders
+                        showPastOrders();
+
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                        javafx.scene.control.Alert error = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
+                        error.setTitle("Error");
+                        error.setHeaderText(null);
+                        error.setContentText("Could not request refund. Please try again.");
+                        error.showAndWait();
+                    }
+                }
+            });
+
+            panel.getChildren().add(btnRefund);
+        }
+
+        // --------------------------
+        // CANCEL BUTTON for Current Orders
+        // --------------------------
+        if (!showRefundButton && status.equals("Pending")) { // only current orders
+            Button btnCancel = new Button("Cancel Order");
+            btnCancel.setLayoutX(20);
+            btnCancel.setLayoutY(125);
+            btnCancel.setStyle("-fx-background-color: #d46a6a; -fx-text-fill: white; -fx-font-size: 16px;");
+
+            btnCancel.setOnAction(e -> {
+                javafx.scene.control.Alert confirm = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.CONFIRMATION);
+                confirm.setTitle("Confirm Cancel");
+                confirm.setHeaderText(null);
+                confirm.setContentText("Are you sure you want to cancel this order?");
+
+                var result = confirm.showAndWait();
+                if (result.isPresent() && result.get() == javafx.scene.control.ButtonType.OK) {
+                    try {
+                        DBHelper.executeFunction("UpdateCustomerOrderStatus", orderIdInt, "Cancelled");
+
+                        javafx.scene.control.Dialog<Void> dialog = new javafx.scene.control.Dialog<>();
+                        dialog.setTitle("Order Cancelled");
+                        dialog.getDialogPane().setContent(new Label("Your order has been successfully cancelled"));
+                        dialog.getDialogPane().getButtonTypes().add(javafx.scene.control.ButtonType.OK);
+                        dialog.showAndWait();
+
+                        // Refresh current orders
+                        showCurrentOrders();
+
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                        javafx.scene.control.Alert error = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
+                        error.setTitle("Error");
+                        error.setHeaderText(null);
+                        error.setContentText("Could not cancel order. Please try again.");
+                        error.showAndWait();
+                    }
+                }
+            });
+
+            panel.getChildren().add(btnCancel);
+        }
+
         ordersContainer.getChildren().add(panel);
     }
+
+
 }

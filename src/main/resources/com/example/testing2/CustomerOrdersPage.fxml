@@ -37,16 +37,25 @@
     <AnchorPane fx:id="mainContent" style="-fx-background-color: #d7e3ee;" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="249" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
         <children>
 
-            <!-- TOP TAB BAR (moved down by 20) -->
             <HBox fx:id="tabBar" prefHeight="70" spacing="0" style="-fx-background-color: #d7e3ee; -fx-border-color: #c9bad6;" layoutY="20" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
 
                 <!-- Current Orders Tab -->
-                <Button fx:id="btnCurrentOrders" prefHeight="70" prefWidth="300" style="-fx-background-color: #6d4c7d; -fx-text-fill: white; -fx-font-size: 20;" text="Current Orders" />
+                <Button fx:id="btnCurrentOrders" prefHeight="70" prefWidth="300"
+                        style="-fx-background-color: #6d4c7d; -fx-text-fill: white; -fx-font-size: 20;"
+                        text="Current Orders" />
 
                 <!-- Past Orders Tab -->
-                <Button fx:id="btnPastOrders" prefHeight="70" prefWidth="300" style="-fx-background-color: #8b6fa1; -fx-text-fill: white; -fx-font-size: 20;" text="Past Orders" />
+                <Button fx:id="btnPastOrders" prefHeight="70" prefWidth="300"
+                        style="-fx-background-color: #8b6fa1; -fx-text-fill: white; -fx-font-size: 20;"
+                        text="Past Orders" />
+
+                <!-- Refunded Orders Tab -->
+                <Button fx:id="btnRefundedOrders" prefHeight="70" prefWidth="300"
+                        style="-fx-background-color: #8b6fa1; -fx-text-fill: white; -fx-font-size: 20;"
+                        text="Refunded Orders" />
 
             </HBox>
+
 
             <!-- SCROLLABLE ORDER LIST -->
             <ScrollPane fx:id="scrollOrders" fitToWidth="true" style="-fx-background-color: #d7e3ee;" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="90">
