@@ -2,31 +2,36 @@ package com.example.testing2.controllers;
 
 import com.example.testing2.utils.DBHelper;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
-import javafx.scene.control.Button;
-import javafx.scene.layout.StackPane;
 import javafx.animation.ScaleTransition;
 import javafx.util.Duration;
+import javafx.stage.Stage;
 
 import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
-import javafx.scene.Node;
-import java.util.Locale;
 import java.util.List;
+import java.util.Locale;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
+
 
 
 public class CustomerMainPageController implements Initializable {
@@ -62,13 +67,13 @@ public class CustomerMainPageController implements Initializable {
     private final Map<Integer, Integer> cart = new HashMap<>();
 
     private int currentQuantity = 1;
-
+    private int currentUserId;  // <--- add this at the top with other fields
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         itemCard.setVisible(false);
         categoriesContainer.setPadding(new Insets(70, 0, 0, 0));
-
+        this.currentUserId = 7;
         loadCategoriesWithProducts();
 
         // Client-side search
@@ -90,8 +95,72 @@ public class CustomerMainPageController implements Initializable {
             addToCart();
         });
 
-
+        btnCart.setOnAction(e -> openCartPage());
     }
+    public void setCurrentUserId(int userId) {
+        this.currentUserId = userId;
+        System.out.println("Logged-in user ID = " + userId);
+    }
+
+    private void openCartPage() {
+        try {
+            if (cart == null || cart.isEmpty()) {
+                System.out.println("Cart is empty.");
+                return;
+            }
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/testing2/CartPage.fxml"));
+            Parent root = loader.load();
+
+            CartPageController controller = loader.getController();
+
+            // Set current user ID first
+            controller.setCurrentUserId(this.currentUserId);
+
+            // Prepare product names and prices from current products in categories
+            Map<Integer, String> productNames = new HashMap<>();
+            Map<Integer, Double> productPrices = new HashMap<>();
+
+            for (Map.Entry<TilePane, List<AnchorPane>> entry : categoryProductsMap.entrySet()) {
+                for (AnchorPane card : entry.getValue()) {
+                    int pid = (int) card.getUserData();
+
+                    Text nameText = null;
+                    Text priceText = null;
+
+                    for (Node n : card.getChildren()) {
+                        if (n instanceof Text t) {
+                            if (nameText == null) nameText = t;
+                            else if (priceText == null) priceText = t;
+                        }
+                    }
+
+                    if (nameText != null) {
+                        productNames.put(pid, nameText.getText());
+                    }
+
+                    if (priceText != null) {
+                        String txt = priceText.getText().replace("Rs ", "").trim();
+                        productPrices.put(pid, Double.parseDouble(txt));
+                    }
+                }
+            }
+
+            // Pass cart data **once**, after maps are ready
+            controller.setCartData(cart, productNames, productPrices);
+
+            // Open CartPage in a new Stage
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root, 1600, 900));
+            stage.setTitle("My Cart");
+            stage.show();
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+
 
     private void loadCategoriesWithProducts() {
         categoriesContainer.getChildren().clear();
@@ -251,6 +320,7 @@ public class CustomerMainPageController implements Initializable {
 
         // CLICK LISTENER TO OPEN MODAL
         clone.setOnMouseClicked(e -> openItemModal(productId));
+
 
         return clone;
     }

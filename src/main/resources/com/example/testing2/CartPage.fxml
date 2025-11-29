@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.image.ImageView?>
+
+<AnchorPane prefHeight="900" prefWidth="1600" style="-fx-background-color: #d7e3ee;"
+            xmlns="http://javafx.com/javafx/25"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.testing2.controllers.CartPageController">
+
+    <!-- Title -->
+    <Text text="My Cart" layoutX="50" layoutY="80"
+          style="-fx-font-size: 36px; -fx-font-weight: bold;"/>
+
+    <!-- ScrollPane for items -->
+    <ScrollPane layoutX="50" layoutY="120"
+                prefWidth="900" prefHeight="600"
+                fitToWidth="true" style="-fx-background:white; -fx-border-color:black;">
+        <content>
+            <VBox fx:id="cartItemsContainer" spacing="15">
+                <padding>
+                    <javafx.geometry.Insets top="10" right="20" bottom="10" left="20"/>
+                </padding>
+            </VBox>
+        </content>
+    </ScrollPane>
+
+    <!-- Right-side Column -->
+    <VBox layoutX="1000" layoutY="120" spacing="25">
+
+        <!-- Payment Box -->
+        <AnchorPane prefWidth="500" prefHeight="180" style="-fx-background-color:white; -fx-border-color:black;">
+            <children>
+                <Text text="Payment Method" layoutX="20" layoutY="45">
+                    <font>
+                        <Font size="28"/>
+                    </font>
+                </Text>
+
+                <CheckBox fx:id="chkCard" text="Card" layoutX="20" layoutY="90">
+                    <font>
+                        <Font size="22"/>
+                    </font>
+                </CheckBox>
+
+                <CheckBox fx:id="chkCash" text="Cash" layoutX="150" layoutY="90">
+                    <font>
+                        <Font size="22"/>
+                    </font>
+                </CheckBox>
+            </children>
+        </AnchorPane>
+
+        <!-- Total Box -->
+        <AnchorPane prefWidth="500" prefHeight="130" style="-fx-background-color:white; -fx-border-color:black;">
+            <children>
+                <Text text="Total" layoutX="20" layoutY="45">
+                    <font>
+                        <Font size="28"/>
+                    </font>
+                </Text>
+
+                <Text fx:id="txtTotal" text="0.0" layoutX="20" layoutY="95">
+                    <font>
+                        <Font size="28"/>
+                    </font>
+                </Text>
+            </children>
+        </AnchorPane>
+
+        <!-- Address Box -->
+        <AnchorPane prefWidth="500" prefHeight="150" style="-fx-background-color:white; -fx-border-color:black;">
+            <children>
+                <Text text="Address" layoutX="20" layoutY="45">
+                    <font>
+                        <Font size="28"/>
+                    </font>
+                </Text>
+
+                <TextField fx:id="txtAddress" layoutX="20" layoutY="70"
+                           prefWidth="460" prefHeight="50"
+                           style="-fx-font-size: 20;"/>
+            </children>
+        </AnchorPane>
+
+        <!-- Place Order Button -->
+        <Button fx:id="btnPlaceOrder" text="Place Order" prefWidth="250" prefHeight="60"
+                style="-fx-font-size: 24; -fx-background-color:#826478; -fx-text-fill:white;"/>
+    </VBox>
+
+</AnchorPane>

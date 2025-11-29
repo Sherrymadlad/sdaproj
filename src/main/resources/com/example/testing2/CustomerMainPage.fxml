@@ -113,7 +113,6 @@
                AnchorPane.rightAnchor="0.0">
 
         <!-- White Modal Box -->
-        <!-- White Modal Box -->
         <AnchorPane fx:id="modalBox"
                     prefWidth="500" prefHeight="620"
                     maxWidth="500" maxHeight="620"
