@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="900" prefWidth="1600" style="-fx-background-color: #d7e3ee;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.testing2.controllers.CustomerOrdersPageController">
+
+    <!-- LEFT SIDEBAR -->
+    <AnchorPane prefWidth="249" style="-fx-background-color: #f3e6f7; -fx-border-color: black;" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.topAnchor="0">
+        <children>
+            <!-- Logo -->
+            <ImageView fitHeight="187" fitWidth="191" layoutX="31" layoutY="14" preserveRatio="true">
+                <image>
+                    <Image url="@images/cart-removebg-preview.png" />
+                </image>
+            </ImageView>
+
+            <!-- Sidebar Buttons -->
+            <Button fx:id="btnItems" layoutX="3" layoutY="230" prefHeight="49" prefWidth="243" style="-fx-background-color: #8b6fa1; -fx-text-fill: white;" text="Items" AnchorPane.leftAnchor="10" AnchorPane.rightAnchor="10">
+                <font><Font name="System Bold" size="26" /></font>
+            </Button>
+
+            <Button fx:id="btnOrders" layoutX="4" layoutY="330" prefHeight="49" prefWidth="243" style="-fx-background-color: #6d4c7d; -fx-text-fill: white;" text="Orders" AnchorPane.leftAnchor="10" AnchorPane.rightAnchor="10">
+                <font><Font name="System Bold" size="26" /></font>
+            </Button>
+        </children>
+    </AnchorPane>
+
+    <!-- MAIN CONTENT AREA -->
+    <AnchorPane fx:id="mainContent" style="-fx-background-color: #d7e3ee;" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="249" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
+        <children>
+
+            <!-- TOP TAB BAR (moved down by 20) -->
+            <HBox fx:id="tabBar" prefHeight="70" spacing="0" style="-fx-background-color: #d7e3ee; -fx-border-color: #c9bad6;" layoutY="20" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
+
+                <!-- Current Orders Tab -->
+                <Button fx:id="btnCurrentOrders" prefHeight="70" prefWidth="300" style="-fx-background-color: #6d4c7d; -fx-text-fill: white; -fx-font-size: 20;" text="Current Orders" />
+
+                <!-- Past Orders Tab -->
+                <Button fx:id="btnPastOrders" prefHeight="70" prefWidth="300" style="-fx-background-color: #8b6fa1; -fx-text-fill: white; -fx-font-size: 20;" text="Past Orders" />
+
+            </HBox>
+
+            <!-- SCROLLABLE ORDER LIST -->
+            <ScrollPane fx:id="scrollOrders" fitToWidth="true" style="-fx-background-color: #d7e3ee;" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="90">
+
+                <content>
+                    <VBox fx:id="ordersContainer" spacing="20" style="-fx-background-color: #d7e3ee;">
+                        <padding>
+                            <Insets bottom="20" left="20" right="20" top="20" />
+                        </padding>
+                    </VBox>
+                </content>
+
+            </ScrollPane>
+
+        </children>
+    </AnchorPane>
+
+</AnchorPane>

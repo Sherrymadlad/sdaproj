@@ -68,6 +68,9 @@ public class CustomerMainPageController implements Initializable {
 
     private int currentQuantity = 1;
     private int currentUserId;  // <--- add this at the top with other fields
+    @FXML private Button btnItems;
+    @FXML private Button btnOrders;
+    @FXML private AnchorPane mainContent;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -96,11 +99,27 @@ public class CustomerMainPageController implements Initializable {
         });
 
         btnCart.setOnAction(e -> openCartPage());
+        btnItems.setStyle("-fx-background-color: #6d4c7d; -fx-text-fill: white;");
+        btnItems.setOnAction(e -> showItemsPage());
+
     }
+
     public void setCurrentUserId(int userId) {
         this.currentUserId = userId;
         System.out.println("Logged-in user ID = " + userId);
     }
+    private void resetSidebarButtons() {
+        btnItems.setStyle("-fx-background-color: #8b6fa1; -fx-text-fill: white;");
+        btnOrders.setStyle("-fx-background-color: #8b6fa1; -fx-text-fill: white;");
+    }
+
+    private void showItemsPage() {
+        resetSidebarButtons();
+        btnItems.setStyle("-fx-background-color: #6d4c7d; -fx-text-fill: white;");
+        // Already on items page — no need to reload anything
+    }
+
+
 
     public void clearCart() {
         cart.clear();
