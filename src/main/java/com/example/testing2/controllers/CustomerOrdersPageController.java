@@ -86,6 +86,7 @@ public class CustomerOrdersPageController {
                 int orderIdInt = rsOrders.getInt("orderid");
                 String orderId = "Order #" + orderIdInt;
                 String status = rsOrders.getString("status");
+                double totalPrice = rsOrders.getDouble("totalprice");
 
                 // Get items
                 StringBuilder itemsList = new StringBuilder();
@@ -103,25 +104,25 @@ public class CustomerOrdersPageController {
                     itemsList.append("No items");
                 }
 
-                addOrderPanel(orderId, itemsList.toString(), status, showRefundButton, orderIdInt);
+                addOrderPanel(orderId, itemsList.toString(), status, totalPrice,  showRefundButton, orderIdInt);
             }
 
             rsOrders.close();
 
             if (!hasOrders) {
-                addOrderPanel("No Orders", "You have no orders", "", false, 0);
+                addOrderPanel("No Orders", "You have no orders", "", 0, false, 0);
             }
 
         } catch (SQLException e) {
             e.printStackTrace();
-            addOrderPanel("Error", "Could not load orders", "", false, 0);
+            addOrderPanel("Error", "Could not load orders", "", 0,false, 0);
         }
     }
 
     // -------------------------------
     // CREATE ORDER PANEL
     // -------------------------------
-    private void addOrderPanel(String orderId, String items, String status, boolean showRefundButton, int orderIdInt) {
+    private void addOrderPanel(String orderId, String items, String status, double totalPrice, boolean showRefundButton, int orderIdInt) {
         AnchorPane panel = new AnchorPane();
         panel.setPrefHeight(160);
         panel.setStyle("-fx-background-color: white; -fx-background-radius: 12; -fx-border-color: #cbbcd9; -fx-border-radius: 12;");
@@ -186,6 +187,15 @@ public class CustomerOrdersPageController {
 
             panel.getChildren().add(btnRefund);
         }
+
+        // -------------------------------
+        //TOTAL PRICE
+        Label lblTotalPrice = new Label("Total: $" + totalPrice);
+        lblTotalPrice.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #6d4c7d;");
+        AnchorPane.setTopAnchor(lblTotalPrice, 95.0);   // aligns vertically with status
+        AnchorPane.setRightAnchor(lblTotalPrice, 20.0); // 20px from right edge
+        panel.getChildren().add(lblTotalPrice);
+
 
         // --------------------------
         // CANCEL BUTTON for Current Orders
