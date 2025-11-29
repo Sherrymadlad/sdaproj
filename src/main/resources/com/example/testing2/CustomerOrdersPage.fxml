@@ -23,11 +23,22 @@
             </ImageView>
 
             <!-- Sidebar Buttons -->
-            <Button fx:id="btnItems" layoutX="3" layoutY="230" prefHeight="49" prefWidth="243" style="-fx-background-color: #8b6fa1; -fx-text-fill: white;" text="Items" AnchorPane.leftAnchor="10" AnchorPane.rightAnchor="10">
+            <Button fx:id="btnItems" layoutX="3" layoutY="230" prefHeight="49" prefWidth="243"
+                    style="-fx-background-color: #8b6fa1; -fx-text-fill: white;" text="Items"
+                    AnchorPane.leftAnchor="10" AnchorPane.rightAnchor="10">
                 <font><Font name="System Bold" size="26" /></font>
             </Button>
 
-            <Button fx:id="btnOrders" layoutX="4" layoutY="330" prefHeight="49" prefWidth="243" style="-fx-background-color: #6d4c7d; -fx-text-fill: white;" text="Orders" AnchorPane.leftAnchor="10" AnchorPane.rightAnchor="10">
+            <Button fx:id="btnOrders" layoutX="4" layoutY="330" prefHeight="49" prefWidth="243"
+                    style="-fx-background-color: #6d4c7d; -fx-text-fill: white;" text="Orders"
+                    AnchorPane.leftAnchor="10" AnchorPane.rightAnchor="10">
+                <font><Font name="System Bold" size="26" /></font>
+            </Button>
+
+            <!-- Profile Button -->
+            <Button fx:id="btnProfile" layoutX="4" layoutY="430" prefHeight="49" prefWidth="243"
+                    style="-fx-background-color: #8b6fa1; -fx-text-fill: white;" text="Profile"
+                    AnchorPane.leftAnchor="10" AnchorPane.rightAnchor="10">
                 <font><Font name="System Bold" size="26" /></font>
             </Button>
         </children>

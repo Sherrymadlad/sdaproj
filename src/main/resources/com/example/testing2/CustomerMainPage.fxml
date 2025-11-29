@@ -18,6 +18,7 @@
 <AnchorPane maxHeight="Infinity" maxWidth="Infinity" minHeight="-Infinity" minWidth="-Infinity" style="-fx-background-color: #d7e3ee;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.testing2.controllers.CustomerMainPageController">
 
     <!-- Sidebar (fixed width, full height) -->
+    <!-- Sidebar (fixed width, full height) -->
     <AnchorPane prefWidth="249.0" style="-fx-background-color: #f3e6f7; -fx-border-color: black;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
 
         <children>
@@ -34,13 +35,21 @@
                 </font>
             </Button>
 
-            <Button fx:id="btnOrders" layoutX="4.0" layoutY="330.0" mnemonicParsing="false" prefHeight="49.0" prefWidth="243.0" style="-fx-background-color: #8b6fa1;" text="Orders" textFill="WHITE" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0">
+            <Button fx:id="btnOrders" layoutX="4.0" layoutY="300.0" mnemonicParsing="false" prefHeight="49.0" prefWidth="243.0" style="-fx-background-color: #8b6fa1;" text="Orders" textFill="WHITE" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0">
+                <font>
+                    <Font name="System Bold" size="26.0" />
+                </font>
+            </Button>
+
+            <!-- New Profile Button -->
+            <Button fx:id="btnProfile" layoutX="4.0" layoutY="370.0" mnemonicParsing="false" prefHeight="49.0" prefWidth="243.0" style="-fx-background-color: #8b6fa1;" text="Profile" textFill="WHITE" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0">
                 <font>
                     <Font name="System Bold" size="26.0" />
                 </font>
             </Button>
         </children>
     </AnchorPane>
+
 
     <!-- Main Content (fills remaining space) -->
     <AnchorPane fx:id="mainContent" style="-fx-background-color: #d7e3ee;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="249.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
