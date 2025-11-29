@@ -102,6 +102,11 @@ public class CustomerMainPageController implements Initializable {
         System.out.println("Logged-in user ID = " + userId);
     }
 
+    public void clearCart() {
+        cart.clear();
+        updateCartBadge();
+    }
+
     private void openCartPage() {
         try {
             if (cart == null || cart.isEmpty()) {
@@ -111,13 +116,15 @@ public class CustomerMainPageController implements Initializable {
 
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/testing2/CartPage.fxml"));
             Parent root = loader.load();
-
             CartPageController controller = loader.getController();
+
+            // Pass parent controller
+            controller.setParentController(this);
 
             // Set current user ID first
             controller.setCurrentUserId(this.currentUserId);
 
-            // Prepare product names and prices from current products in categories
+            // Prepare product names and prices from current products
             Map<Integer, String> productNames = new HashMap<>();
             Map<Integer, Double> productPrices = new HashMap<>();
 
@@ -135,9 +142,7 @@ public class CustomerMainPageController implements Initializable {
                         }
                     }
 
-                    if (nameText != null) {
-                        productNames.put(pid, nameText.getText());
-                    }
+                    if (nameText != null) productNames.put(pid, nameText.getText());
 
                     if (priceText != null) {
                         String txt = priceText.getText().replace("Rs ", "").trim();
@@ -146,10 +151,9 @@ public class CustomerMainPageController implements Initializable {
                 }
             }
 
-            // Pass cart data **once**, after maps are ready
+            // Pass cart data
             controller.setCartData(cart, productNames, productPrices);
 
-            // Open CartPage in a new Stage
             Stage stage = new Stage();
             stage.setScene(new Scene(root, 1600, 900));
             stage.setTitle("My Cart");
@@ -159,6 +163,7 @@ public class CustomerMainPageController implements Initializable {
             ex.printStackTrace();
         }
     }
+
 
 
 
