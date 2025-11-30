@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextField?>
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.testing2.controllers.LoginController">
 
@@ -42,6 +42,20 @@
                             </font>
                         </Button>
                     </children>
+
+                    <Text fill="#532386" layoutX="204.0" layoutY="494.0">
+                        <font>
+                            <Font size="16.0" />
+                        </font>
+                        Don't have an account?
+                    </Text>
+
+                    <Text fx:id="txtGoToSignup" fill="#532386" layoutX="380.0" layoutY="493.0" style="-fx-cursor: hand;" text="Signup!" underline="true">
+                        <font>
+                            <Font size="16.0" />
+                        </font>
+                    </Text>
+
                 </Pane>
             </children>
         </Pane>

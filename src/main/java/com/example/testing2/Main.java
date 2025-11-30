@@ -11,12 +11,12 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         // Load FXML from resources
-        Parent root = FXMLLoader.load(getClass().getResource("/com/example/testing2/CustomerProfilePage.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/com/example/testing2/LoginPage.fxml"));
         primaryStage.setTitle("Inventory System");
         primaryStage.setScene(new Scene(root));
         primaryStage.setMinHeight(600);
         primaryStage.setMinWidth(800);
-        primaryStage.setMaximized(true);
+       // primaryStage.setMaximized(true);
         primaryStage.show();
     }
 

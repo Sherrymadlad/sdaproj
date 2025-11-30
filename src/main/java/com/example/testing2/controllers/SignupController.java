@@ -7,6 +7,11 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.text.Text;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 
 import java.math.BigInteger;
 import java.security.MessageDigest;
@@ -27,6 +32,7 @@ public class SignupController {
     @FXML private CheckBox btnCustomer;
 
     @FXML private Button btnSignup;
+    @FXML private Text txtGoToLogin;
 
     @FXML
     private void initialize() {
@@ -38,6 +44,26 @@ public class SignupController {
 
         // Handle signup button click
         btnSignup.setOnAction(e -> handleSignup());
+        txtGoToLogin.setOnMouseClicked(e -> openLoginPage());
+    }
+
+    private void openLoginPage() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/testing2/LoginPage.fxml"));
+            Parent root = loader.load();
+
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Login");
+            stage.show();
+
+            // close current window
+            Stage current = (Stage) txtGoToLogin.getScene().getWindow();
+            current.close();
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     private void deselectOthers(CheckBox selected) {
