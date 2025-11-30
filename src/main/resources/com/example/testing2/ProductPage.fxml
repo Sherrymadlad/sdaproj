@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="600" prefWidth="900" style="-fx-background-color: #d7e3ee;"
+            xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.testing2.controllers.ProductsPageController">
+
+    <!-- Sidebar -->
+    <AnchorPane prefWidth="250.0" style="-fx-background-color: #f3e6f7; -fx-border-color: black;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <children>
+            <ImageView fitHeight="150.0" fitWidth="150.0" layoutX="50.0" layoutY="20.0" pickOnBounds="true" preserveRatio="true">
+                <image>
+                    <Image url="@images/cart-removebg-preview.png" />
+                </image>
+            </ImageView>
+
+            <Button fx:id="btnMetrics" layoutX="5.0" layoutY="200.0" prefHeight="50.0" prefWidth="240.0" style="-fx-background-color: #8b6fa1;" text="Metrics" textFill="WHITE">
+                <font>
+                    <Font name="System Bold" size="20" />
+                </font>
+            </Button>
+        </children>
+    </AnchorPane>
+    <!-- ================= TOP TABS ================= -->
+    <HBox spacing="10" AnchorPane.leftAnchor="270" AnchorPane.topAnchor="10">
+        <children>
+            <Button fx:id="tabMetrics" prefHeight="50" prefWidth="220"
+                    style="-fx-background-color: #8b6fa1; -fx-text-fill: white; -fx-font-size: 16px; -fx-background-radius: 5;"
+                    text="Metrics"/>
+            <Button fx:id="tabProducts" prefHeight="50" prefWidth="220"
+                    style="-fx-background-color: #c2add3; -fx-text-fill: #4b355a; -fx-font-size: 16px; -fx-background-radius: 5;"
+                    text="Products"/>
+        </children>
+    </HBox>
+
+    <!-- ================= PRODUCT PANE ================= -->
+    <VBox AnchorPane.topAnchor="100" AnchorPane.leftAnchor="270" AnchorPane.rightAnchor="20" AnchorPane.bottomAnchor="20" spacing="10">
+
+        <!-- Stock Filter -->
+        <HBox spacing="10">
+            <Label text="Filter by Stock:" style="-fx-font-weight: bold; -fx-font-size: 14px;"/>
+            <ComboBox fx:id="cbStockFilter" prefWidth="150"/>
+            <Button fx:id="btnClearFilter" text="Clear" style="-fx-background-color: #8b6fa1; -fx-text-fill: white;"/>
+        </HBox>
+
+        <ScrollPane fx:id="scrollProducts" fitToWidth="true" style="-fx-background: transparent;">
+            <content>
+                <VBox fx:id="productsList" spacing="12" style="-fx-background-color: transparent;"/>
+            </content>
+        </ScrollPane>
+
+    </VBox>
+</AnchorPane>
