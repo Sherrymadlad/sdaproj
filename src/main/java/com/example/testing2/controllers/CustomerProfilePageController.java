@@ -5,10 +5,10 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
+
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Optional;
@@ -65,6 +65,30 @@ public class CustomerProfilePageController {
         }
     }
 
+    // Only send the values you want to update, pass null for the rest
+    private void updateUserField(String username, String passwordhash, String address, String phone, String email) {
+        String sql = "SELECT UpdateUserDetails(?, ?, ?, ?, ?, ?)";
+        try (var conn = DBHelper.getConnection();
+             var stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, currentUserId);
+            stmt.setString(2, username);
+            stmt.setString(3, passwordhash);
+            stmt.setString(4, address);
+            stmt.setString(5, phone);
+            stmt.setString(6, email);
+
+            stmt.execute();  // Use execute() for functions that return VOID
+
+            loadUserDetails();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            showAlert("Error", "Could not update user details.");
+        }
+    }
+
+
+
     private void editField(String fieldName, TextField field) {
         TextInputDialog dialog = new TextInputDialog(field.getText());
         dialog.setTitle("Edit " + fieldName);
@@ -73,18 +97,17 @@ public class CustomerProfilePageController {
 
         Optional<String> result = dialog.showAndWait();
         result.ifPresent(newValue -> {
-            try {
-                DBHelper.executeFunction("UpdateUserField", currentUserId, fieldName, newValue);
-                field.setText(newValue);
-            } catch (Exception ex) {
-                ex.printStackTrace();
-                showAlert("Error", "Could not update " + fieldName);
+            switch (fieldName.toLowerCase()) {
+                case "username" -> updateUserField(newValue, null, null, null, null);
+                case "address" -> updateUserField(null, null, newValue, null, null);
+                case "phone" -> updateUserField(null, null, null, newValue, null);
+                case "email" -> updateUserField(null, null, null, null, newValue);
             }
+            field.setText(newValue);
         });
     }
 
     private void editPassword() {
-        // Custom modal for old + new password
         Dialog<String[]> dialog = new Dialog<>();
         dialog.setTitle("Change Password");
         dialog.setHeaderText(null);
@@ -121,15 +144,13 @@ public class CustomerProfilePageController {
             String newPass = passwords[1];
 
             try {
-                // Hash the old password the same way as login
                 String oldHashed = hashPassword(oldPass);
 
-                // Verify old password in DB
+                // Verify old password
                 ResultSet rs = DBHelper.executeFunction("VerifyUserPassword", currentUserId, oldHashed);
                 if (rs.next() && rs.getBoolean("is_valid")) {
-                    // Hash the new password before updating
                     String newHashed = hashPassword(newPass);
-                    DBHelper.executeFunction("UpdateUserField", currentUserId, "password", newHashed);
+                    updateUserField(null, newHashed, null, null, null);
                     txtPassword.setText("********");
                 } else {
                     showAlert("Error", "Old password is incorrect.");
