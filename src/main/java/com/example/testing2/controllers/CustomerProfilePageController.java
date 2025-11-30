@@ -26,13 +26,15 @@ public class CustomerProfilePageController {
     @FXML private Button btnEditAddress;
     @FXML private Button btnEditPhone;
     @FXML private Button btnEditEmail;
+    private int currentUserId; // dynamic
 
-    private final int currentUserId = 7;
+    public void setCurrentUserId(int userId) {
+        this.currentUserId = userId;
+        loadUserDetails(); // load profile once userId is set
+    }
 
     @FXML
     public void initialize() {
-        loadUserDetails();
-
         btnEditUsername.setOnAction(e -> editField("username", txtUsername));
         btnEditPassword.setOnAction(e -> editPassword());
         btnEditAddress.setOnAction(e -> editField("address", txtAddress));
@@ -41,6 +43,7 @@ public class CustomerProfilePageController {
     }
 
     private void loadUserDetails() {
+        if (currentUserId == 0) return; // safety check
         try {
             ResultSet rs = DBHelper.executeFunction("GetUserDetails", currentUserId);
             if (rs.next()) {

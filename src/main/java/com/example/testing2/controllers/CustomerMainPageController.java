@@ -70,14 +70,14 @@ public class CustomerMainPageController implements Initializable {
     private int currentUserId;  // <--- add this at the top with other fields
     @FXML private Button btnItems;
     @FXML private Button btnOrders;
+    @FXML private Button btnProfile; // you added this for profile page
     @FXML private AnchorPane mainContent;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         itemCard.setVisible(false);
         categoriesContainer.setPadding(new Insets(70, 0, 0, 0));
-        this.currentUserId = 7;
-        loadCategoriesWithProducts();
+
 
         // Client-side search
         txtSearch.textProperty().addListener((obs, oldText, newText) -> filterProducts(newText));
@@ -102,12 +102,65 @@ public class CustomerMainPageController implements Initializable {
         btnItems.setStyle("-fx-background-color: #6d4c7d; -fx-text-fill: white;");
         btnItems.setOnAction(e -> showItemsPage());
 
+
+        btnOrders.setOnAction(e -> showOrdersPage());
+        btnProfile.setOnAction(e -> showProfilePage());
+
     }
 
     public void setCurrentUserId(int userId) {
         this.currentUserId = userId;
         System.out.println("Logged-in user ID = " + userId);
+        loadCustomerData();
     }
+    private void showOrdersPage() {
+        resetSidebarButtons();
+        btnOrders.setStyle("-fx-background-color: #6d4c7d; -fx-text-fill: white;");
+
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/testing2/CustomerOrdersPage.fxml"));
+            AnchorPane ordersPage = loader.load();
+
+            // Optionally, pass userId to Orders page controller
+            CustomerOrdersPageController controller = loader.getController();
+            controller.setCurrentUserId(currentUserId);
+
+            mainContent.getChildren().setAll(ordersPage);
+            AnchorPane.setTopAnchor(ordersPage, 0.0);
+            AnchorPane.setBottomAnchor(ordersPage, 0.0);
+            AnchorPane.setLeftAnchor(ordersPage, 0.0);
+            AnchorPane.setRightAnchor(ordersPage, 0.0);
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+
+    private void showProfilePage() {
+        resetSidebarButtons();
+        btnProfile.setStyle("-fx-background-color: #6d4c7d; -fx-text-fill: white;");
+
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/testing2/CustomerProfilePage.fxml"));
+            AnchorPane profilePage = loader.load();
+
+            // Optionally, pass userId to Profile page controller
+            CustomerProfilePageController controller = loader.getController();
+            controller.setCurrentUserId(currentUserId);
+
+            mainContent.getChildren().setAll(profilePage);
+            AnchorPane.setTopAnchor(profilePage, 0.0);
+            AnchorPane.setBottomAnchor(profilePage, 0.0);
+            AnchorPane.setLeftAnchor(profilePage, 0.0);
+            AnchorPane.setRightAnchor(profilePage, 0.0);
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+
     private void resetSidebarButtons() {
         btnItems.setStyle("-fx-background-color: #8b6fa1; -fx-text-fill: white;");
         btnOrders.setStyle("-fx-background-color: #8b6fa1; -fx-text-fill: white;");
@@ -118,7 +171,6 @@ public class CustomerMainPageController implements Initializable {
         btnItems.setStyle("-fx-background-color: #6d4c7d; -fx-text-fill: white;");
         // Already on items page — no need to reload anything
     }
-
 
 
     public void clearCart() {
@@ -183,7 +235,10 @@ public class CustomerMainPageController implements Initializable {
         }
     }
 
-
+    private void loadCustomerData() {
+        // anything that depends on userId goes here
+        loadCategoriesWithProducts();
+    }
 
 
     private void loadCategoriesWithProducts() {
@@ -312,7 +367,6 @@ public class CustomerMainPageController implements Initializable {
         cartBadge.setText(String.valueOf(totalItems));
         cartBadge.setVisible(totalItems > 0);
     }
-
 
 
     private AnchorPane createItemCard(int productId, String name, double price) {

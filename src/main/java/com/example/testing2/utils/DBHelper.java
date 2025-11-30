@@ -74,4 +74,25 @@ public class DBHelper {
             }
         }
     }
+
+    // In DBHelper.java
+    public static int getCustomerIdByUserId(int userId) {
+        int customerId = 0;
+        try {
+            String query = "SELECT customerid FROM customer WHERE userid = ?";
+            var conn = getConnection(); // your existing connection method
+            var pst = conn.prepareStatement(query);
+            pst.setInt(1, userId);
+            var rs = pst.executeQuery();
+            if (rs.next()) {
+                customerId = rs.getInt("customerid");
+            }
+            rs.close();
+            pst.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return customerId;
+    }
+
 }

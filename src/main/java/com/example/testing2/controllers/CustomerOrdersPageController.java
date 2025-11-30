@@ -20,17 +20,30 @@ public class CustomerOrdersPageController {
     @FXML private Button btnPastOrders;
     @FXML private Button btnRefundedOrders;
 
-    private final int currentUserId = 1; // hardcoded for testing
+    private int currentUserId; // hardcoded for testing
+
+    public void setCurrentUserId(int userId) {
+        // Fetch customerid first
+        int customerId = DBHelper.getCustomerIdByUserId(userId);
+        this.currentUserId = customerId; // now this is the correct customerid
+        System.out.println("Orders Page CustomerID: " + customerId);
+
+        // Load orders immediately after setting customerid
+        highlightCurrentOrders();
+        showCurrentOrders();
+    }
 
     @FXML
     public void initialize() {
-        highlightCurrentOrders();
-        showCurrentOrders(); // default
-
+        // Set button actions
         btnCurrentOrders.setOnAction(e -> showCurrentOrders());
         btnPastOrders.setOnAction(e -> showPastOrders());
         btnRefundedOrders.setOnAction(e -> showRefundedOrders());
+
+        // Do not call showCurrentOrders() here.
+        // Orders will load only after setCurrentUserId() is called
     }
+
 
     // -------------------------------
     // TAB HIGHLIGHT
@@ -75,6 +88,7 @@ public class CustomerOrdersPageController {
     // LOAD ORDERS HELPER
     // -------------------------------
     private void loadOrders(String functionName, boolean showRefundButton) {
+        if (currentUserId == 0) return; // safety check
         ordersContainer.getChildren().clear();
 
         try {

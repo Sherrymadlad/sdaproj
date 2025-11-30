@@ -122,19 +122,23 @@ public class LoginController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/testing2/CustomerMainPage.fxml"));
             Parent root = loader.load();
 
-            // Get controller of the next page
+            // Pass data to next controller
             CustomerMainPageController controller = loader.getController();
-            controller.setCurrentUserId(userId); // pass logged in user id
+            controller.setCurrentUserId(userId);
 
-            // Open new window
-            Stage stage = new Stage();
-            stage.setTitle("Customer Main Page");
-            stage.setScene(new Scene(root));
-            stage.show();
+            // Get primary stage from login button
+            Stage primaryStage = (Stage) btnLogin.getScene().getWindow();
 
-            // Close login window
-            Stage current = (Stage) btnLogin.getScene().getWindow();
-            current.close();
+            // Apply your preferred window settings
+            Scene scene = new Scene(root);
+            primaryStage.setScene(scene);
+            primaryStage.setMinHeight(600);
+            primaryStage.setMinWidth(800);
+
+            // OPTIONAL: maximize window
+            primaryStage.setMaximized(true);
+
+            primaryStage.show();
 
         } catch (Exception e) {
             e.printStackTrace();

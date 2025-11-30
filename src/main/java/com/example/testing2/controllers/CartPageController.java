@@ -34,7 +34,7 @@ public class CartPageController implements Initializable {
     private Map<Integer, Integer> cart;        // productId -> quantity
     private Map<Integer, String> productNames; // productId -> product name
     private Map<Integer, Double> productPrices;// productId -> product price
-    private int currentUserId = -7; // set when opening cart
+    private int currentUserId; // set when opening cart
 
     private CustomerMainPageController parentController;
 
@@ -49,7 +49,9 @@ public class CartPageController implements Initializable {
 
     public void setCurrentUserId(int userId) {
         this.currentUserId = userId;
+        System.out.println("CartPageController: currentUserId = " + currentUserId);
         fetchUserAddress();
+        if (cart != null) populateCartItems();
     }
 
     public void setCartData(Map<Integer, Integer> cart,
