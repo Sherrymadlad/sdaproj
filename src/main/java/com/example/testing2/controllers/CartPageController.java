@@ -82,6 +82,7 @@ public class CartPageController implements Initializable {
     private void populateCartItems() {
         cartItemsContainer.getChildren().clear();
         double total = 0;
+
         if (cart == null || cart.isEmpty()) {
             Text emptyText = new Text("Your cart is empty!");
             emptyText.setFont(Font.font("System", FontWeight.BOLD, 20));
@@ -89,24 +90,85 @@ public class CartPageController implements Initializable {
             txtTotal.setText("Total: Rs 0.0");
             return;
         }
+
         for (Map.Entry<Integer, Integer> entry : cart.entrySet()) {
             int productId = entry.getKey();
             int quantity = entry.getValue();
             String name = productNames.get(productId);
             double price = productPrices.get(productId);
 
-            HBox itemRow = new HBox(20);
+            HBox itemRow = new HBox(15);
             itemRow.setStyle("-fx-background-color:white; -fx-padding:10; -fx-border-radius:5; -fx-background-radius:5;");
+            itemRow.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
 
             Text nameText = new Text(name);
             nameText.setFont(Font.font("System", FontWeight.BOLD, 16));
-            Text qtyText = new Text("Qty: " + quantity);
-            Text priceText = new Text("Rs " + (price * quantity));
 
-            itemRow.getChildren().addAll(nameText, qtyText, priceText);
+            Button btnDecrease = new Button("-");
+            btnDecrease.setStyle("-fx-font-size:18; -fx-background-color:#d3d3d3;");
+            Text qtyText = new Text(String.valueOf(quantity));
+            qtyText.setFont(Font.font("System", FontWeight.BOLD, 16));
+            Button btnIncrease = new Button("+");
+            btnIncrease.setStyle("-fx-font-size:18; -fx-background-color:#d3d3d3;");
+
+            // Handlers for +/- buttons
+            btnIncrease.setOnAction(e -> {
+                cart.put(productId, cart.get(productId) + 1);
+                qtyText.setText(String.valueOf(cart.get(productId)));
+                updateTotal();
+            });
+
+            btnDecrease.setOnAction(e -> {
+                int currentQty = cart.get(productId) - 1;
+                if (currentQty <= 0) {
+                    cart.remove(productId);
+                    cartItemsContainer.getChildren().remove(itemRow);
+                } else {
+                    cart.put(productId, currentQty);
+                    qtyText.setText(String.valueOf(currentQty));
+                }
+                updateTotal();
+            });
+
+            Text priceText = new Text("Rs " + (price * quantity));
+            priceText.setFont(Font.font("System", FontWeight.BOLD, 16));
+
+            // Update price dynamically when quantity changes
+            btnIncrease.setOnAction(e -> {
+                cart.put(productId, cart.get(productId) + 1);
+                qtyText.setText(String.valueOf(cart.get(productId)));
+                priceText.setText("Rs " + (price * cart.get(productId)));
+                updateTotal();
+            });
+
+            btnDecrease.setOnAction(e -> {
+                int currentQty = cart.get(productId) - 1;
+                if (currentQty <= 0) {
+                    cart.remove(productId);
+                    cartItemsContainer.getChildren().remove(itemRow);
+                } else {
+                    cart.put(productId, currentQty);
+                    qtyText.setText(String.valueOf(currentQty));
+                    priceText.setText("Rs " + (price * currentQty));
+                }
+                updateTotal();
+            });
+
+            itemRow.getChildren().addAll(nameText, btnDecrease, qtyText, btnIncrease, priceText);
             cartItemsContainer.getChildren().add(itemRow);
 
             total += price * quantity;
+        }
+
+        txtTotal.setText("Total: Rs " + total);
+
+    }
+
+    private void updateTotal() {
+        double total = 0;
+        for (Map.Entry<Integer, Integer> entry : cart.entrySet()) {
+            int pid = entry.getKey();
+            total += productPrices.get(pid) * entry.getValue();
         }
         txtTotal.setText("Total: Rs " + total);
     }

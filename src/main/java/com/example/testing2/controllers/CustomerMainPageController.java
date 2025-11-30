@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
 
+import javafx.scene.control.ComboBox;
 
 
 public class CustomerMainPageController implements Initializable {
@@ -64,6 +65,8 @@ public class CustomerMainPageController implements Initializable {
     @FXML private Button btnIncrease;
     @FXML private Button btnDecrease;
     @FXML private Button btnCloseModal;
+    @FXML private ComboBox<String> cmbFilterCategory;
+    @FXML private ComboBox<String> cmbSortBy;
     private final Map<Integer, Integer> cart = new HashMap<>();
 
     private int currentQuantity = 1;
@@ -106,6 +109,25 @@ public class CustomerMainPageController implements Initializable {
         btnOrders.setOnAction(e -> showOrdersPage());
         btnProfile.setOnAction(e -> showProfilePage());
 
+        cmbFilterCategory.getItems().clear();
+        cmbFilterCategory.getItems().add("All"); // default
+        try {
+            ResultSet rs = DBHelper.executeFunction("GetAllCategories");
+            while (rs.next()) {
+                cmbFilterCategory.getItems().add(rs.getString("name"));
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+
+        // Populate sort options
+        cmbSortBy.getItems().clear();
+        cmbSortBy.getItems().addAll("Price Ascending", "Price Descending", "Alphabetical A-Z", "Alphabetical Z-A");
+
+        // Add listeners
+        cmbFilterCategory.setOnAction(e -> applyFilterAndSort());
+        cmbSortBy.setOnAction(e -> applyFilterAndSort());
+
     }
 
     public void setCurrentUserId(int userId) {
@@ -136,6 +158,79 @@ public class CustomerMainPageController implements Initializable {
         }
     }
 
+    private void applyFilterAndSort() {
+        String category = cmbFilterCategory.getValue();
+        String sort = cmbSortBy.getValue();
+
+        try {
+            ResultSet rs;
+
+            if (category == null || category.equals("All")) {
+                // Show products grouped by category (initial layout)
+                loadCategoriesWithProducts();
+                return;
+            }
+
+            // Filter by a specific category
+            rs = DBHelper.executeFunction("FilterByCategory", category);
+
+            // Apply sort if selected
+            if (sort != null) {
+                switch (sort) {
+                    case "Price Ascending" -> rs = DBHelper.executeFunction("SortByPriceAsc", category);
+                    case "Price Descending" -> rs = DBHelper.executeFunction("SortByPriceDesc", category);
+                    case "Alphabetical A-Z" -> rs = DBHelper.executeFunction("SortByNameAsc", category);
+                    case "Alphabetical Z-A" -> rs = DBHelper.executeFunction("SortByNameDesc", category);
+                }
+            }
+
+            // Display filtered products with actual category name
+            displayProducts(rs, category);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
+    private void displayProducts(ResultSet rs, String categoryName) throws SQLException {
+        categoriesContainer.getChildren().clear();
+        categoryProductsMap.clear();
+
+        VBox categoryBox = new VBox(5);
+        categoryBox.setPadding(new Insets(0,0,0,0));
+
+        // Use actual category name here
+        Label categoryLabel = new Label(categoryName);
+        categoryLabel.setPadding(new Insets(0,0,0,60));
+        categoryLabel.setStyle("-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #826478;");
+        categoryBox.getChildren().add(categoryLabel);
+
+        TilePane productPane = new TilePane();
+        productPane.setHgap(20);
+        productPane.setVgap(20);
+        productPane.setPadding(new Insets(10, 0, 10, 60));
+        productPane.setPrefColumns(4);
+        productPane.setPrefTileWidth(210);
+        productPane.setPrefTileHeight(224);
+
+        List<AnchorPane> productCards = new ArrayList<>();
+
+        while (rs.next()) {
+            int productId = rs.getInt("productid");
+            String productName = rs.getString("name");
+            double price = rs.getDouble("price");
+
+            AnchorPane card = createItemCard(productId, productName, price);
+            productPane.getChildren().add(card);
+            productCards.add(card);
+        }
+
+        categoryProductsMap.put(productPane, productCards);
+        categoryBox.getChildren().add(productPane);
+        categoriesContainer.getChildren().add(categoryBox);
+    }
 
     private void showProfilePage() {
         resetSidebarButtons();

@@ -1,19 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-
+<?import java.lang.String?>
+<?import javafx.collections.FXCollections?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
-<?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.control.Label?>
-
 
 <AnchorPane maxHeight="Infinity" maxWidth="Infinity" minHeight="-Infinity" minWidth="-Infinity" style="-fx-background-color: #d7e3ee;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.testing2.controllers.CustomerMainPageController">
 
@@ -55,26 +56,59 @@
     <AnchorPane fx:id="mainContent" style="-fx-background-color: #d7e3ee;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="249.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
 
         <children>
-         <AnchorPane prefHeight="90.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-            <children>
+            <!-- Search bar and dropdowns container -->
 
-                  <!-- Search bar -->
-                  <TextField fx:id="txtSearch" promptText="Search..." style="-fx-border-radius: 10; -fx-border-width: 5;" AnchorPane.leftAnchor="80.0" AnchorPane.rightAnchor="80.0" AnchorPane.topAnchor="45">
-                      <font>
-                          <Font size="16.0" />
-                      </font>
-                  </TextField>
+            <!-- Search bar and dropdowns container -->
+            <AnchorPane prefHeight="140.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                <children>
+                    <!-- Search bar -->
+                    <TextField fx:id="txtSearch" promptText="Search..." style="-fx-border-radius: 10; -fx-border-width: 5;" AnchorPane.leftAnchor="80.0" AnchorPane.rightAnchor="80.0" AnchorPane.topAnchor="30.0">
+                        <font>
+                            <Font size="16.0" />
+                        </font>
+                    </TextField>
 
-                  <ImageView fitHeight="36.6" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="45.0" AnchorPane.topAnchor="45">
-                      <image>
-                          <Image url="@images/icon-removebg-preview.png" />
-                      </image>
-                  </ImageView>
-            </children>
-         </AnchorPane>
+                    <!-- Search icon -->
+                    <ImageView fitHeight="36.6" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="45.0" AnchorPane.topAnchor="30.0">
+                        <image>
+                            <Image url="@images/icon-removebg-preview.png" />
+                        </image>
+                    </ImageView>
+
+                    <!-- HBox for Filter & Sort dropdowns -->
+                    <HBox spacing="15" AnchorPane.leftAnchor="120.0" AnchorPane.rightAnchor="80.0" AnchorPane.topAnchor="80.0">
+                        <children>
+                            <!-- Filter by Category -->
+                            <ComboBox fx:id="cmbFilterCategory" prefWidth="200.0" promptText="Filter by Category">
+                                <items>
+                                    <FXCollections fx:factory="observableArrayList">
+                                        <String fx:value="All" />
+                                        <String fx:value="Beverages" />
+                                        <String fx:value="Snacks" />
+                                        <String fx:value="Desserts" />
+                                    </FXCollections>
+                                </items>
+                            </ComboBox>
+      
+                            <!-- Sort by Options -->
+                            <ComboBox fx:id="cmbSortBy" prefWidth="200.0" promptText="Sort by">
+                                <items>
+                                    <FXCollections fx:factory="observableArrayList">
+                                        <String fx:value="Price Ascending" />
+                                        <String fx:value="Price Descending" />
+                                        <String fx:value="Alphabetical A-Z" />
+                                        <String fx:value="Alphabetical Z-A" />
+                                    </FXCollections>
+                                </items>
+                            </ComboBox>
+                        </children>
+                    </HBox>
+                </children>
+            </AnchorPane>
+
 
             <!-- Scrollable container -->
-            <ScrollPane fx:id="scrollPane" fitToWidth="true" pannable="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="90.0">
+            <ScrollPane fx:id="scrollPane" fitToWidth="true" layoutY="127.2" pannable="true" prefHeight="495.0" prefWidth="615.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="127.0">
 
                 <content>
                     <VBox fx:id="categoriesContainer" spacing="20" style="-fx-background-color: #d7e3ee;" />
@@ -109,89 +143,55 @@
         </children>
     </AnchorPane>
     <!-- CENTERED MODAL OVERLAY -->
-    <?import javafx.geometry.Pos?>
+    
 
     <!-- CENTERED MODAL OVERLAY -->
-    <StackPane fx:id="itemDetailsPanel"
-               alignment="CENTER"
-               visible="false"
-               style="-fx-background-color: rgba(0,0,0,0.6);"
-               AnchorPane.topAnchor="0.0"
-               AnchorPane.bottomAnchor="0.0"
-               AnchorPane.leftAnchor="0.0"
-               AnchorPane.rightAnchor="0.0">
+    <StackPane fx:id="itemDetailsPanel" alignment="CENTER" style="-fx-background-color: rgba(0,0,0,0.6);" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
 
         <!-- White Modal Box -->
-        <AnchorPane fx:id="modalBox"
-                    prefWidth="500" prefHeight="620"
-                    maxWidth="500" maxHeight="620"
-                    style="-fx-background-color: white; -fx-background-radius: 20;">
+        <AnchorPane fx:id="modalBox" maxHeight="620" maxWidth="500" prefHeight="620" prefWidth="500" style="-fx-background-color: white; -fx-background-radius: 20;">
 
             <!-- Close Button: put this first so it's on top -->
-            <Button fx:id="btnCloseModal" text="✕"
-                    layoutX="445" layoutY="15"
-                    prefWidth="40" prefHeight="40"
-                    style="-fx-background-color: transparent; -fx-font-size: 22px; -fx-text-fill: #444;" />
+            <Button fx:id="btnCloseModal" layoutX="445" layoutY="15" prefHeight="40" prefWidth="40" style="-fx-background-color: transparent; -fx-font-size: 22px; -fx-text-fill: #444;" text="✕" />
 
             <!-- Modal Content -->
             <VBox layoutX="25" layoutY="60" spacing="15">
 
                 <!-- Item Image -->
-                <ImageView fx:id="modalItemImage"
-                           fitWidth="450" fitHeight="260"
-                           preserveRatio="true"
-                           style="-fx-background-radius: 15;" />
+                <ImageView fx:id="modalItemImage" fitHeight="260" fitWidth="450" preserveRatio="true" style="-fx-background-radius: 15;" />
 
                 <!-- Name and Price -->
-                <HBox spacing="20" alignment="CENTER_LEFT">
-                    <Text fx:id="modalItemName"
-                          style="-fx-font-size: 26px; -fx-font-weight: bold; -fx-fill: #6d4c7d;" />
-                    <Text fx:id="modalItemPrice"
-                          style="-fx-font-size: 22px; -fx-fill: #8a6699;" />
+                <HBox alignment="CENTER_LEFT" spacing="20">
+                    <Text fx:id="modalItemName" style="-fx-font-size: 26px; -fx-font-weight: bold; -fx-fill: #6d4c7d;" />
+                    <Text fx:id="modalItemPrice" style="-fx-font-size: 22px; -fx-fill: #8a6699;" />
                 </HBox>
 
                 <!-- Description -->
-                <Text fx:id="modalItemDescription"
-                      wrappingWidth="450"
-                      style="-fx-font-size: 16px; -fx-fill: #333;" />
+                <Text fx:id="modalItemDescription" style="-fx-font-size: 16px; -fx-fill: #333;" wrappingWidth="450" />
 
                 <!-- Quantity Selector -->
-                <HBox spacing="15" alignment="CENTER_LEFT">
-                    <Button fx:id="btnDecrease" text="−"
-                            prefWidth="50" prefHeight="50"
-                            style="-fx-font-size: 24px; -fx-background-color: #e6d9f0; -fx-background-radius: 10;" />
-                    <Text fx:id="txtQuantity" text="1"
-                          style="-fx-font-size: 24px;" />
-                    <Button fx:id="btnIncrease" text="+" prefWidth="50" prefHeight="50"
-                            style="-fx-font-size: 24px; -fx-background-color: #e6d9f0; -fx-background-radius: 10;" />
+                <HBox alignment="CENTER_LEFT" spacing="15">
+                    <Button fx:id="btnDecrease" prefHeight="50" prefWidth="50" style="-fx-font-size: 24px; -fx-background-color: #e6d9f0; -fx-background-radius: 10;" text="−" />
+                    <Text fx:id="txtQuantity" style="-fx-font-size: 24px;" text="1" />
+                    <Button fx:id="btnIncrease" prefHeight="50" prefWidth="50" style="-fx-font-size: 24px; -fx-background-color: #e6d9f0; -fx-background-radius: 10;" text="+" />
                 </HBox>
 
                 <!-- Add to Cart Button -->
-                <Button fx:id="btnAddToCart" text="Add to Cart"
-                        prefWidth="450" prefHeight="50"
-                        style="-fx-background-color: #8b6fa1; -fx-text-fill: white; -fx-font-size: 20px; -fx-background-radius: 10;" />
+                <Button fx:id="btnAddToCart" prefHeight="50" prefWidth="450" style="-fx-background-color: #8b6fa1; -fx-text-fill: white; -fx-font-size: 20px; -fx-background-radius: 10;" text="Add to Cart" />
             </VBox>
         </AnchorPane>
 
     </StackPane>
 
-    <Button fx:id="btnCart"
-            layoutX="0" layoutY="0"
-            prefWidth="70" prefHeight="70"
-            style="-fx-background-radius: 35; -fx-background-color: #8b6fa1; -fx-cursor: hand;"
-            AnchorPane.bottomAnchor="20.0"
-            AnchorPane.rightAnchor="20.0">
+    <Button fx:id="btnCart" layoutX="0" layoutY="0" prefHeight="70" prefWidth="70" style="-fx-background-radius: 35; -fx-background-color: #8b6fa1; -fx-cursor: hand;" AnchorPane.bottomAnchor="20.0" AnchorPane.rightAnchor="20.0">
         <graphic>
             <StackPane>
-                <ImageView fx:id="cartIcon" fitWidth="35" fitHeight="35" pickOnBounds="true" preserveRatio="true">
+                <ImageView fx:id="cartIcon" fitHeight="35" fitWidth="35" pickOnBounds="true" preserveRatio="true">
                     <image>
-                        <Image url="@images/carticon.png"/>
+                        <Image url="@images/carticon.png" />
                     </image>
                 </ImageView>
-                <Label fx:id="cartBadge" text="0"
-                       style="-fx-background-color: red; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px; -fx-background-radius: 10; -fx-padding: 2 6 2 6;"
-                       StackPane.alignment="TOP_RIGHT"
-                       visible="false" />
+                <Label fx:id="cartBadge" style="-fx-background-color: red; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px; -fx-background-radius: 10; -fx-padding: 2 6 2 6;" text="0" visible="false" StackPane.alignment="TOP_RIGHT" />
             </StackPane>
         </graphic>
     </Button>
