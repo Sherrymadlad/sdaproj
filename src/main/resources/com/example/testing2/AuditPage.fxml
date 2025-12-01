@@ -9,7 +9,6 @@
 <?import javafx.scene.text.Font?>
 
 <AnchorPane prefHeight="600.0" prefWidth="900.0" style="-fx-background-color: #d7e3ee;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.testing2.controllers.AuditPageController">
-
     <!-- Sidebar -->
     <AnchorPane prefWidth="250.0" style="-fx-background-color: #f3e6f7; -fx-border-color: black;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
         <children>
@@ -32,6 +31,12 @@
             </Button>
 
             <Button fx:id="btnAudit" layoutX="5.0" layoutY="350.0" prefHeight="50.0" prefWidth="240.0" style="-fx-background-color: #8b6fa1;" text="Audit Logs" textFill="WHITE">
+                <font>
+                    <Font name="System Bold" size="20" />
+                </font>
+            </Button>
+
+            <Button fx:id="btnAdminProfile" layoutX="5.0" layoutY="430.0" prefHeight="50.0" prefWidth="240.0" style="-fx-background-color: #8b6fa1;" text="Profile" textFill="WHITE">
                 <font>
                     <Font name="System Bold" size="20" />
                 </font>

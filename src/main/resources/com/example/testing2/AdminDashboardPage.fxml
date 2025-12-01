@@ -37,9 +37,14 @@
                 </font>
             </Button>
 
+            <Button fx:id="btnAdminProfile" layoutX="5.0" layoutY="430.0" prefHeight="50.0" prefWidth="240.0" style="-fx-background-color: #8b6fa1;" text="Profile" textFill="WHITE">
+                <font>
+                    <Font name="System Bold" size="20" />
+                </font>
+            </Button>
+
         </children>
     </AnchorPane>
-
 
     <!-- Main Content -->
     <AnchorPane fx:id="mainContent" layoutX="250.0" style="-fx-background-color: #d7e3ee;" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">

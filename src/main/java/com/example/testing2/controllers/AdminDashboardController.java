@@ -26,6 +26,7 @@ public class AdminDashboardController implements Initializable {
     @FXML private Button tabUsers;
     @FXML private Button tabProducts;
     @FXML private Button btnAudit; // Add this if not already declared
+    @FXML private Button btnAdminProfile;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -52,6 +53,8 @@ public class AdminDashboardController implements Initializable {
             highlightTab(tabProducts);
             openPage("/com/example/testing2/ProductPage.fxml");
         });
+        btnAdminProfile.setOnAction(event -> openPage("/com/example/testing2/AdminsProfilePage.fxml"));
+
     }
 
 
