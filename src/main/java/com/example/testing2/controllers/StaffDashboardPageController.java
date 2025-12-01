@@ -15,6 +15,10 @@ import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 
 
 import java.net.URL;
@@ -27,7 +31,12 @@ public class StaffDashboardPageController implements Initializable {
     @FXML private VBox categoriesContainer;
     @FXML private TextField txtSearch;
     @FXML private ComboBox<String> cmbFilterCategory;
-    @FXML private ComboBox<String> cmbSortBy;
+
+    @FXML private Button btnOrders;
+    @FXML private Button btnReports;
+    @FXML private Button btnProfile;
+    @FXML private Button btnItems; // if you also want to reference Items
+
 
     @FXML private AnchorPane itemCard; // TEMPLATE card from FXML (hidden)
     @FXML private StackPane productViewPanel;
@@ -43,8 +52,12 @@ public class StaffDashboardPageController implements Initializable {
     @FXML private Text modalItemPrice;
     @FXML private Text modalItemDescription;
     @FXML private VBox warehousesContainer;
+    @FXML private AnchorPane mainContent;
+
 
     @FXML private Button btnCloseModal;
+    @FXML private ComboBox<String> cmbSortBy;
+
 
     private final Image placeholderImage =
             new Image(getClass().getResource("/com/example/testing2/images/placeholder.jpg").toExternalForm());
@@ -86,6 +99,24 @@ public class StaffDashboardPageController implements Initializable {
         loadCategoriesWithItems();
         btnCloseModal.setOnAction(e -> itemDetailsPanel.setVisible(false));
 
+        btnOrders.setOnAction(e -> loadPage("/com/example/testing2/StaffOrdersPage.fxml"));
+        btnReports.setOnAction(e -> loadPage("/com/example/testing2/StaffReportsPage.fxml"));
+        btnProfile.setOnAction(e -> loadPage("/com/example/testing2/StaffProfilePage.fxml"));
+
+    }
+
+    private void loadPage(String fxmlPath) {
+        try {
+            AnchorPane pane = javafx.fxml.FXMLLoader.load(getClass().getResource(fxmlPath));
+            mainContent.getChildren().setAll(pane);
+
+            AnchorPane.setTopAnchor(pane, 0.0);
+            AnchorPane.setBottomAnchor(pane, 0.0);
+            AnchorPane.setLeftAnchor(pane, 0.0);
+            AnchorPane.setRightAnchor(pane, 0.0);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /* ---------------------------------------------------------

@@ -33,23 +33,31 @@
                 </image>
             </ImageView>
 
-            <Button fx:id="btnItems" layoutX="3.0" layoutY="230.0"
-                    prefHeight="49.0" prefWidth="243.0"
-                    style="-fx-background-color: #8b6fa1;" text="Items" textFill="WHITE">
-                <font><Font name="System Bold" size="26.0" /></font>
-            </Button>
+            <VBox layoutX="3.0" layoutY="230.0" spacing="10">
+                <!-- Items Tab -->
+                <Button fx:id="btnItems" prefHeight="49.0" prefWidth="243.0"
+                        style="-fx-background-color: #8b6fa1;" text="Items" textFill="WHITE">
+                    <font><Font name="System Bold" size="26.0" /></font>
+                </Button>
 
-            <Button fx:id="btnOrders" layoutX="4.0" layoutY="300.0"
-                    prefHeight="49.0" prefWidth="243.0"
-                    style="-fx-background-color: #8b6fa1;" text="Orders" textFill="WHITE">
-                <font><Font name="System Bold" size="26.0" /></font>
-            </Button>
+                <!-- Orders Tab -->
+                <Button fx:id="btnOrders" prefHeight="49.0" prefWidth="243.0"
+                        style="-fx-background-color: #8b6fa1;" text="Orders" textFill="WHITE">
+                    <font><Font name="System Bold" size="26.0" /></font>
+                </Button>
 
-            <Button fx:id="btnProfile" layoutX="4.0" layoutY="370.0"
-                    prefHeight="49.0" prefWidth="243.0"
-                    style="-fx-background-color: #8b6fa1;" text="Profile" textFill="WHITE">
-                <font><Font name="System Bold" size="26.0" /></font>
-            </Button>
+                <!-- Reports Tab -->
+                <Button fx:id="btnReports" prefHeight="49.0" prefWidth="243.0"
+                        style="-fx-background-color: #8b6fa1;" text="Reports" textFill="WHITE">
+                    <font><Font name="System Bold" size="26.0" /></font>
+                </Button>
+
+                <!-- Profile Tab -->
+                <Button fx:id="btnProfile" prefHeight="49.0" prefWidth="243.0"
+                        style="-fx-background-color: #8b6fa1;" text="Profile" textFill="WHITE">
+                    <font><Font name="System Bold" size="26.0" /></font>
+                </Button>
+            </VBox>
         </children>
     </AnchorPane>
 

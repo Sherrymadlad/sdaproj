@@ -1,34 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.example.testing2.controllers.StaffReportsController"
-            prefHeight="700.0" prefWidth="1000.0"
-            style="-fx-background-color: #e6f0fa;"> <!-- faint blue background -->
+<AnchorPane prefHeight="700.0" prefWidth="1000.0" style="-fx-background-color: #e6f0fa;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.testing2.controllers.StaffReportsController"> <!-- faint blue background -->
 
-    <!-- TabPane with two tabs, fully anchored -->
-    <TabPane fx:id="tabPane" tabClosingPolicy="UNAVAILABLE"
-             style="-fx-background-color: transparent; -fx-tab-min-width: 200; -fx-tab-max-width: 300;"
-             AnchorPane.topAnchor="10" AnchorPane.leftAnchor="10"
-             AnchorPane.rightAnchor="10" AnchorPane.bottomAnchor="10">
+    <!-- Main Content TabPane (centered with padding) -->
+    <TabPane fx:id="tabPane" style="-fx-background-color: transparent; -fx-border-color: black;" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="20.0">
 
         <!-- Products Stock Tab -->
         <tabs>
             <Tab text="Products Stock">
                 <AnchorPane style="-fx-background-color: transparent;">
-                    <TableView fx:id="tblProductsStock"
-                               style="-fx-background-color: #f0f8ff; -fx-border-color: #cce0ff; -fx-border-radius: 5; -fx-background-radius: 5;"
-                               AnchorPane.topAnchor="10" AnchorPane.leftAnchor="10"
-                               AnchorPane.rightAnchor="10" AnchorPane.bottomAnchor="10">
+                    <TableView fx:id="tblProductsStock" style="-fx-background-color: #f0f8ff; -fx-border-color: #cce0ff; -fx-border-radius: 5; -fx-background-radius: 5;" AnchorPane.bottomAnchor="10" AnchorPane.leftAnchor="10" AnchorPane.rightAnchor="10" AnchorPane.topAnchor="10">
                         <columns>
-                            <TableColumn fx:id="colProductId" text="ID" prefWidth="80"/>
-                            <TableColumn fx:id="colSKU" text="SKU" prefWidth="150"/>
-                            <TableColumn fx:id="colProductName" text="Product Name" prefWidth="300"/>
-                            <TableColumn fx:id="colPrice" text="Price" prefWidth="150"/>
-                            <TableColumn fx:id="colTotalStock" text="Total Stock" prefWidth="150"/>
+                            <TableColumn fx:id="colProductId" prefWidth="80" text="ID" />
+                            <TableColumn fx:id="colSKU" prefWidth="150" text="SKU" />
+                            <TableColumn fx:id="colProductName" prefWidth="300" text="Product Name" />
+                            <TableColumn fx:id="colPrice" prefWidth="150" text="Price" />
+                            <TableColumn fx:id="colTotalStock" prefWidth="150" text="Total Stock" />
                         </columns>
                     </TableView>
                 </AnchorPane>
@@ -37,14 +30,11 @@
             <!-- Warehouse Stock Tab -->
             <Tab text="Warehouse Stock">
                 <AnchorPane style="-fx-background-color: transparent;">
-                    <TableView fx:id="tblWarehouseStock"
-                               style="-fx-background-color: #f0f8ff; -fx-border-color: #cce0ff; -fx-border-radius: 5; -fx-background-radius: 5;"
-                               AnchorPane.topAnchor="10" AnchorPane.leftAnchor="10"
-                               AnchorPane.rightAnchor="10" AnchorPane.bottomAnchor="10">
+                    <TableView fx:id="tblWarehouseStock" style="-fx-background-color: #f0f8ff; -fx-border-color: #cce0ff; -fx-border-radius: 5; -fx-background-radius: 5;" AnchorPane.bottomAnchor="10" AnchorPane.leftAnchor="10" AnchorPane.rightAnchor="10" AnchorPane.topAnchor="10">
                         <columns>
-                            <TableColumn fx:id="colProductNameWH" text="Product Name" prefWidth="300"/>
-                            <TableColumn fx:id="colWarehouseName" text="Warehouse" prefWidth="300"/>
-                            <TableColumn fx:id="colQuantityAvailable" text="Available Stock" prefWidth="200"/>
+                            <TableColumn fx:id="colProductNameWH" prefWidth="300" text="Product Name" />
+                            <TableColumn fx:id="colWarehouseName" prefWidth="300" text="Warehouse" />
+                            <TableColumn fx:id="colQuantityAvailable" prefWidth="200" text="Available Stock" />
                         </columns>
                     </TableView>
                 </AnchorPane>
