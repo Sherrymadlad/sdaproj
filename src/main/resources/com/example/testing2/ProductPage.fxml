@@ -25,17 +25,31 @@
                     <Font name="System Bold" size="20" />
                 </font>
             </Button>
+
+            <Button fx:id="btnReports" layoutX="5.0" layoutY="270.0" prefHeight="50.0" prefWidth="240.0" style="-fx-background-color: #8b6fa1;" text="Reports" textFill="WHITE">
+                <font>
+                    <Font name="System Bold" size="20" />
+                </font>
+            </Button>
+
+            <Button fx:id="btnAudit" layoutX="5.0" layoutY="350.0" prefHeight="50.0" prefWidth="240.0" style="-fx-background-color: #8b6fa1;" text="Audit Logs" textFill="WHITE">
+                <font>
+                    <Font name="System Bold" size="20" />
+                </font>
+            </Button>
+
         </children>
     </AnchorPane>
-    <!-- ================= TOP TABS ================= -->
-    <HBox spacing="10" AnchorPane.leftAnchor="270" AnchorPane.topAnchor="10">
+
+
+    <!-- Top Tabs -->
+    <HBox layoutX="260.0" layoutY="10.0" spacing="10">
         <children>
-            <Button fx:id="tabMetrics" prefHeight="50" prefWidth="220"
-                    style="-fx-background-color: #8b6fa1; -fx-text-fill: white; -fx-font-size: 16px; -fx-background-radius: 5;"
-                    text="Metrics"/>
-            <Button fx:id="tabProducts" prefHeight="50" prefWidth="220"
-                    style="-fx-background-color: #c2add3; -fx-text-fill: #4b355a; -fx-font-size: 16px; -fx-background-radius: 5;"
-                    text="Products"/>
+            <Button fx:id="tabMetrics" prefHeight="50.0" prefWidth="220.0" style="-fx-background-color: #8b6fa1; -fx-text-fill: white; -fx-font-size: 16px; -fx-background-radius: 5;" text="Metrics" />
+
+            <Button fx:id="tabUsers" prefHeight="52.0" prefWidth="220.0" style="-fx-background-color: #c2add3; -fx-text-fill: #4b355a; -fx-font-size: 16px; -fx-background-radius: 5;" text="Users" />
+
+            <Button fx:id="tabProducts" prefHeight="52.0" prefWidth="220.0" style="-fx-background-color: #c2add3; -fx-text-fill: #4b355a; -fx-font-size: 16px; -fx-background-radius: 5;" text="Products" />
         </children>
     </HBox>
 

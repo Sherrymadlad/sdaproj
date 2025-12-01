@@ -14,8 +14,6 @@
             xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.example.testing2.controllers.ReportsPageController">
 
-    <!-- Sidebar -->
-    <!-- Sidebar -->
     <AnchorPane prefWidth="250.0" style="-fx-background-color: #f3e6f7; -fx-border-color: black;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
         <children>
             <ImageView fitHeight="150.0" fitWidth="150.0" layoutX="50.0" layoutY="20.0" pickOnBounds="true" preserveRatio="true">
@@ -25,6 +23,12 @@
             </ImageView>
 
             <Button fx:id="btnMetrics" layoutX="5.0" layoutY="200.0" prefHeight="50.0" prefWidth="240.0" style="-fx-background-color: #8b6fa1;" text="Metrics" textFill="WHITE">
+                <font>
+                    <Font name="System Bold" size="20" />
+                </font>
+            </Button>
+
+            <Button fx:id="btnReports" layoutX="5.0" layoutY="270.0" prefHeight="50.0" prefWidth="240.0" style="-fx-background-color: #8b6fa1;" text="Reports" textFill="WHITE">
                 <font>
                     <Font name="System Bold" size="20" />
                 </font>
@@ -70,5 +74,7 @@
         </ScrollPane>
 
     </AnchorPane>
+
+
 
 </AnchorPane>

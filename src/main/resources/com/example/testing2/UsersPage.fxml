@@ -13,28 +13,39 @@
 
 <AnchorPane prefHeight="600" prefWidth="900" style="-fx-background-color: #d7e3ee;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.testing2.controllers.UsersPageController">
 
-    <!-- ================= SIDEBAR ================= -->
-    <AnchorPane prefWidth="250" style="-fx-background-color: #f3e6f7; -fx-border-color: black;" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.topAnchor="0">
+    <!-- Sidebar -->
+    <AnchorPane prefWidth="250.0" style="-fx-background-color: #f3e6f7; -fx-border-color: black;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
         <children>
-            <ImageView fitHeight="150" fitWidth="150" layoutX="50" layoutY="20" preserveRatio="true">
+            <ImageView fitHeight="150.0" fitWidth="150.0" layoutX="50.0" layoutY="20.0" pickOnBounds="true" preserveRatio="true">
                 <image>
                     <Image url="@images/cart-removebg-preview.png" />
                 </image>
             </ImageView>
 
-            <Button fx:id="btnMetrics" layoutX="5" layoutY="200" prefHeight="50" prefWidth="240" style="-fx-background-color: #8b6fa1;" text="Metrics" textFill="white">
-                <font><Font name="System Bold" size="20" /></font>
+            <Button fx:id="btnMetrics" layoutX="5.0" layoutY="200.0" prefHeight="50.0" prefWidth="240.0" style="-fx-background-color: #8b6fa1;" text="Metrics" textFill="WHITE">
+                <font>
+                    <Font name="System Bold" size="20" />
+                </font>
             </Button>
+
+            <Button fx:id="btnReports" layoutX="5.0" layoutY="270.0" prefHeight="50.0" prefWidth="240.0" style="-fx-background-color: #8b6fa1;" text="Reports" textFill="WHITE">
+                <font>
+                    <Font name="System Bold" size="20" />
+                </font>
+            </Button>
+
+            <Button fx:id="btnAudit" layoutX="5.0" layoutY="350.0" prefHeight="50.0" prefWidth="240.0" style="-fx-background-color: #8b6fa1;" text="Audit Logs" textFill="WHITE">
+                <font>
+                    <Font name="System Bold" size="20" />
+                </font>
+            </Button>
+
         </children>
     </AnchorPane>
 
-    <!-- ================= TOP TABS ================= -->
-    <HBox spacing="10" AnchorPane.leftAnchor="270" AnchorPane.topAnchor="10">
-        <children>
-            <Button fx:id="tabMetrics" prefHeight="50" prefWidth="220" style="-fx-background-color: #8b6fa1; -fx-text-fill: white; -fx-font-size: 16px; -fx-background-radius: 5;" text="Metrics" />
-            <Button fx:id="tabUsers" prefHeight="52" prefWidth="220" style="-fx-background-color: #c2add3; -fx-text-fill: #4b355a; -fx-font-size: 16px; -fx-background-radius: 5;" text="Users" />
-        </children>
-    </HBox>
+
+
+
 
     <!-- ================= USER PANE ================= -->
     <VBox spacing="10" AnchorPane.bottomAnchor="20" AnchorPane.leftAnchor="270" AnchorPane.rightAnchor="20" AnchorPane.topAnchor="100">
@@ -54,5 +65,17 @@
     <ComboBox fx:id="cbFilterRole" layoutX="390.0" layoutY="83.0" prefWidth="150" />
     <Button fx:id="btnClearFilter" layoutX="552.0" layoutY="86.0" style="-fx-background-color: #8b6fa1; -fx-text-fill: white;" text="Clear" />
     <Label layoutX="289.0" layoutY="86.0" style="-fx-font-weight: bold; -fx-font-size: 14px;" text="Filter by Role:" />
+
+    <!-- Top Tabs -->
+    <HBox layoutX="260.0" layoutY="10.0" spacing="10">
+        <children>
+            <Button fx:id="tabMetrics" prefHeight="50.0" prefWidth="220.0" style="-fx-background-color: #8b6fa1; -fx-text-fill: white; -fx-font-size: 16px; -fx-background-radius: 5;" text="Metrics" />
+
+            <Button fx:id="tabUsers" prefHeight="52.0" prefWidth="220.0" style="-fx-background-color: #c2add3; -fx-text-fill: #4b355a; -fx-font-size: 16px; -fx-background-radius: 5;" text="Users" />
+
+            <Button fx:id="tabProducts" prefHeight="52.0" prefWidth="220.0" style="-fx-background-color: #c2add3; -fx-text-fill: #4b355a; -fx-font-size: 16px; -fx-background-radius: 5;" text="Products" />
+        </children>
+    </HBox>
+
 
 </AnchorPane>
