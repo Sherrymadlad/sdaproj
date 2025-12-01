@@ -15,7 +15,6 @@
 
     <!-- ================= SIDEBAR ================= -->
     <AnchorPane prefWidth="250" style="-fx-background-color: #f3e6f7; -fx-border-color: black;" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.topAnchor="0">
-
         <children>
             <ImageView fitHeight="150" fitWidth="150" layoutX="50" layoutY="20" preserveRatio="true">
                 <image>
@@ -32,9 +31,8 @@
     <!-- ================= TOP TABS ================= -->
     <HBox spacing="10" AnchorPane.leftAnchor="270" AnchorPane.topAnchor="10">
         <children>
-            <Button fx:id="tabMetrics" prefHeight="50" prefWidth="220" style="-fx-background-color: #8b6fa1; -fx-text-fill: white;                            -fx-font-size: 16px; -fx-background-radius: 5;" text="Metrics" />
-
-            <Button fx:id="tabUsers" prefHeight="52" prefWidth="220" style="-fx-background-color: #c2add3; -fx-text-fill: #4b355a;                            -fx-font-size: 16px; -fx-background-radius: 5;" text="Users" />
+            <Button fx:id="tabMetrics" prefHeight="50" prefWidth="220" style="-fx-background-color: #8b6fa1; -fx-text-fill: white; -fx-font-size: 16px; -fx-background-radius: 5;" text="Metrics" />
+            <Button fx:id="tabUsers" prefHeight="52" prefWidth="220" style="-fx-background-color: #c2add3; -fx-text-fill: #4b355a; -fx-font-size: 16px; -fx-background-radius: 5;" text="Users" />
         </children>
     </HBox>
 
@@ -52,17 +50,9 @@
         </ScrollPane>
 
     </VBox>
-    <ScrollPane fx:id="scrollUsers" fitToWidth="true" layoutY="132.0" prefHeight="448.0" prefWidth="610.0" style="-fx-background: transparent;" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="270.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="132.0">
 
-              <content>
-            <VBox fx:id="usersList" spacing="12" style="-fx-background-color: transparent;">
-            </VBox>
-        </content>
-
-          </ScrollPane>
-      <ComboBox fx:id="cbFilterRole" layoutX="390.0" layoutY="83.0" prefWidth="150" />
-      <Button fx:id="btnClearFilter" layoutX="552.0" layoutY="86.0" style="-fx-background-color: #8b6fa1; -fx-text-fill: white;" text="Clear" />
-      <Label layoutX="289.0" layoutY="86.0" style="-fx-font-weight: bold; -fx-font-size: 14px;" text="Filter by Role:" />
-
+    <ComboBox fx:id="cbFilterRole" layoutX="390.0" layoutY="83.0" prefWidth="150" />
+    <Button fx:id="btnClearFilter" layoutX="552.0" layoutY="86.0" style="-fx-background-color: #8b6fa1; -fx-text-fill: white;" text="Clear" />
+    <Label layoutX="289.0" layoutY="86.0" style="-fx-font-weight: bold; -fx-font-size: 14px;" text="Filter by Role:" />
 
 </AnchorPane>
