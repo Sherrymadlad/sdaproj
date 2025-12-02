@@ -113,34 +113,16 @@ public class CartPageController implements Initializable {
             Button btnIncrease = new Button("+");
             btnIncrease.setStyle("-fx-font-size:18; -fx-background-color:#d3d3d3;");
 
-            // Handlers for +/- buttons
-            btnIncrease.setOnAction(e -> {
-                cart.put(productId, cart.get(productId) + 1);
-                qtyText.setText(String.valueOf(cart.get(productId)));
-                updateTotal();
-            });
-
-            btnDecrease.setOnAction(e -> {
-                int currentQty = cart.get(productId) - 1;
-                if (currentQty <= 0) {
-                    cart.remove(productId);
-                    cartItemsContainer.getChildren().remove(itemRow);
-                } else {
-                    cart.put(productId, currentQty);
-                    qtyText.setText(String.valueOf(currentQty));
-                }
-                updateTotal();
-            });
-
             Text priceText = new Text("Rs " + (price * quantity));
             priceText.setFont(Font.font("System", FontWeight.BOLD, 16));
 
-            // Update price dynamically when quantity changes
+            // Handlers for +/- buttons
             btnIncrease.setOnAction(e -> {
                 cart.put(productId, cart.get(productId) + 1);
                 qtyText.setText(String.valueOf(cart.get(productId)));
                 priceText.setText("Rs " + (price * cart.get(productId)));
                 updateTotal();
+                if (parentController != null) parentController.updateCartBadge();
             });
 
             btnDecrease.setOnAction(e -> {
@@ -154,6 +136,7 @@ public class CartPageController implements Initializable {
                     priceText.setText("Rs " + (price * currentQty));
                 }
                 updateTotal();
+                if (parentController != null) parentController.updateCartBadge();
             });
 
             itemRow.getChildren().addAll(nameText, btnDecrease, qtyText, btnIncrease, priceText);
@@ -163,8 +146,8 @@ public class CartPageController implements Initializable {
         }
 
         txtTotal.setText("Total: Rs " + total);
-
     }
+
 
     private void updateTotal() {
         double total = 0;
@@ -263,6 +246,12 @@ public class CartPageController implements Initializable {
         alert.setHeaderText(null);
         alert.setContentText(msg);
         alert.showAndWait();
+    }
+
+    private void updateParentCartBadge() {
+        if (parentController != null) {
+            parentController.updateCartBadge();
+        }
     }
 
 }

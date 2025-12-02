@@ -319,7 +319,7 @@ public class CustomerMainPageController implements Initializable, SidebarListene
         } catch (Exception ex) { ex.printStackTrace(); }
     }
 
-    private void updateCartBadge() {
+    public void updateCartBadge() {
         int totalItems = cart.values().stream().mapToInt(Integer::intValue).sum();
         cartBadge.setText(String.valueOf(totalItems));
         cartBadge.setVisible(totalItems > 0);
