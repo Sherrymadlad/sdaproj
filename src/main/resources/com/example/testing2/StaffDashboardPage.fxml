@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.String?>
+<?import javafx.collections.FXCollections?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane maxHeight="Infinity" maxWidth="Infinity" minHeight="-Infinity" minWidth="-Infinity"
+            style="-fx-background-color: #d7e3ee;"
+            xmlns="http://javafx.com/javafx/25"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.testing2.controllers.StaffDashboardPageController">
+
+    <!-- Sidebar -->
+    <AnchorPane prefWidth="249.0" style="-fx-background-color: #f3e6f7; -fx-border-color: black;"
+                AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <children>
+            <ImageView fitHeight="187.0" fitWidth="191.0" layoutX="31.0" layoutY="14.0"
+                       preserveRatio="true">
+                <image>
+                    <Image url="@images/cart-removebg-preview.png" />
+                </image>
+            </ImageView>
+
+            <VBox layoutX="3.0" layoutY="230.0" spacing="10">
+                <!-- Items Tab -->
+                <Button fx:id="btnItems" prefHeight="49.0" prefWidth="243.0"
+                        style="-fx-background-color: #8b6fa1;" text="Items" textFill="WHITE">
+                    <font><Font name="System Bold" size="26.0" /></font>
+                </Button>
+
+                <!-- Orders Tab -->
+                <Button fx:id="btnOrders" prefHeight="49.0" prefWidth="243.0"
+                        style="-fx-background-color: #8b6fa1;" text="Orders" textFill="WHITE">
+                    <font><Font name="System Bold" size="26.0" /></font>
+                </Button>
+
+                <!-- Reports Tab -->
+                <Button fx:id="btnReports" prefHeight="49.0" prefWidth="243.0"
+                        style="-fx-background-color: #8b6fa1;" text="Reports" textFill="WHITE">
+                    <font><Font name="System Bold" size="26.0" /></font>
+                </Button>
+
+                <!-- Profile Tab -->
+                <Button fx:id="btnProfile" prefHeight="49.0" prefWidth="243.0"
+                        style="-fx-background-color: #8b6fa1;" text="Profile" textFill="WHITE">
+                    <font><Font name="System Bold" size="26.0" /></font>
+                </Button>
+            </VBox>
+        </children>
+    </AnchorPane>
+
+    <!-- Main Content -->
+    <AnchorPane fx:id="mainContent" style="-fx-background-color: #d7e3ee;"
+                AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="249.0"
+                AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+
+        <children>
+
+            <!-- Search bar section -->
+            <AnchorPane prefHeight="140.0" AnchorPane.topAnchor="0.0"
+                        AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                <children>
+
+                    <TextField fx:id="txtSearch" promptText="Search..."
+                               style="-fx-border-radius: 10; -fx-border-width: 5;"
+                               AnchorPane.leftAnchor="80.0"
+                               AnchorPane.rightAnchor="80.0"
+                               AnchorPane.topAnchor="30.0">
+                        <font><Font size="16.0" /></font>
+                    </TextField>
+
+                    <ImageView fitHeight="36.6" fitWidth="32.0"
+                               preserveRatio="true"
+                               AnchorPane.leftAnchor="45.0"
+                               AnchorPane.topAnchor="30.0">
+                        <image><Image url="@images/icon-removebg-preview.png"/></image>
+                    </ImageView>
+
+                    <HBox spacing="15"
+                          AnchorPane.leftAnchor="120.0"
+                          AnchorPane.rightAnchor="80.0"
+                          AnchorPane.topAnchor="80.0">
+
+                        <children>
+                            <ComboBox fx:id="cmbFilterCategory" prefWidth="200.0" promptText="Filter by Category">
+                                <items>
+                                    <FXCollections fx:factory="observableArrayList">
+                                        <String fx:value="All"/>
+                                        <String fx:value="Beverages"/>
+                                        <String fx:value="Snacks"/>
+                                        <String fx:value="Desserts"/>
+                                    </FXCollections>
+                                </items>
+                            </ComboBox>
+
+                            <ComboBox fx:id="cmbSortBy" prefWidth="200.0" promptText="Sort by">
+                                <items>
+                                    <FXCollections fx:factory="observableArrayList">
+                                        <String fx:value="Price Ascending"/>
+                                        <String fx:value="Price Descending"/>
+                                        <String fx:value="Alphabetical A-Z"/>
+                                        <String fx:value="Alphabetical Z-A"/>
+                                    </FXCollections>
+                                </items>
+                            </ComboBox>
+                        </children>
+
+                    </HBox>
+
+                </children>
+            </AnchorPane>
+
+            <!-- ScrollPane List -->
+            <ScrollPane fx:id="scrollPane" fitToWidth="true"
+                        layoutY="127.2"
+                        AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+                        AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="127.0">
+                <content>
+                    <VBox fx:id="categoriesContainer" spacing="20"
+                          style="-fx-background-color: #d7e3ee;"/>
+                </content>
+            </ScrollPane>
+
+            <!-- Hidden item card template -->
+            <AnchorPane fx:id="itemCard" prefHeight="224.0" prefWidth="205.0"
+                        style="-fx-background-color: #f7ecfa;" visible="false">
+
+                <children>
+                    <ImageView fx:id="imgItem" fitHeight="112.0" fitWidth="250.0"/>
+
+                    <AnchorPane layoutY="114.0" prefHeight="110.0" prefWidth="205.0"
+                                style="-fx-background-color: #fbf8ff;">
+                        <children>
+                            <Text fx:id="txtItemName" fill="#826478" layoutX="8.0" layoutY="59.0">
+                                <font><Font size="15.0"/></font>
+                            </Text>
+
+                            <Text fx:id="txtPrice" fill="#826478" layoutX="139.0" layoutY="59.0">
+                                <font><Font size="16.0"/></font>
+                            </Text>
+                        </children>
+                    </AnchorPane>
+                </children>
+            </AnchorPane>
+        </children>
+    </AnchorPane>
+
+    <!-- ITEM DETAILS MODAL (VIEW-ONLY) -->
+    <StackPane fx:id="itemDetailsPanel" alignment="CENTER"
+               style="-fx-background-color: rgba(0,0,0,0.6);" visible="false"
+               AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+               AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+
+        <AnchorPane fx:id="modalBox" maxHeight="620" maxWidth="500"
+                    prefHeight="620" prefWidth="500"
+                    style="-fx-background-color: white; -fx-background-radius: 20;">
+
+            <!-- Close button -->
+            <Button fx:id="btnCloseModal" layoutX="445" layoutY="15"
+                    prefHeight="40" prefWidth="40"
+                    style="-fx-background-color: transparent; -fx-font-size: 22px;"
+                    text="✕"/>
+
+            <VBox layoutX="25" layoutY="60" spacing="15">
+
+                <!-- Product image -->
+                <ImageView fx:id="modalItemImage" fitHeight="260" fitWidth="450"
+                           preserveRatio="true"/>
+
+                <!-- Name + Price -->
+                <HBox spacing="20">
+                    <Text fx:id="modalItemName" style="-fx-font-size: 26px; -fx-font-weight: bold;"/>
+                    <Text fx:id="modalItemPrice" style="-fx-font-size: 22px;"/>
+                </HBox>
+
+                <!-- Description -->
+                <Text fx:id="modalItemDescription"
+                      style="-fx-font-size: 16px;" wrappingWidth="450"/>
+
+                <!-- Warehouses Section -->
+                <VBox fx:id="warehousesContainer" spacing="5">
+                    <Text text="Available in:" style="-fx-font-weight: bold; -fx-font-size: 16px;"/>
+                    <!-- Individual warehouses will be added dynamically in controller -->
+                </VBox>
+
+            </VBox>
+        </AnchorPane>
+    </StackPane>
+
+</AnchorPane>
