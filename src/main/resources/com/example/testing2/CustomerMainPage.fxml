@@ -18,47 +18,16 @@
 
 <AnchorPane maxHeight="Infinity" maxWidth="Infinity" minHeight="-Infinity" minWidth="-Infinity" style="-fx-background-color: #d7e3ee;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.testing2.controllers.CustomerMainPageController">
 
-    <!-- Sidebar (fixed width, full height) -->
-    <AnchorPane prefWidth="249.0" style="-fx-background-color: #f3e6f7; -fx-border-color: black;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
-
-        <children>
-            <ImageView fitHeight="187.0" fitWidth="191.0" layoutX="31.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
-                <image>
-                    <Image url="@images/cart-removebg-preview.png" />
-                </image>
-            </ImageView>
-
-            <!-- Sidebar Buttons -->
-            <Button fx:id="btnItems" layoutX="3.0" layoutY="230.0" mnemonicParsing="false" prefHeight="49.0" prefWidth="243.0" style="-fx-background-color: #8b6fa1;" text="Items" textFill="WHITE" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0">
-                <font>
-                    <Font name="System Bold" size="26.0" />
-                </font>
-            </Button>
-
-            <Button fx:id="btnOrders" layoutX="4.0" layoutY="300.0" mnemonicParsing="false" prefHeight="49.0" prefWidth="243.0" style="-fx-background-color: #8b6fa1;" text="Orders" textFill="WHITE" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0">
-                <font>
-                    <Font name="System Bold" size="26.0" />
-                </font>
-            </Button>
-
-            <!-- New Profile Button -->
-            <Button fx:id="btnProfile" layoutX="4.0" layoutY="370.0" mnemonicParsing="false" prefHeight="49.0" prefWidth="243.0" style="-fx-background-color: #8b6fa1;" text="Profile" textFill="WHITE" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0">
-                <font>
-                    <Font name="System Bold" size="26.0" />
-                </font>
-            </Button>
-        </children>
-    </AnchorPane>
-
+    <!-- Sidebar Placeholder -->
+    <AnchorPane fx:id="sidebarContainer" layoutX="0" layoutY="0" prefWidth="339" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="0.0" />
 
     <!-- Main Content (fills remaining space) -->
-    <AnchorPane fx:id="mainContent" style="-fx-background-color: #d7e3ee;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="249.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+    <AnchorPane fx:id="mainContent" layoutX="338.0" prefHeight="622.0" prefWidth="526.0" style="-fx-background-color: #d7e3ee;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="338.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
 
         <children>
-            <!-- Search bar and dropdowns container -->
 
             <!-- Search bar and dropdowns container -->
-            <AnchorPane prefHeight="140.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <AnchorPane fx:id="header" prefHeight="140.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                 <children>
                     <!-- Search bar -->
                     <TextField fx:id="txtSearch" promptText="Search..." style="-fx-border-radius: 10; -fx-border-width: 5;" AnchorPane.leftAnchor="80.0" AnchorPane.rightAnchor="80.0" AnchorPane.topAnchor="30.0">
@@ -88,7 +57,7 @@
                                     </FXCollections>
                                 </items>
                             </ComboBox>
-      
+
                             <!-- Sort by Options -->
                             <ComboBox fx:id="cmbSortBy" prefWidth="200.0" promptText="Sort by">
                                 <items>
@@ -115,34 +84,30 @@
             </ScrollPane>
 
 
-            <!-- Hidden template card -->
-            <AnchorPane fx:id="itemCard" prefHeight="224.0" prefWidth="205.0" style="-fx-background-color: #f7ecfa;" visible="false" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0">
+            <!-- Hidden template card (updated) -->
+            <AnchorPane fx:id="itemCard" onMouseEntered="#handleCardHoverIn" onMouseExited="#handleCardHoverOut" prefHeight="280.0" prefWidth="250.0" style="-fx-background-color: #fff0f5;                    -fx-background-radius: 15;                    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10,0,0,3);                    -fx-cursor: hand;" visible="false" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0">
 
                 <children>
-                    <ImageView fx:id="imgItem" fitHeight="112.0" fitWidth="250.0" layoutX="0.0" pickOnBounds="true" preserveRatio="false" />
+                    <!-- Item Image -->
+                    <ImageView fx:id="imgItem" fitHeight="160.0" fitWidth="250.0" pickOnBounds="true" preserveRatio="true" style="-fx-background-radius: 15 15 0 0;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
 
-                    <AnchorPane layoutX="0.0" layoutY="114.0" prefHeight="110.0" prefWidth="205.0" style="-fx-background-color: #fbf8ff;">
+                    <!-- Bottom Info Pane -->
+                    <AnchorPane layoutY="160.0" prefHeight="120.0" prefWidth="250.0" style="-fx-background-color: #ffe6f0; -fx-background-radius: 0 0 15 15; -fx-padding: 12;">
                         <children>
-                            <Text fx:id="txtItemName" fill="#826478" layoutX="8.0" layoutY="59.0" text="Item Name">
-                                <font>
-                                    <Font size="15.0" />
-                                </font>
-                            </Text>
-                            <Text fx:id="txtPrice" fill="#826478" layoutX="139.0" layoutY="59.0" text="Rs 0">
-                                <font>
-                                    <Font size="16.0" />
-                                </font>
-                            </Text>
+                            <!-- Item Name -->
+                            <Text fx:id="txtItemName" fill="#532386" layoutX="12.0" layoutY="40.0" style="-fx-font-weight: bold; -fx-font-size: 18;" text="Item Name" wrappingWidth="160" />
+
+                            <!-- Price -->
+                            <Text fx:id="txtPrice" fill="#8b6fa1" layoutX="180.0" layoutY="40.0" style="-fx-font-weight: bold; -fx-font-size: 18;" text="Rs 0" />
                         </children>
                     </AnchorPane>
                 </children>
-
             </AnchorPane>
 
         </children>
     </AnchorPane>
     <!-- CENTERED MODAL OVERLAY -->
-    
+
 
     <!-- CENTERED MODAL OVERLAY -->
     <StackPane fx:id="itemDetailsPanel" alignment="CENTER" style="-fx-background-color: rgba(0,0,0,0.6);" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
