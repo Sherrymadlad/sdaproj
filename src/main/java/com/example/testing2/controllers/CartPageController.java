@@ -15,6 +15,8 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 import javafx.stage.Stage;
+import java.math.BigDecimal;
+
 
 import java.net.URL;
 import java.sql.*;
@@ -210,32 +212,23 @@ public class CartPageController implements Initializable {
                 else throw new SQLException("No customer found for user " + currentUserId);
             }
 
-            // Insert order
-            String orderSql = "INSERT INTO orders(ordertype, customerid, status) VALUES (?, ?, ?) RETURNING orderid";
-            int orderId;
-            try (PreparedStatement stmt = conn.prepareStatement(orderSql)) {
-                stmt.setString(1, "Sales");
-                stmt.setInt(2, customerId);
-                stmt.setString(3, "Pending");
-                ResultSet rs = stmt.executeQuery();
-                rs.next();
-                orderId = rs.getInt("orderid");
-            }
-
-            // Insert order items
-            String itemSql = "INSERT INTO orderitem(orderid, productid, quantity, unitprice) VALUES (?, ?, ?, ?)";
-            try (PreparedStatement stmt = conn.prepareStatement(itemSql)) {
+            // Call AddSalesOrder stored procedure for each product in cart
+            String procSql = "SELECT AddSalesOrder(?, ?, ?, ?, ?)";
+            try (PreparedStatement stmt = conn.prepareStatement(procSql)) {
+                int warehouseId = 1; // replace with actual warehouse
                 for (Map.Entry<Integer, Integer> entry : cart.entrySet()) {
-                    int pid = entry.getKey();
+                    int productId = entry.getKey();
                     int qty = entry.getValue();
-                    double price = productPrices.get(pid);
-                    stmt.setInt(1, orderId);
-                    stmt.setInt(2, pid);
-                    stmt.setInt(3, qty);
-                    stmt.setDouble(4, price);
-                    stmt.addBatch();
+                    double price = productPrices.get(productId);
+
+                    stmt.setInt(1, customerId);
+                    stmt.setInt(2, warehouseId);
+                    stmt.setInt(3, productId);
+                    stmt.setInt(4, qty);
+                    stmt.setBigDecimal(5, BigDecimal.valueOf(price)); // <- fix here
+
+                    stmt.execute();
                 }
-                stmt.executeBatch();
             }
 
             conn.commit();
@@ -262,6 +255,7 @@ public class CartPageController implements Initializable {
             showAlert(Alert.AlertType.ERROR, "Error", "Failed to place order. Please try again.");
         }
     }
+
 
     private void showAlert(AlertType type, String title, String msg) {
         Alert alert = new Alert(type);

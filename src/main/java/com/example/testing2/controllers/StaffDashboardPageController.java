@@ -60,7 +60,7 @@ public class StaffDashboardPageController implements Initializable {
 
 
     private final Image placeholderImage =
-            new Image(getClass().getResource("/com/example/testing2/images/placeholder.jpg").toExternalForm());
+            new Image(getClass().getResource("/com/example/testing2/images/placeholder.png").toExternalForm());
 
     private final Map<TilePane, List<AnchorPane>> categoryItemsMap = new HashMap<>();
 
