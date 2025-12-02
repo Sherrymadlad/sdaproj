@@ -29,6 +29,14 @@ public class StaffReportsController {
     @FXML private TableColumn<WarehouseStock, String> colProductNameWH;
     @FXML private TableColumn<WarehouseStock, String> colWarehouseName;
     @FXML private TableColumn<WarehouseStock, Integer> colQuantityAvailable;
+    @FXML private TableView<BatchTracking> tblBatchTracking;
+    @FXML private TableColumn<BatchTracking, Integer> colBatchId;
+    @FXML private TableColumn<BatchTracking, String> colLotNumber;
+    @FXML private TableColumn<BatchTracking, Integer> colProductIdBatch;
+    @FXML private TableColumn<BatchTracking, String> colProductNameBatch;
+    @FXML private TableColumn<BatchTracking, String> colExpiryDateBatch;
+    @FXML private TableColumn<BatchTracking, Integer> colQuantityBatch;
+
 
     public void initialize() {
         setupProductsStockTable();
@@ -36,6 +44,9 @@ public class StaffReportsController {
 
         setupWarehouseStockTable();
         loadWarehouseStock();
+        setupBatchTrackingTable();
+        loadBatchTracking();
+
     }
 
     // -------------------------------
@@ -131,5 +142,62 @@ public class StaffReportsController {
         public String getProductName() { return productName; }
         public String getWarehouseName() { return warehouseName; }
         public int getQuantityAvailable() { return quantityAvailable; }
+    }
+
+    private void setupBatchTrackingTable() {
+        colBatchId.setCellValueFactory(new PropertyValueFactory<>("batchId"));
+        colLotNumber.setCellValueFactory(new PropertyValueFactory<>("lotNumber"));
+        colProductIdBatch.setCellValueFactory(new PropertyValueFactory<>("productId"));
+        colProductNameBatch.setCellValueFactory(new PropertyValueFactory<>("productName"));
+        colExpiryDateBatch.setCellValueFactory(new PropertyValueFactory<>("expiryDate"));
+        colQuantityBatch.setCellValueFactory(new PropertyValueFactory<>("quantity"));
+    }
+
+
+    private void loadBatchTracking() {
+        ObservableList<BatchTracking> list = FXCollections.observableArrayList();
+        try (ResultSet rs = DBHelper.executeFunction("GetBatchDetails")) {
+            while (rs.next()) {
+                list.add(new BatchTracking(
+                        rs.getInt("batchid"),
+                        rs.getString("lotnumber"),
+                        rs.getInt("productid"),
+                        rs.getString("productname"),
+                        rs.getDate("expirydate").toString(),
+                        rs.getInt("quantity")
+                ));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        tblBatchTracking.setItems(list);
+    }
+
+    // -------------------------------
+// BatchTracking Data Model
+// -------------------------------
+    public static class BatchTracking {
+        private final int batchId;
+        private final String lotNumber;
+        private final int productId;
+        private final String productName;
+        private final String expiryDate;
+        private final int quantity;
+
+        public BatchTracking(int batchId, String lotNumber, int productId, String productName, String expiryDate, int quantity) {
+            this.batchId = batchId;
+            this.lotNumber = lotNumber;
+            this.productId = productId;
+            this.productName = productName;
+            this.expiryDate = expiryDate;
+            this.quantity = quantity;
+        }
+
+        public int getBatchId() { return batchId; }
+        public String getLotNumber() { return lotNumber; }
+        public int getProductId() { return productId; }
+        public String getProductName() { return productName; }
+        public String getExpiryDate() { return expiryDate; }
+        public int getQuantity() { return quantity; }
     }
 }

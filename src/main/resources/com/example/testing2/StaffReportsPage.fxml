@@ -39,7 +39,26 @@
                     </TableView>
                 </AnchorPane>
             </Tab>
+
+            <Tab text="Batch Tracking">
+                <AnchorPane style="-fx-background-color: transparent;">
+                    <TableView fx:id="tblBatchTracking" AnchorPane.topAnchor="10" AnchorPane.bottomAnchor="10"
+                               AnchorPane.leftAnchor="10" AnchorPane.rightAnchor="10"
+                               style="-fx-background-color: #f0f8ff; -fx-border-color: #cce0ff; -fx-border-radius: 5; -fx-background-radius: 5;">
+                        <columns>
+                            <TableColumn fx:id="colBatchId" text="Batch ID" prefWidth="80"/>
+                            <TableColumn fx:id="colLotNumber" text="Lot Number" prefWidth="150"/>
+                            <TableColumn fx:id="colProductIdBatch" text="Product ID" prefWidth="80"/>
+                            <TableColumn fx:id="colProductNameBatch" text="Product Name" prefWidth="300"/>
+                            <TableColumn fx:id="colExpiryDateBatch" text="Expiry Date" prefWidth="150"/>
+                            <TableColumn fx:id="colQuantityBatch" text="Quantity" prefWidth="150"/>
+                        </columns>
+                    </TableView>
+                </AnchorPane>
+            </Tab>
         </tabs>
+
+
     </TabPane>
 
 </AnchorPane>
