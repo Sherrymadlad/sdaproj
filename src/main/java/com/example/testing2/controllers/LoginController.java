@@ -1,14 +1,16 @@
 package com.example.testing2.controllers;
 
 import com.example.testing2.utils.DBHelper;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
-import javafx.scene.control.Alert;
-import javafx.scene.text.Text;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.math.BigInteger;
@@ -16,24 +18,39 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
-
 
 public class LoginController {
 
+    @FXML private AnchorPane mainRoot; // Root of login page to overlay modal
     @FXML private TextField txtLoginName;
     @FXML private TextField txtLoginPassword;
     @FXML private Button btnLogin;
     @FXML private Text txtGoToSignup;
 
+    private CustomModalController customModalController;
 
     @FXML
     private void initialize() {
         btnLogin.setOnAction(event -> handleLogin());
         txtGoToSignup.setOnMouseClicked(e -> openSignupPage());
+
+        // Load Custom Modal
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/testing2/CustomModal.fxml"));
+            StackPane modalRoot = loader.load();
+            customModalController = loader.getController();
+
+            // Add modal to main root and anchor it to fill the parent
+            mainRoot.getChildren().add(modalRoot);
+            AnchorPane.setTopAnchor(modalRoot, 0.0);
+            AnchorPane.setBottomAnchor(modalRoot, 0.0);
+            AnchorPane.setLeftAnchor(modalRoot, 0.0);
+            AnchorPane.setRightAnchor(modalRoot, 0.0);
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void openSignupPage() {
@@ -51,6 +68,7 @@ public class LoginController {
 
         } catch (Exception e) {
             e.printStackTrace();
+            showCustomModal("Unable to open signup page.");
         }
     }
 
@@ -59,33 +77,57 @@ public class LoginController {
         String password = txtLoginPassword.getText().trim();
 
         if (username.isEmpty() || password.isEmpty()) {
-            showAlert(Alert.AlertType.WARNING, "Missing Fields", "Please enter both username and password.");
+            showCustomModal("Please enter both username and password.");
             return;
         }
 
+        btnLogin.setText("Logging in...");
+        btnLogin.setDisable(true);
+
         String hashedPassword = hashPassword(password);
 
-        try (ResultSet rs = DBHelper.executeFunction("Login", username, hashedPassword)) {
+        Task<Boolean> loginTask = new Task<>() {
+            private int userId = -1;
+            private String name = null;
 
-            if (rs.next()) {
-                String name = rs.getString("username");
-
-                showAlert(Alert.AlertType.INFORMATION, "Login Successful", "Welcome, " + name + "!");
-                clearFields();
-                int userId = rs.getInt("userid");
-                openCustomerMainPage(userId);
-
-                // TODO: Open the next page here
-                // openDashboard(userId);
-
-            } else {
-                showAlert(Alert.AlertType.ERROR, "Invalid Credentials", "Incorrect username or password.");
+            @Override
+            protected Boolean call() {
+                try (ResultSet rs = DBHelper.executeFunction("Login", username, hashedPassword)) {
+                    if (rs.next()) {
+                        name = rs.getString("username");
+                        userId = rs.getInt("userid");
+                        return true;
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                    return false;
+                }
+                return false;
             }
 
-        } catch (SQLException e) {
-            e.printStackTrace();
-            showAlert(Alert.AlertType.ERROR, "Database Error", "An error occurred while trying to log in.");
-        }
+            @Override
+            protected void succeeded() {
+                boolean success = getValue();
+                if (success) {
+                    showCustomModal("Welcome, " + name + "!");
+                    clearFields();
+                    openCustomerMainPage(userId);
+                } else {
+                    showCustomModal("Incorrect username or password.");
+                }
+                btnLogin.setText("Login");
+                btnLogin.setDisable(false);
+            }
+
+            @Override
+            protected void failed() {
+                showCustomModal("An error occurred while trying to log in.");
+                btnLogin.setText("Login");
+                btnLogin.setDisable(false);
+            }
+        };
+
+        new Thread(loginTask).start();
     }
 
     private String hashPassword(String password) {
@@ -105,45 +147,38 @@ public class LoginController {
         }
     }
 
-    private void showAlert(Alert.AlertType type, String title, String message) {
-        Alert alert = new Alert(type);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
-
     private void clearFields() {
         txtLoginName.clear();
         txtLoginPassword.clear();
     }
+
     private void openCustomerMainPage(int userId) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/testing2/CustomerMainPage.fxml"));
             Parent root = loader.load();
 
-            // Pass data to next controller
             CustomerMainPageController controller = loader.getController();
             controller.setCurrentUserId(userId);
 
-            // Get primary stage from login button
             Stage primaryStage = (Stage) btnLogin.getScene().getWindow();
-
-            // Apply your preferred window settings
             Scene scene = new Scene(root);
             primaryStage.setScene(scene);
             primaryStage.setMinHeight(600);
             primaryStage.setMinWidth(800);
-
-            // OPTIONAL: maximize window
             primaryStage.setMaximized(true);
-
             primaryStage.show();
 
         } catch (Exception e) {
             e.printStackTrace();
-            showAlert(Alert.AlertType.ERROR, "Error", "Unable to load main page.");
+            showCustomModal("Unable to load main page.");
         }
     }
 
+    private void showCustomModal(String message) {
+        if (customModalController != null) {
+            customModalController.showMessage(message);
+        } else {
+            System.err.println("Custom modal not initialized: " + message);
+        }
+    }
 }

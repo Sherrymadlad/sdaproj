@@ -1,16 +1,14 @@
 package com.example.testing2.controllers;
 
-import com.example.testing2.utils.DBHelper; // <-- correct import
+import com.example.testing2.utils.DBHelper;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.math.BigInteger;
@@ -19,6 +17,8 @@ import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 
 public class SignupController {
+
+    @FXML private AnchorPane mainRoot; // Root to overlay modal
 
     @FXML private TextField txtName;
     @FXML private TextField txtPassword;
@@ -34,6 +34,8 @@ public class SignupController {
     @FXML private Button btnSignup;
     @FXML private Text txtGoToLogin;
 
+    private CustomModalController customModalController;
+
     @FXML
     private void initialize() {
         // Ensure only one role can be selected at a time
@@ -41,6 +43,23 @@ public class SignupController {
         btnManager.setOnAction(e -> deselectOthers(btnManager));
         btnStaff.setOnAction(e -> deselectOthers(btnStaff));
         btnCustomer.setOnAction(e -> deselectOthers(btnCustomer));
+
+        // Load custom modal
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/testing2/CustomModal.fxml"));
+            StackPane modalRoot = loader.load();
+            customModalController = loader.getController();
+
+            // Add modal to main root
+            mainRoot.getChildren().add(modalRoot);
+            AnchorPane.setTopAnchor(modalRoot, 0.0);
+            AnchorPane.setBottomAnchor(modalRoot, 0.0);
+            AnchorPane.setLeftAnchor(modalRoot, 0.0);
+            AnchorPane.setRightAnchor(modalRoot, 0.0);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         // Handle signup button click
         btnSignup.setOnAction(e -> handleSignup());
@@ -50,19 +69,20 @@ public class SignupController {
     private void openLoginPage() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/testing2/LoginPage.fxml"));
-            Parent root = loader.load();
+            AnchorPane root = loader.load();
 
             Stage stage = new Stage();
-            stage.setScene(new Scene(root));
+            stage.setScene(new javafx.scene.Scene(root));
             stage.setTitle("Login");
             stage.show();
 
-            // close current window
+            // Close current window
             Stage current = (Stage) txtGoToLogin.getScene().getWindow();
             current.close();
 
         } catch (Exception ex) {
             ex.printStackTrace();
+            showCustomModal("Unable to open login page.");
         }
     }
 
@@ -82,7 +102,7 @@ public class SignupController {
 
         // Validate fields
         if (name.isEmpty() || password.isEmpty() || email.isEmpty() || phone.isEmpty() || address.isEmpty()) {
-            showAlert(AlertType.WARNING, "Validation Error", "Please fill in all fields.");
+            showCustomModal("Please fill in all fields.");
             return;
         }
 
@@ -93,7 +113,7 @@ public class SignupController {
         else if (btnCustomer.isSelected()) role = "Customer";
 
         if (role == null) {
-            showAlert(AlertType.WARNING, "Validation Error", "Please select a role.");
+            showCustomModal("Please select a role.");
             return;
         }
 
@@ -101,13 +121,12 @@ public class SignupController {
         String hashedPassword = hashPassword(password);
 
         try {
-            // Call stored procedure using the new DBHelper
             DBHelper.executeFunction("SignUpUser", name, hashedPassword, address, phone, email, role);
-            showAlert(AlertType.INFORMATION, "Success", "User signed up successfully!");
+            showCustomModal("User signed up successfully!");
             clearFields();
         } catch (SQLException e) {
             e.printStackTrace();
-            showAlert(AlertType.ERROR, "Database Error", "Failed to signup user. Check console for details.");
+            showCustomModal("Failed to signup user. Check console for details.");
         }
     }
 
@@ -117,24 +136,11 @@ public class SignupController {
             byte[] hashBytes = md.digest(password.getBytes());
             BigInteger number = new BigInteger(1, hashBytes);
             StringBuilder hexString = new StringBuilder(number.toString(16));
-
-            // Pad with leading zeros if necessary
-            while (hexString.length() < 64) {
-                hexString.insert(0, '0');
-            }
-
+            while (hexString.length() < 64) hexString.insert(0, '0');
             return hexString.toString();
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException("SHA-256 algorithm not available", e);
         }
-    }
-
-    private void showAlert(AlertType type, String title, String message) {
-        Alert alert = new Alert(type);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
     }
 
     private void clearFields() {
@@ -147,5 +153,13 @@ public class SignupController {
         btnManager.setSelected(false);
         btnStaff.setSelected(false);
         btnCustomer.setSelected(false);
+    }
+
+    private void showCustomModal(String message) {
+        if (customModalController != null) {
+            customModalController.showMessage(message);
+        } else {
+            System.err.println("Custom modal not initialized: " + message);
+        }
     }
 }
