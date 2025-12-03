@@ -33,7 +33,7 @@
             <ImageView fitHeight="187.0" fitWidth="191.0" layoutX="31.0" layoutY="14.0"
                        pickOnBounds="true" preserveRatio="true">
                 <image>
-                    <Image url="@images/placeholder.jpg" />
+                    <Image url="@images/placeholder.png" />
                 </image>
             </ImageView>
 
@@ -131,11 +131,14 @@
                        AnchorPane.bottomAnchor="100.0" style="-fx-background-color: white;">
                 <columns>
                     <TableColumn fx:id="colId" text="ID" prefWidth="50" />
+                    <TableColumn fx:id="colSku" text="SKU" prefWidth="100" /> <!-- Added -->
                     <TableColumn fx:id="colName" text="Product Name" prefWidth="150" />
                     <TableColumn fx:id="colCategory" text="Category" prefWidth="100" />
                     <TableColumn fx:id="colPrice" text="Price" prefWidth="80" />
                     <TableColumn fx:id="colStock" text="Stock" prefWidth="80" />
-                    <TableColumn fx:id="colLowStock" text="Low Stock" prefWidth="80" />
+                    <!-- Remove colLowStock or add it to controller -->
+                    <!-- <TableColumn fx:id="colLowStock" text="Low Stock" prefWidth="80" /> -->
+                    <TableColumn fx:id="colSupplier" text="Supplier" prefWidth="120" /> <!-- Added -->
                     <TableColumn fx:id="colActions" text="Actions" prefWidth="120" />
                 </columns>
             </TableView>
@@ -189,39 +192,51 @@
 
                 <!-- Product Form -->
                 <VBox spacing="10">
+                    <!-- SKU and Product Name -->
                     <HBox spacing="15">
+                        <VBox spacing="5">
+                            <Label text="SKU *" />
+                            <TextField fx:id="txtSku" prefWidth="200" />
+                        </VBox>
                         <VBox spacing="5">
                             <Label text="Product Name *" />
                             <TextField fx:id="txtProductName" prefWidth="200" />
                         </VBox>
+                    </HBox>
+
+                    <!-- Category and Price -->
+                    <HBox spacing="15">
                         <VBox spacing="5">
                             <Label text="Category *" />
                             <ComboBox fx:id="cmbCategory" prefWidth="200" />
                         </VBox>
-                    </HBox>
-
-                    <HBox spacing="15">
                         <VBox spacing="5">
                             <Label text="Price *" />
                             <TextField fx:id="txtPrice" prefWidth="200" />
                         </VBox>
+                    </HBox>
+
+                    <!-- Stock and Low Stock Threshold -->
+                    <HBox spacing="15">
                         <VBox spacing="5">
                             <Label text="Stock Quantity *" />
                             <TextField fx:id="txtStock" prefWidth="200" />
                         </VBox>
-                    </HBox>
-
-                    <HBox spacing="15">
                         <VBox spacing="5">
                             <Label text="Low Stock Threshold" />
                             <TextField fx:id="txtLowStock" prefWidth="200" />
                         </VBox>
+                    </HBox>
+
+                    <!-- Supplier -->
+                    <HBox spacing="15">
                         <VBox spacing="5">
                             <Label text="Supplier" />
-                            <TextField fx:id="txtSupplier" prefWidth="200" />
+                            <TextField fx:id="txtSupplier" prefWidth="415" />
                         </VBox>
                     </HBox>
 
+                    <!-- Description -->
                     <VBox spacing="5">
                         <Label text="Description" />
                         <TextArea fx:id="txtDescription" prefWidth="415" prefHeight="100"
