@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.testing2.controllers.StaffDashboardController"
+            prefWidth="800" prefHeight="600">
+
+    <!-- Sidebar -->
+    <left>
+        <VBox spacing="10" prefWidth="200" style="-fx-background-color: #6f1414;">
+            <Label text="Staff Dashboard" style="-fx-font-size: 18px; -fx-padding: 10;"/>
+
+            <!-- Buttons mapped to controller methods -->
+            <Button text="Handle Return" onAction="#goToHandleReturn" prefWidth="180" prefHeight="40"/>
+            <Button text="Update Status" onAction="#goToUpdateStatus" prefWidth="180" prefHeight="40"/>
+            <Button text="Record Order" onAction="#goToRecordOrder" prefWidth="180" prefHeight="40"/>
+            <Button text="View Stocks" onAction="#goToViewStocks" prefWidth="180" prefHeight="40"/>
+            <Button text="Logout" prefWidth="180" prefHeight="40"/>
+        </VBox>
+    </left>
+
+    <!-- Main Content -->
+    <center>
+        <AnchorPane style="-fx-background-color: #f8f8f8;">
+            <Label fx:id="mainContentLabel" text="Select an option from the sidebar" layoutX="20" layoutY="20"/>
+        </AnchorPane>
+    </center>
+
+</BorderPane>

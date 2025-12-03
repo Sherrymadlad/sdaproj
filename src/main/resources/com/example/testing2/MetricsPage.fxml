@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="600" prefWidth="900" style="-fx-background-color: #d7e3ee;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.testing2.controllers.MetricsController">
+
+    <VBox alignment="CENTER" layoutX="-424.0" layoutY="14.0" spacing="30" AnchorPane.bottomAnchor="-14.0" AnchorPane.leftAnchor="-424.0" AnchorPane.rightAnchor="424.0" AnchorPane.topAnchor="14.0">
+
+        <HBox spacing="30">
+            <VBox alignment="CENTER" spacing="10" style="-fx-background-color: #f3e6f7; -fx-padding: 20; -fx-background-radius: 10;">
+                <Text text="Total Users">
+                    <font><Font size="18" /></font>
+                </Text>
+                <Text fx:id="txtTotalUsers" text="0">
+                    <font><Font size="22" /></font>
+                </Text>
+            </VBox>
+
+            <VBox alignment="CENTER" prefHeight="216.0" prefWidth="188.0" spacing="10" style="-fx-background-color: #f3e6f7; -fx-padding: 20; -fx-background-radius: 10;">
+                <Text text="Total Products">
+                    <font><Font size="18" /></font>
+                </Text>
+                <Text fx:id="txtTotalProducts" text="0">
+                    <font><Font size="22" /></font>
+                </Text>
+            </VBox>
+        </HBox>
+
+        <HBox spacing="30">
+            <VBox alignment="CENTER" spacing="10" style="-fx-background-color: #f3e6f7; -fx-padding: 20; -fx-background-radius: 10;">
+                <Text text="Total Sales Orders">
+                    <font><Font size="18" /></font>
+                </Text>
+                <Text fx:id="txtTotalSales" text="0">
+                    <font><Font size="22" /></font>
+                </Text>
+            </VBox>
+
+            <VBox alignment="CENTER" prefHeight="219.0" prefWidth="175.0" spacing="10" style="-fx-background-color: #f3e6f7; -fx-padding: 20; -fx-background-radius: 10;">
+                <Text text="Total Revenue">
+                    <font><Font size="18" /></font>
+                </Text>
+                <Text fx:id="txtTotalRevenue" text="Rs 0">
+                    <font><Font size="22" /></font>
+                </Text>
+            </VBox>
+        </HBox>
+
+    </VBox>
+</AnchorPane>

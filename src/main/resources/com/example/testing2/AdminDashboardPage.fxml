@@ -5,119 +5,66 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="700.0" prefWidth="1000.0" style="-fx-background-color: #d7e3ee;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.testing2.controllers.AdminDashboardController">
+<AnchorPane prefHeight="700.0" prefWidth="1000.0"
+            style="-fx-background-color: #d7e3ee;"
+            xmlns="http://javafx.com/javafx/25"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.testing2.controllers.AdminDashboardController">
 
     <!-- Sidebar -->
-    <AnchorPane prefWidth="250.0" style="-fx-background-color: #f3e6f7; -fx-border-color: black;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+    <AnchorPane prefWidth="250.0"
+                style="-fx-background-color: #f3e6f7; -fx-border-color: black;"
+                AnchorPane.bottomAnchor="0.0"
+                AnchorPane.leftAnchor="0.0"
+                AnchorPane.topAnchor="0.0">
         <children>
-            <ImageView fitHeight="150.0" fitWidth="150.0" layoutX="50.0" layoutY="20.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="150.0" fitWidth="150.0"
+                       layoutX="50.0" layoutY="20.0"
+                       pickOnBounds="true" preserveRatio="true">
                 <image>
-                    <Image url="@images/cart-removebg-preview.png" />
+                    <Image url="@images/cart-removebg-preview.png"/>
                 </image>
             </ImageView>
 
-            <Button fx:id="btnMetrics" layoutX="5.0" layoutY="200.0" prefHeight="50.0" prefWidth="240.0" style="-fx-background-color: #8b6fa1;" text="Metrics" textFill="WHITE">
-                <font>
-                    <Font name="System Bold" size="20" />
-                </font>
-            </Button>
-
-            <Button fx:id="btnReports" layoutX="5.0" layoutY="270.0" prefHeight="50.0" prefWidth="240.0" style="-fx-background-color: #8b6fa1;" text="Reports" textFill="WHITE">
-                <font>
-                    <Font name="System Bold" size="20" />
-                </font>
-            </Button>
-
-            <Button fx:id="btnAudit" layoutX="5.0" layoutY="350.0" prefHeight="50.0" prefWidth="240.0" style="-fx-background-color: #8b6fa1;" text="Audit Logs" textFill="WHITE">
-                <font>
-                    <Font name="System Bold" size="20" />
-                </font>
-            </Button>
-
-            <Button fx:id="btnAdminProfile" layoutX="5.0" layoutY="430.0" prefHeight="50.0" prefWidth="240.0" style="-fx-background-color: #8b6fa1;" text="Profile" textFill="WHITE">
-                <font>
-                    <Font name="System Bold" size="20" />
-                </font>
-            </Button>
-
+            <Button fx:id="btnReports" layoutX="5.0" layoutY="200.0"
+                    prefHeight="50.0" prefWidth="240.0"
+                    style="-fx-background-color: #8b6fa1;" text="Reports" textFill="WHITE"/>
+            <Button fx:id="btnAudit" layoutX="5.0" layoutY="270.0"
+                    prefHeight="50.0" prefWidth="240.0"
+                    style="-fx-background-color: #8b6fa1;" text="Audit Logs" textFill="WHITE"/>
+            <Button fx:id="btnAdminProfile" layoutX="5.0" layoutY="340.0"
+                    prefHeight="50.0" prefWidth="240.0"
+                    style="-fx-background-color: #8b6fa1;" text="Profile" textFill="WHITE"/>
         </children>
     </AnchorPane>
-
-    <!-- Main Content -->
-    <AnchorPane fx:id="mainContent" layoutX="250.0" style="-fx-background-color: #d7e3ee;" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-        <children>
-            <!-- Dashboard Metrics -->
-            <HBox layoutX="20.0" layoutY="20.0" spacing="20" />
-            <!-- Quick Action Buttons -->
-            <HBox layoutX="20" layoutY="170.0" spacing="20" />
-        </children>
-    </AnchorPane>
-
-    <!-- Total Users -->
-    <AnchorPane layoutX="473.0" layoutY="237.0" prefHeight="165.0" prefWidth="260.0" style="-fx-background-color: #f7ecfa; -fx-background-radius: 15;">
-        <children>
-            <Text fx:id="txtTotalUsers" layoutX="20" layoutY="40" style="-fx-font-size: 40px; -fx-font-weight: bold; -fx-fill: #6d4c7d;" text="0" />
-            <Text fill="#6d4c7d" layoutX="14.0" layoutY="108.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Total Users">
-                <font>
-                    <Font name="System Bold" size="25.0" />
-                </font>
-            </Text>
-        </children>
-    </AnchorPane>
-
-    <!-- Sales Orders -->
-    <AnchorPane layoutX="473.0" layoutY="436.0" prefHeight="165.0" prefWidth="260.0" style="-fx-background-color: #f7ecfa; -fx-background-radius: 15;">
-        <children>
-            <Text fx:id="txtTotalSales" layoutX="20" layoutY="40" style="-fx-font-size: 36px; -fx-font-weight: bold; -fx-fill: #6d4c7d;" text="0" />
-            <Text fill="#6d4c7d" layoutX="14.0" layoutY="101.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Sales Orders">
-                <font>
-                    <Font name="System Bold" size="25.0" />
-                </font>
-            </Text>
-        </children>
-    </AnchorPane>
-
-    <!-- Total Products -->
-    <AnchorPane layoutX="828.0" layoutY="237.0" prefHeight="165.0" prefWidth="260.0" style="-fx-background-color: #f7ecfa; -fx-background-radius: 15;">
-        <children>
-            <Text fx:id="txtTotalProducts" layoutX="20" layoutY="40" style="-fx-font-size: 36px; -fx-font-weight: bold; -fx-fill: #6d4c7d;" text="0" />
-            <Text fill="#6d4c7d" layoutX="13.0" layoutY="111.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Total Products">
-                <font>
-                    <Font name="System Bold" size="25.0" />
-                </font>
-            </Text>
-        </children>
-    </AnchorPane>
-
-    <!-- Total Revenue -->
-    <AnchorPane layoutX="828.0" layoutY="436.0" prefHeight="165.0" prefWidth="260.0" style="-fx-background-color: #f7ecfa; -fx-background-radius: 15;">
-        <children>
-            <Text fx:id="txtTotalRevenue" layoutX="20" layoutY="40" style="-fx-font-size: 36px; -fx-font-weight: bold; -fx-fill: #6d4c7d;">
-                <text>$0</text>
-            </Text>
-
-            <Text fill="#6d4c7d" layoutX="20.0" layoutY="99.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Revenue">
-                <font>
-                    <Font name="System Bold" size="25.0" />
-                </font>
-            </Text>
-        </children>
-    </AnchorPane>
-
 
     <!-- Top Tabs -->
     <HBox layoutX="260.0" layoutY="10.0" spacing="10">
         <children>
-            <Button fx:id="tabMetrics" prefHeight="50.0" prefWidth="220.0" style="-fx-background-color: #8b6fa1; -fx-text-fill: white; -fx-font-size: 16px; -fx-background-radius: 5;" text="Metrics" />
-
-            <Button fx:id="tabUsers" prefHeight="52.0" prefWidth="220.0" style="-fx-background-color: #c2add3; -fx-text-fill: #4b355a; -fx-font-size: 16px; -fx-background-radius: 5;" text="Users" />
-
-            <Button fx:id="tabProducts" prefHeight="52.0" prefWidth="220.0" style="-fx-background-color: #c2add3; -fx-text-fill: #4b355a; -fx-font-size: 16px; -fx-background-radius: 5;" text="Products" />
+            <Button fx:id="tabMetrics" prefHeight="50.0" prefWidth="220.0"
+                    style="-fx-background-color: #8b6fa1; -fx-text-fill: white;" text="Metrics"/>
+            <Button fx:id="tabUsers" prefHeight="50.0" prefWidth="220.0"
+                    style="-fx-background-color: #c2add3; -fx-text-fill: #4b355a;" text="Users"/>
+            <Button fx:id="tabProducts" prefHeight="50.0" prefWidth="220.0"
+                    style="-fx-background-color: #c2add3; -fx-text-fill: #4b355a;" text="Products"/>
         </children>
     </HBox>
 
+    <!-- Main Content Area -->
+    <AnchorPane fx:id="mainContent"
+                layoutX="250"
+                AnchorPane.bottomAnchor="0.0"
+                AnchorPane.rightAnchor="0.0"
+                AnchorPane.topAnchor="60.0"
+                style="-fx-background-color: #d7e3ee;">
+        <children>
+            <!-- Metrics Section -->
+            <Text fx:id="txtTotalUsers" layoutX="50" layoutY="50" text="0" style="-fx-font-size: 24px;"/>
+            <Text fx:id="txtTotalOrders" layoutX="50" layoutY="100" text="0" style="-fx-font-size: 24px;"/>
+            <Text fx:id="txtTotalRevenue" layoutX="50" layoutY="150" text="0" style="-fx-font-size: 24px;"/>
+        </children>
+    </AnchorPane>
 
 </AnchorPane>

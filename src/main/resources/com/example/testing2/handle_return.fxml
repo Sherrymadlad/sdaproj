@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="1080.0" prefWidth="1920.0"
+            xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.example.testing2.controllers.HandleReturnController">
+
+    <children>
+
+        <!-- Background -->
+        <Pane prefWidth="1920" prefHeight="1080" style="-fx-background-color: #cad6de;">
+            <children>
+
+                <!-- Center main card -->
+                <Pane layoutX="500" layoutY="250" prefWidth="900" prefHeight="600"
+                      style="-fx-background-color: #e5dae6; -fx-border-color: purple; -fx-border-width: 5; -fx-border-radius: 10;">
+                    <children>
+
+                        <Text text="Handle Returns" layoutX="320" layoutY="100" fill="#532386">
+                            <font><Font size="48" /></font>
+                        </Text>
+
+                        <Button text="Customer Returns"
+                                layoutX="330" layoutY="220"
+                                prefWidth="250" prefHeight="60"
+                                style="-fx-background-color: #FFF0F5; -fx-border-color: black;"
+                                onAction="#openCustomerReturn">
+                            <font><Font size="22"/></font>
+                        </Button>
+
+                        <Button text="Supplier Returns"
+                                layoutX="330" layoutY="330"
+                                prefWidth="250" prefHeight="60"
+                                style="-fx-background-color: #FFF0F5; -fx-border-color: black;"
+                                onAction="#openSupplierReturn">
+                            <font><Font size="22"/></font>
+                        </Button>
+
+                    </children>
+                </Pane>
+
+            </children>
+        </Pane>
+
+    </children>
+
+</AnchorPane>

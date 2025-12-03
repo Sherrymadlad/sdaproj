@@ -1,14 +1,14 @@
 package com.example.testing2.controllers;
 
 import com.example.testing2.utils.DBHelper;
+import com.example.testing2.utils.Router;
+import com.example.testing2.utils.DataReceiver;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Alert;
 import javafx.scene.text.Text;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
+import javafx.event.ActionEvent;
 import javafx.stage.Stage;
 
 import java.math.BigInteger;
@@ -16,11 +16,6 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
-
 
 public class LoginController {
 
@@ -29,32 +24,27 @@ public class LoginController {
     @FXML private Button btnLogin;
     @FXML private Text txtGoToSignup;
 
-
     @FXML
     private void initialize() {
-        btnLogin.setOnAction(event -> handleLogin());
-        txtGoToSignup.setOnMouseClicked(e -> openSignupPage());
+        btnLogin.setOnAction(event -> handleLogin(event));
+
+        // --- Routing to SignupPage ---
+        txtGoToSignup.setOnMouseClicked(e -> {
+            try {
+                // Use Router to open SignupPage
+                Router.openNewWindow("SignupPage.fxml", "Signup", 800, 600);
+
+                // Close current login window
+                Stage current = (Stage) txtGoToSignup.getScene().getWindow();
+                current.close();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                showAlert(Alert.AlertType.ERROR, "Navigation Error", "Unable to open Signup page.");
+            }
+        });
     }
 
-    private void openSignupPage() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/testing2/SignupPage.fxml"));
-            Parent root = loader.load();
-
-            Stage stage = new Stage();
-            stage.setScene(new Scene(root));
-            stage.setTitle("Signup");
-            stage.show();
-
-            Stage current = (Stage) txtGoToSignup.getScene().getWindow();
-            current.close();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void handleLogin() {
+    private void handleLogin(ActionEvent event) {
         String username = txtLoginName.getText().trim();
         String password = txtLoginPassword.getText().trim();
 
@@ -68,15 +58,31 @@ public class LoginController {
         try (ResultSet rs = DBHelper.executeFunction("Login", username, hashedPassword)) {
 
             if (rs.next()) {
-                String name = rs.getString("username");
-
-                showAlert(Alert.AlertType.INFORMATION, "Login Successful", "Welcome, " + name + "!");
-                clearFields();
+                String role = rs.getString("role"); // assuming DB returns role column
                 int userId = rs.getInt("userid");
-                openCustomerMainPage(userId);
 
-                // TODO: Open the next page here
-                // openDashboard(userId);
+                showAlert(Alert.AlertType.INFORMATION, "Login Successful", "Welcome, " + username + "!");
+                clearFields();
+
+                // Wrap Router calls in try-catch to handle Exception
+                try {
+                    switch (role.toLowerCase()) {
+                        case "admin":
+                            Router.navigate(event, "AdminDashboardPage.fxml");
+                            break;
+                        case "staff":
+                            Router.navigate(event, "StaffDashboard.fxml");
+                            break;
+                        case "customer":
+                            Router.navigateWithData(event, "CustomerMainPage.fxml", userId);
+                            break;
+                        default:
+                            showAlert(Alert.AlertType.ERROR, "Error", "Invalid role");
+                    }
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    showAlert(Alert.AlertType.ERROR, "Navigation Error", "Failed to open the page.");
+                }
 
             } else {
                 showAlert(Alert.AlertType.ERROR, "Invalid Credentials", "Incorrect username or password.");
@@ -117,33 +123,4 @@ public class LoginController {
         txtLoginName.clear();
         txtLoginPassword.clear();
     }
-    private void openCustomerMainPage(int userId) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/testing2/CustomerMainPage.fxml"));
-            Parent root = loader.load();
-
-            // Pass data to next controller
-            CustomerMainPageController controller = loader.getController();
-            controller.setCurrentUserId(userId);
-
-            // Get primary stage from login button
-            Stage primaryStage = (Stage) btnLogin.getScene().getWindow();
-
-            // Apply your preferred window settings
-            Scene scene = new Scene(root);
-            primaryStage.setScene(scene);
-            primaryStage.setMinHeight(600);
-            primaryStage.setMinWidth(800);
-
-            // OPTIONAL: maximize window
-            primaryStage.setMaximized(true);
-
-            primaryStage.show();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            showAlert(Alert.AlertType.ERROR, "Error", "Unable to load main page.");
-        }
-    }
-
 }

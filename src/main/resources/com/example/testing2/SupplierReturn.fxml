@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="1080.0" prefWidth="1920.0"
+            xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.example.testing2.controllers.SupplierReturnController">
+
+    <children>
+
+        <!-- Background -->
+        <Pane prefWidth="1920" prefHeight="1080" style="-fx-background-color: #cad6de;">
+            <children>
+
+                <!-- Card -->
+                <Pane layoutX="250" layoutY="150" prefWidth="1400" prefHeight="780"
+                      style="-fx-background-color: #e5dae6; -fx-border-color: purple; -fx-border-width: 5; -fx-border-radius: 10;">
+                    <children>
+
+                        <Text text="Supplier Pending Returns" layoutX="480" layoutY="80" fill="#532386">
+                            <font><Font size="42"/></font>
+                        </Text>
+
+                        <!-- Table -->
+                        <TableView fx:id="tableSupplierRefunds"
+                                   layoutX="100" layoutY="120"
+                                   prefWidth="1200" prefHeight="520"
+                                   style="-fx-border-color: black;">
+                            <columns>
+                                <TableColumn fx:id="colOrderID" text="Order ID" prefWidth="200"/>
+                                <TableColumn fx:id="colSupplierID" text="Supplier ID" prefWidth="300"/>
+                                <TableColumn fx:id="colStatus" text="Status" prefWidth="300"/>
+                                <TableColumn fx:id="colTotalPrice" text="Total Price" prefWidth="300"/>
+                            </columns>
+                        </TableView>
+
+                        <!-- Approve Button -->
+                        <Button text="Approve"
+                                layoutX="450" layoutY="680"
+                                prefWidth="180" prefHeight="50"
+                                textFill="#532386"
+                                style="-fx-background-color: #FFF0F5; -fx-border-color: black;"
+                                onAction="#acceptRefund">
+                            <font><Font size="20"/></font>
+                        </Button>
+
+                        <!-- Reject Button -->
+                        <Button text="Reject"
+                                layoutX="750" layoutY="680"
+                                prefWidth="180" prefHeight="50"
+                                textFill="#532386"
+                                style="-fx-background-color: #FFF0F5; -fx-border-color: black;"
+                                onAction="#rejectRefund">
+                            <font><Font size="20"/></font>
+                        </Button>
+
+                        <!-- Go Back Button -->
+                        <Button text="Back"
+                                layoutX="1050" layoutY="680"
+                                prefWidth="180" prefHeight="50"
+                                textFill="#532386"
+                                style="-fx-background-color: #FFF0F5; -fx-border-color: black;"
+                                onAction="#goBack">
+                            <font><Font size="20"/></font>
+                        </Button>
+
+                    </children>
+                </Pane>
+
+            </children>
+        </Pane>
+
+    </children>
+
+</AnchorPane>

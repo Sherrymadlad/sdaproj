@@ -1,6 +1,7 @@
 package com.example.testing2.controllers;
 
 import com.example.testing2.utils.DBHelper;
+import com.example.testing2.utils.DataReceiver;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -35,7 +36,7 @@ import java.util.HashMap;
 import javafx.scene.control.ComboBox;
 
 
-public class CustomerMainPageController implements Initializable {
+public class CustomerMainPageController implements Initializable, DataReceiver {
 
     @FXML
     private AnchorPane itemCard;
@@ -134,6 +135,12 @@ public class CustomerMainPageController implements Initializable {
         this.currentUserId = userId;
         System.out.println("Logged-in user ID = " + userId);
         loadCustomerData();
+    }
+
+    @Override
+    public void setData(int value) {
+        // simply call existing method
+        setCurrentUserId(value);
     }
     private void showOrdersPage() {
         resetSidebarButtons();
