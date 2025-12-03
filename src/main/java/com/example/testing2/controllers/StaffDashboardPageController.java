@@ -36,6 +36,7 @@ public class StaffDashboardPageController implements Initializable {
     @FXML private Button btnReports;
     @FXML private Button btnProfile;
     @FXML private Button btnItems; // if you also want to reference Items
+    private int currentUserId;
 
 
     @FXML private AnchorPane itemCard; // TEMPLATE card from FXML (hidden)
@@ -366,5 +367,12 @@ public class StaffDashboardPageController implements Initializable {
         itemDetailsPanel.setUserData(productId);
         itemDetailsPanel.setVisible(true);
     }
+    public void setCurrentUserId(int userId) {
+        this.currentUserId = userId;
+        System.out.println("✅ StaffDashboard loaded for userId: " + userId);
+        // You can use this ID to load staff-specific data if needed
+    }
+
+
 
 }

@@ -27,6 +27,8 @@ public class AdminDashboardController implements Initializable {
     @FXML private Button tabProducts;
     @FXML private Button btnAudit; // Add this if not already declared
     @FXML private Button btnAdminProfile;
+    private int currentUserId;
+
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -105,4 +107,10 @@ public class AdminDashboardController implements Initializable {
             System.out.println("❌ Failed to load Report Page");
         }
     }
+    public void setCurrentUserId(int userId) {
+        this.currentUserId = userId;
+        System.out.println("✅ AdminDashboard loaded for userId: " + userId);
+        // You can also use this ID to load user-specific data if needed
+    }
+
 }

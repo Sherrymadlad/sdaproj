@@ -89,6 +89,7 @@ public class LoginController {
         Task<Boolean> loginTask = new Task<>() {
             private int userId = -1;
             private String name = null;
+            private String role = null;   // <-- NEW
 
             @Override
             protected Boolean call() {
@@ -96,6 +97,13 @@ public class LoginController {
                     if (rs.next()) {
                         name = rs.getString("username");
                         userId = rs.getInt("userid");
+
+                        // Call GetUserRole function to fetch role
+                        try (ResultSet roleRs = DBHelper.executeFunction("GetUserRole", userId)) {
+                            if (roleRs.next()) {
+                                role = roleRs.getString("rolename");
+                            }
+                        }
                         return true;
                     }
                 } catch (SQLException e) {
@@ -109,9 +117,9 @@ public class LoginController {
             protected void succeeded() {
                 boolean success = getValue();
                 if (success) {
-                    showCustomModal("Welcome, " + name + "!");
+                    showCustomModal("Welcome, " + name + "! Role: " + role);
                     clearFields();
-                    openCustomerMainPage(userId);
+                    openMainPage(userId, role);   // <-- pass role
                 } else {
                     showCustomModal("Incorrect username or password.");
                 }
@@ -129,7 +137,6 @@ public class LoginController {
 
         new Thread(loginTask).start();
     }
-
     private String hashPassword(String password) {
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-256");
@@ -152,13 +159,40 @@ public class LoginController {
         txtLoginPassword.clear();
     }
 
-    private void openCustomerMainPage(int userId) {
+    private void openMainPage(int userId, String role) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/testing2/CustomerMainPage.fxml"));
-            Parent root = loader.load();
+            FXMLLoader loader;
+            Parent root;
 
-            CustomerMainPageController controller = loader.getController();
-            controller.setCurrentUserId(userId);
+            switch (role) {
+                case "Admin":
+                    loader = new FXMLLoader(getClass().getResource("/com/example/testing2/AdminDashboardPage.fxml"));
+                    root = loader.load();
+                    AdminDashboardController adminController = loader.getController();
+                    adminController.setCurrentUserId(userId);
+                    break;
+
+//                case "Manager":
+//                    loader = new FXMLLoader(getClass().getResource("/com/example/testing2/ManagerMainPage.fxml"));
+//                    root = loader.load();
+//                    ManagerMainPageController managerController = loader.getController();
+//                    managerController.setCurrentUserId(userId);
+//                    break;
+
+                case "Staff":
+                    loader = new FXMLLoader(getClass().getResource("/com/example/testing2/StaffDashboardPage.fxml"));
+                    root = loader.load();
+                    StaffDashboardPageController staffController = loader.getController();
+                    staffController.setCurrentUserId(userId);
+                    break;
+
+                default: // Customer
+                    loader = new FXMLLoader(getClass().getResource("/com/example/testing2/CustomerMainPage.fxml"));
+                    root = loader.load();
+                    CustomerMainPageController customerController = loader.getController();
+                    customerController.setCurrentUserId(userId);
+                    break;
+            }
 
             Stage primaryStage = (Stage) btnLogin.getScene().getWindow();
             Scene scene = new Scene(root);
@@ -170,7 +204,7 @@ public class LoginController {
 
         } catch (Exception e) {
             e.printStackTrace();
-            showCustomModal("Unable to load main page.");
+            showCustomModal("Unable to load main page for role: " + role);
         }
     }
 
