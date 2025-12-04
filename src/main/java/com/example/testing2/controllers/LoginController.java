@@ -18,12 +18,14 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import javafx.scene.control.PasswordField;
+
 
 public class LoginController {
 
     @FXML private AnchorPane mainRoot; // Root of login page to overlay modal
     @FXML private TextField txtLoginName;
-    @FXML private TextField txtLoginPassword;
+    @FXML private PasswordField txtLoginPassword;
     @FXML private Button btnLogin;
     @FXML private Text txtGoToSignup;
 

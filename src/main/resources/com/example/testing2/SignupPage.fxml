@@ -8,6 +8,7 @@
 <?import javafx.scene.text.Text?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.CheckBox?>
 
 <AnchorPane fx:id = "mainRoot" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1010.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.testing2.controllers.SignupController">
@@ -32,11 +33,11 @@
                                 <Font size="16.0" />
                             </font>
                         </TextField>
-                        <TextField fx:id="txtPassword" layoutX="106.0" layoutY="256.0" prefHeight="35.0" prefWidth="459.0" promptText="Enter Password..." style="-fx-background-color: #E6E6FA; -fx-border-color: black;">
+                        <PasswordField fx:id="txtPassword" layoutX="106.0" layoutY="256.0" prefHeight="35.0" prefWidth="459.0" promptText="Enter Password..." style="-fx-background-color: #E6E6FA; -fx-border-color: black;">
                             <font>
                                 <Font size="16.0" />
                             </font>
-                        </TextField>
+                        </PasswordField>
                         <TextField fx:id="txtEmail" layoutX="106.0" layoutY="318.0" prefHeight="35.0" prefWidth="459.0" promptText="Enter Email..." style="-fx-background-color: #E6E6FA; -fx-border-color: black;">
                             <font>
                                 <Font size="16.0" />
