@@ -95,4 +95,12 @@ public class DBHelper {
         return customerId;
     }
 
+    public static ResultSet executeQuery(String sql, Object... params) throws SQLException {
+        PreparedStatement stmt = getConnection().prepareStatement(sql);
+        for (int i = 0; i < params.length; i++) {
+            stmt.setObject(i + 1, params[i]);
+        }
+        return stmt.executeQuery();
+    }
+
 }

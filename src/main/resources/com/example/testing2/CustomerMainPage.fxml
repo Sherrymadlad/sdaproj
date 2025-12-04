@@ -76,7 +76,7 @@
 
 
             <!-- Scrollable container -->
-            <ScrollPane fx:id="scrollPane" fitToWidth="true" layoutY="127.2" pannable="true" prefHeight="495.0" prefWidth="615.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="127.0">
+            <ScrollPane fx:id="scrollPane" fitToHeight="true" fitToWidth="true" layoutY="127.2" pannable="true" prefHeight="495.0" prefWidth="615.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="127.0">
 
                 <content>
                     <VBox fx:id="categoriesContainer" spacing="20" style="-fx-background-color: #d7e3ee;" />
@@ -85,7 +85,7 @@
 
 
             <!-- Hidden template card (updated) -->
-            <AnchorPane fx:id="itemCard" onMouseEntered="#handleCardHoverIn" onMouseExited="#handleCardHoverOut" prefHeight="280.0" prefWidth="250.0" style="-fx-background-color: #fff0f5;                    -fx-background-radius: 15;                    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10,0,0,3);                    -fx-cursor: hand;" visible="false" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0">
+            <AnchorPane fx:id="itemCard" onMouseEntered="#handleCardHoverIn" onMouseExited="#handleCardHoverOut" prefHeight="224.0" prefWidth="205.0" style="-fx-background-color: #fff0f5;                    -fx-background-radius: 15;                    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10,0,0,3);                    -fx-cursor: hand;" visible="false" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0">
 
                 <children>
                     <!-- Item Image -->

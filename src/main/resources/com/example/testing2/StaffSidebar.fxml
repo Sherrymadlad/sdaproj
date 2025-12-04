@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:controller="com.example.testing2.controllers.StaffSidebarController"
+            prefWidth="339" prefHeight="Infinity"
+            style="-fx-background-color: #f3e6f7;"
+            xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
+
+    <children>
+
+        <!-- Sidebar Image -->
+        <ImageView layoutX="45" layoutY="0" fitWidth="360" fitHeight="235" preserveRatio="true">
+            <image>
+                <Image url="@images/cart-removebg-preview.png"/>
+            </image>
+        </ImageView>
+
+        <!-- Buttons -->
+        <Button fx:id="btnDashboard" layoutX="30" layoutY="220"
+                prefWidth="280" prefHeight="80" text="Dashboard">
+            <font><Font name="Arial Black" size="25"/></font>
+        </Button>
+
+        <Button fx:id="btnOrders" layoutX="30" layoutY="330"
+                prefWidth="280" prefHeight="80" text="Orders">
+            <font><Font name="Arial Black" size="25"/></font>
+        </Button>
+
+        <Button fx:id="btnReports" layoutX="30" layoutY="440"
+                prefWidth="280" prefHeight="80" text="Reports">
+            <font><Font name="Arial Black" size="25"/></font>
+        </Button>
+
+        <Button fx:id="btnProfile" layoutX="30" layoutY="550"
+                prefWidth="280" prefHeight="80" text="Profile">
+            <font><Font name="Arial Black" size="25"/></font>
+        </Button>
+
+    </children>
+</AnchorPane>
