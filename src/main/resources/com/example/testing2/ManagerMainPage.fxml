@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+<?import javafx.geometry.Insets?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+            style="-fx-background-color: #d7e3ee;"
+            AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+            AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"
+            xmlns="http://javafx.com/javafx/25"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.testing2.controllers.ManagerMainPageController">
+
+    <!-- Sidebar (fixed width, full height) -->
+    <AnchorPane prefWidth="249.0" style="-fx-background-color: #f3e6f7; -fx-border-color: black;"
+                AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <children>
+            <ImageView fitHeight="187.0" fitWidth="191.0" layoutX="31.0" layoutY="14.0"
+                       pickOnBounds="true" preserveRatio="true">
+                <image>
+                    <Image url="@images/placeholder.jpg" />
+                </image>
+            </ImageView>
+
+            <!-- Manager Sidebar Buttons -->
+            <Button fx:id="btnAddDeleteProducts" layoutX="3.0" layoutY="230.0" mnemonicParsing="false"
+                    prefHeight="49.0" prefWidth="243.0" style="-fx-background-color: #8b6fa1;"
+                    text="Add/Delete Products" textFill="WHITE"
+                    AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0">
+                <font>
+                    <Font name="System Bold" size="18.0" />
+                </font>
+            </Button>
+
+            <Button fx:id="btnCategorizeProducts" layoutX="3.0" layoutY="290.0" mnemonicParsing="false"
+                    prefHeight="49.0" prefWidth="243.0" style="-fx-background-color: #8b6fa1;"
+                    text="Categorize Products" textFill="WHITE"
+                    AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0">
+                <font>
+                    <Font name="System Bold" size="18.0" />
+                </font>
+            </Button>
+
+            <Button fx:id="btnMaintainStock" layoutX="3.0" layoutY="350.0" mnemonicParsing="false"
+                    prefHeight="49.0" prefWidth="243.0" style="-fx-background-color: #8b6fa1;"
+                    text="Maintain Stock" textFill="WHITE"
+                    AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0">
+                <font>
+                    <Font name="System Bold" size="18.0" />
+                </font>
+            </Button>
+
+            <Button fx:id="btnApprovePurchases" layoutX="3.0" layoutY="410.0" mnemonicParsing="false"
+                    prefHeight="49.0" prefWidth="243.0" style="-fx-background-color: #8b6fa1;"
+                    text="Approve Purchases" textFill="WHITE"
+                    AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0">
+                <font>
+                    <Font name="System Bold" size="18.0" />
+                </font>
+            </Button>
+
+            <Button fx:id="btnGenerateReports" layoutX="3.0" layoutY="470.0" mnemonicParsing="false"
+                    prefHeight="49.0" prefWidth="243.0" style="-fx-background-color: #8b6fa1;"
+                    text="Generate Reports" textFill="WHITE"
+                    AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0">
+                <font>
+                    <Font name="System Bold" size="18.0" />
+                </font>
+            </Button>
+
+            <Button fx:id="btnLowStockNotifications" layoutX="3.0" layoutY="530.0" mnemonicParsing="false"
+                    prefHeight="49.0" prefWidth="243.0" style="-fx-background-color: #8b6fa1;"
+                    text="Low Stock Alerts" textFill="WHITE"
+                    AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0">
+                <font>
+                    <Font name="System Bold" size="18.0" />
+                </font>
+            </Button>
+        </children>
+    </AnchorPane>
+
+    <!-- Main Content Area -->
+    <AnchorPane fx:id="mainContent" style="-fx-background-color: #d7e3ee;"
+                AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="249.0"
+                AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <children>
+            <!-- Header with Search -->
+            <AnchorPane prefHeight="90.0" AnchorPane.leftAnchor="0.0"
+                        AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                <children>
+                    <Text layoutX="30.0" layoutY="40.0" text="Manager Dashboard"
+                          style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-fill: #6d4c7d;" />
+
+                    <TextField fx:id="txtSearch" promptText="Search products..."
+                               style="-fx-border-radius: 10; -fx-border-width: 2; -fx-background-radius: 10;"
+                               AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="30.0"
+                               prefWidth="250.0" prefHeight="35.0">
+                        <font>
+                            <Font size="14.0" />
+                        </font>
+                    </TextField>
+
+                    <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true"
+                               preserveRatio="true" AnchorPane.rightAnchor="280.0"
+                               AnchorPane.topAnchor="32.0">
+                        <image>
+                            <Image url="@images/icon-removebg-preview.png" />
+                        </image>
+                    </ImageView>
+                </children>
+            </AnchorPane>
+
+            <!-- Products Table -->
+            <TableView fx:id="productsTable" AnchorPane.topAnchor="100.0"
+                       AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0"
+                       AnchorPane.bottomAnchor="100.0" style="-fx-background-color: white;">
+                <columns>
+                    <TableColumn fx:id="colId" text="ID" prefWidth="50" />
+                    <TableColumn fx:id="colName" text="Product Name" prefWidth="150" />
+                    <TableColumn fx:id="colCategory" text="Category" prefWidth="100" />
+                    <TableColumn fx:id="colPrice" text="Price" prefWidth="80" />
+                    <TableColumn fx:id="colStock" text="Stock" prefWidth="80" />
+                    <TableColumn fx:id="colLowStock" text="Low Stock" prefWidth="80" />
+                    <TableColumn fx:id="colActions" text="Actions" prefWidth="120" />
+                </columns>
+            </TableView>
+
+            <!-- Action Buttons -->
+            <HBox spacing="15" alignment="CENTER_RIGHT"
+                  AnchorPane.bottomAnchor="20.0" AnchorPane.rightAnchor="20.0">
+                <Button fx:id="btnAddProduct" text="Add Product"
+                        style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 14px; -fx-background-radius: 5;"
+                        prefWidth="120" prefHeight="35" />
+                <Button fx:id="btnDeleteProduct" text="Delete Selected"
+                        style="-fx-background-color: #f44336; -fx-text-fill: white; -fx-font-size: 14px; -fx-background-radius: 5;"
+                        prefWidth="120" prefHeight="35" />
+                <Button fx:id="btnUpdateProduct" text="Update Product"
+                        style="-fx-background-color: #2196F3; -fx-text-fill: white; -fx-font-size: 14px; -fx-background-radius: 5;"
+                        prefWidth="120" prefHeight="35" />
+            </HBox>
+        </children>
+    </AnchorPane>
+
+    <!-- Add/Edit Product Modal -->
+    <StackPane fx:id="productModal" alignment="CENTER" visible="false"
+               style="-fx-background-color: rgba(0,0,0,0.6);"
+               AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0"
+               AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+        <AnchorPane fx:id="modalContent" prefWidth="500" prefHeight="650"
+                    maxWidth="500" maxHeight="650"
+                    style="-fx-background-color: white; -fx-background-radius: 20;">
+
+            <Button fx:id="btnCloseModal" text="✕" layoutX="445" layoutY="15"
+                    prefWidth="40" prefHeight="40"
+                    style="-fx-background-color: transparent; -fx-font-size: 22px; -fx-text-fill: #444;" />
+
+            <Text layoutX="25.0" layoutY="50.0" text="Add/Edit Product"
+                  style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-fill: #6d4c7d;" />
+
+            <VBox layoutX="25.0" layoutY="70.0" spacing="20" prefWidth="450">
+                <padding>
+                    <Insets top="20" />
+                </padding>
+
+                <!-- Product Image -->
+                <HBox spacing="15" alignment="CENTER_LEFT">
+                    <ImageView fx:id="productImage" fitWidth="100" fitHeight="100"
+                               preserveRatio="true"
+                               style="-fx-background-color: #f0f0f0; -fx-background-radius: 10;" />
+                    <Button fx:id="btnUploadImage" text="Upload Image"
+                            style="-fx-background-color: #8b6fa1; -fx-text-fill: white; -fx-background-radius: 5;"
+                            prefWidth="120" />
+                </HBox>
+
+                <!-- Product Form -->
+                <VBox spacing="10">
+                    <HBox spacing="15">
+                        <VBox spacing="5">
+                            <Label text="Product Name *" />
+                            <TextField fx:id="txtProductName" prefWidth="200" />
+                        </VBox>
+                        <VBox spacing="5">
+                            <Label text="Category *" />
+                            <ComboBox fx:id="cmbCategory" prefWidth="200" />
+                        </VBox>
+                    </HBox>
+
+                    <HBox spacing="15">
+                        <VBox spacing="5">
+                            <Label text="Price *" />
+                            <TextField fx:id="txtPrice" prefWidth="200" />
+                        </VBox>
+                        <VBox spacing="5">
+                            <Label text="Stock Quantity *" />
+                            <TextField fx:id="txtStock" prefWidth="200" />
+                        </VBox>
+                    </HBox>
+
+                    <HBox spacing="15">
+                        <VBox spacing="5">
+                            <Label text="Low Stock Threshold" />
+                            <TextField fx:id="txtLowStock" prefWidth="200" />
+                        </VBox>
+                        <VBox spacing="5">
+                            <Label text="Supplier" />
+                            <TextField fx:id="txtSupplier" prefWidth="200" />
+                        </VBox>
+                    </HBox>
+
+                    <VBox spacing="5">
+                        <Label text="Description" />
+                        <TextArea fx:id="txtDescription" prefWidth="415" prefHeight="100"
+                                  wrapText="true" />
+                    </VBox>
+                </VBox>
+
+                <!-- Action Buttons -->
+                <HBox spacing="15" alignment="CENTER_RIGHT">
+                    <Button fx:id="btnCancel" text="Cancel"
+                            style="-fx-background-color: #9e9e9e; -fx-text-fill: white; -fx-background-radius: 5;"
+                            prefWidth="100" />
+                    <Button fx:id="btnSaveProduct" text="Save Product"
+                            style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-background-radius: 5;"
+                            prefWidth="120" />
+                </HBox>
+            </VBox>
+        </AnchorPane>
+    </StackPane>
+
+    <!-- Low Stock Notification Badge -->
+    <StackPane fx:id="notificationBadge" visible="false"
+               style="-fx-background-color: red; -fx-background-radius: 10; -fx-padding: 2 6 2 6;"
+               AnchorPane.topAnchor="15.0" AnchorPane.rightAnchor="15.0">
+        <Label fx:id="lblNotificationCount" text="0"
+               style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 12px;" />
+    </StackPane>
+</AnchorPane>

@@ -15,6 +15,8 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 import javafx.stage.Stage;
+import java.math.BigDecimal;
+
 
 import java.net.URL;
 import java.sql.*;
@@ -111,34 +113,16 @@ public class CartPageController implements Initializable {
             Button btnIncrease = new Button("+");
             btnIncrease.setStyle("-fx-font-size:18; -fx-background-color:#d3d3d3;");
 
-            // Handlers for +/- buttons
-            btnIncrease.setOnAction(e -> {
-                cart.put(productId, cart.get(productId) + 1);
-                qtyText.setText(String.valueOf(cart.get(productId)));
-                updateTotal();
-            });
-
-            btnDecrease.setOnAction(e -> {
-                int currentQty = cart.get(productId) - 1;
-                if (currentQty <= 0) {
-                    cart.remove(productId);
-                    cartItemsContainer.getChildren().remove(itemRow);
-                } else {
-                    cart.put(productId, currentQty);
-                    qtyText.setText(String.valueOf(currentQty));
-                }
-                updateTotal();
-            });
-
             Text priceText = new Text("Rs " + (price * quantity));
             priceText.setFont(Font.font("System", FontWeight.BOLD, 16));
 
-            // Update price dynamically when quantity changes
+            // Handlers for +/- buttons
             btnIncrease.setOnAction(e -> {
                 cart.put(productId, cart.get(productId) + 1);
                 qtyText.setText(String.valueOf(cart.get(productId)));
                 priceText.setText("Rs " + (price * cart.get(productId)));
                 updateTotal();
+                if (parentController != null) parentController.updateCartBadge();
             });
 
             btnDecrease.setOnAction(e -> {
@@ -152,6 +136,7 @@ public class CartPageController implements Initializable {
                     priceText.setText("Rs " + (price * currentQty));
                 }
                 updateTotal();
+                if (parentController != null) parentController.updateCartBadge();
             });
 
             itemRow.getChildren().addAll(nameText, btnDecrease, qtyText, btnIncrease, priceText);
@@ -161,8 +146,8 @@ public class CartPageController implements Initializable {
         }
 
         txtTotal.setText("Total: Rs " + total);
-
     }
+
 
     private void updateTotal() {
         double total = 0;
@@ -210,32 +195,23 @@ public class CartPageController implements Initializable {
                 else throw new SQLException("No customer found for user " + currentUserId);
             }
 
-            // Insert order
-            String orderSql = "INSERT INTO orders(ordertype, customerid, status) VALUES (?, ?, ?) RETURNING orderid";
-            int orderId;
-            try (PreparedStatement stmt = conn.prepareStatement(orderSql)) {
-                stmt.setString(1, "Sales");
-                stmt.setInt(2, customerId);
-                stmt.setString(3, "Pending");
-                ResultSet rs = stmt.executeQuery();
-                rs.next();
-                orderId = rs.getInt("orderid");
-            }
-
-            // Insert order items
-            String itemSql = "INSERT INTO orderitem(orderid, productid, quantity, unitprice) VALUES (?, ?, ?, ?)";
-            try (PreparedStatement stmt = conn.prepareStatement(itemSql)) {
+            // Call AddSalesOrder stored procedure for each product in cart
+            String procSql = "SELECT AddSalesOrder(?, ?, ?, ?, ?)";
+            try (PreparedStatement stmt = conn.prepareStatement(procSql)) {
+                int warehouseId = 1; // replace with actual warehouse
                 for (Map.Entry<Integer, Integer> entry : cart.entrySet()) {
-                    int pid = entry.getKey();
+                    int productId = entry.getKey();
                     int qty = entry.getValue();
-                    double price = productPrices.get(pid);
-                    stmt.setInt(1, orderId);
-                    stmt.setInt(2, pid);
-                    stmt.setInt(3, qty);
-                    stmt.setDouble(4, price);
-                    stmt.addBatch();
+                    double price = productPrices.get(productId);
+
+                    stmt.setInt(1, customerId);
+                    stmt.setInt(2, warehouseId);
+                    stmt.setInt(3, productId);
+                    stmt.setInt(4, qty);
+                    stmt.setBigDecimal(5, BigDecimal.valueOf(price)); // <- fix here
+
+                    stmt.execute();
                 }
-                stmt.executeBatch();
             }
 
             conn.commit();
@@ -263,12 +239,19 @@ public class CartPageController implements Initializable {
         }
     }
 
+
     private void showAlert(AlertType type, String title, String msg) {
         Alert alert = new Alert(type);
         alert.setTitle(title);
         alert.setHeaderText(null);
         alert.setContentText(msg);
         alert.showAndWait();
+    }
+
+    private void updateParentCartBadge() {
+        if (parentController != null) {
+            parentController.updateCartBadge();
+        }
     }
 
 }
