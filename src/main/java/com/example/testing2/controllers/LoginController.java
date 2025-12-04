@@ -1,3 +1,5 @@
+
+
 package com.example.testing2.controllers;
 
 import com.example.testing2.utils.DBHelper;
@@ -74,7 +76,7 @@ public class LoginController {
         }
     }
 
-    private void handleLogin(ActionEvent event) {
+    private void handleLogin() {
         String username = txtLoginName.getText().trim();
         String password = txtLoginPassword.getText().trim();
 
@@ -218,3 +220,7 @@ public class LoginController {
         }
     }
 }
+
+
+
+

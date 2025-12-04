@@ -63,20 +63,7 @@ public class SignupController {
 
         // Handle signup button click
         btnSignup.setOnAction(e -> handleSignup());
-
-        // --- Added routing functionality ---
-        txtGoToLogin.setOnMouseClicked(e -> {
-            try {
-                // Use Router to open LoginPage
-                Router.openNewWindow("LoginPage.fxml", "Login", 800, 600);
-
-                // Close current signup window
-                Stage current = (Stage) txtGoToLogin.getScene().getWindow();
-                current.close();
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-        });
+        txtGoToLogin.setOnMouseClicked(e -> openLoginPage());
     }
 
     private void openLoginPage() {
@@ -197,3 +184,6 @@ public class SignupController {
         }
     }
 }
+
+
+
