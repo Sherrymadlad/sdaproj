@@ -111,7 +111,7 @@ public class ManagerMainPageController implements Initializable, SidebarListener
                     loadProductsFromDatabase();
                     return;
                 }
-                case "Orders" -> loadPage("/com/example/testing2/StaffOrdersPage.fxml");
+                case "Orders" -> loadPage("/com/example/testing2/ManagerOrdersPage.fxml");
                 case "Reports" -> loadPage("/com/example/testing2/StaffReportsPage.fxml");
                 case "Notifications" -> loadPage("/com/example/testing2/NotificationsPage.fxml");
                 case "Profile" -> {
