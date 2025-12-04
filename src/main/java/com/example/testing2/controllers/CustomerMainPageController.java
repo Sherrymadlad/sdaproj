@@ -64,7 +64,6 @@ public class CustomerMainPageController implements Initializable, SidebarListene
     public void initialize(URL url, ResourceBundle resourceBundle) {
         setupSidebar();
         setupUI();
-        setCurrentUserId(11); // temporary
     }
 
     private void setupSidebar() {
@@ -184,6 +183,7 @@ public class CustomerMainPageController implements Initializable, SidebarListene
                 SELECT p.productid, p.name AS product_name, p.price, c.categoryid, c.name AS category_name
                 FROM product p 
                 JOIN category c ON p.categoryid = c.categoryid 
+                WHERE p.isactive = TRUE
                 ORDER BY c.name, p.name
             """);
 
@@ -361,8 +361,10 @@ public class CustomerMainPageController implements Initializable, SidebarListene
             if (cart.isEmpty()) return;
 
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/testing2/CartPage.fxml"));
-            Parent root = loader.load();
+            StackPane cartPage = loader.load();
             CartPageController controller = loader.getController();
+
+            // Pass data to the cart controller
             controller.setParentController(this);
             controller.setCurrentUserId(currentUserId);
 
@@ -372,9 +374,12 @@ public class CustomerMainPageController implements Initializable, SidebarListene
             for (Map.Entry<TilePane, List<AnchorPane>> entry : categoryProductsMap.entrySet()) {
                 for (AnchorPane card : entry.getValue()) {
                     int pid = (int) card.getUserData();
-                    Text nameText = null; Text priceText = null;
+                    Text nameText = null, priceText = null;
                     for (Node n : card.getChildren()) {
-                        if (n instanceof Text t) { if (nameText == null) nameText = t; else if (priceText == null) priceText = t; }
+                        if (n instanceof Text t) {
+                            if (nameText == null) nameText = t;
+                            else if (priceText == null) priceText = t;
+                        }
                     }
                     if (nameText != null) productNames.put(pid, nameText.getText());
                     if (priceText != null) productPrices.put(pid, Double.parseDouble(priceText.getText().replace("Rs ", "").trim()));
@@ -383,13 +388,20 @@ public class CustomerMainPageController implements Initializable, SidebarListene
 
             controller.setCartData(cart, productNames, productPrices);
 
-            Stage stage = new Stage();
-            stage.setScene(new Scene(root, 1600, 900));
-            stage.setTitle("My Cart");
-            stage.setMaximized(true);
-            stage.show();
+            // Add as overlay to main content
+            cartPage.setUserData("overlay"); // mark as overlay
+            mainContent.getChildren().removeIf(node -> "overlay".equals(node.getUserData()));
+            mainContent.getChildren().add(cartPage);
 
-        } catch (Exception ex) { ex.printStackTrace(); }
+            // Anchor the StackPane to fill mainContent
+            AnchorPane.setTopAnchor(cartPage, 0.0);
+            AnchorPane.setBottomAnchor(cartPage, 0.0);
+            AnchorPane.setLeftAnchor(cartPage, 0.0);
+            AnchorPane.setRightAnchor(cartPage, 0.0);
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     public void clearCart() { cart.clear(); updateCartBadge(); }
