@@ -6,65 +6,47 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Text?>
+<?import javafx.fxml.FXMLLoader?>
+<?import javafx.scene.layout.BorderPane?>
 
-<AnchorPane prefHeight="700.0" prefWidth="1000.0"
+<BorderPane prefHeight="700.0" prefWidth="1000.0"
             style="-fx-background-color: #d7e3ee;"
             xmlns="http://javafx.com/javafx/25"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.example.testing2.controllers.AdminDashboardController">
 
-    <!-- Sidebar -->
-    <AnchorPane prefWidth="250.0"
-                style="-fx-background-color: #f3e6f7; -fx-border-color: black;"
-                AnchorPane.bottomAnchor="0.0"
-                AnchorPane.leftAnchor="0.0"
-                AnchorPane.topAnchor="0.0">
-        <children>
-            <ImageView fitHeight="150.0" fitWidth="150.0"
-                       layoutX="50.0" layoutY="20.0"
-                       pickOnBounds="true" preserveRatio="true">
-                <image>
-                    <Image url="@images/cart-removebg-preview.png"/>
-                </image>
-            </ImageView>
+    <!-- LEFT SIDEBAR (now dynamic) -->
+    <left>
+        <fx:include fx:id="sidebar" source="Sidebar.fxml"/>
+    </left>
 
-            <Button fx:id="btnReports" layoutX="5.0" layoutY="200.0"
-                    prefHeight="50.0" prefWidth="240.0"
-                    style="-fx-background-color: #8b6fa1;" text="Reports" textFill="WHITE"/>
-            <Button fx:id="btnAudit" layoutX="5.0" layoutY="270.0"
-                    prefHeight="50.0" prefWidth="240.0"
-                    style="-fx-background-color: #8b6fa1;" text="Audit Logs" textFill="WHITE"/>
-            <Button fx:id="btnAdminProfile" layoutX="5.0" layoutY="340.0"
-                    prefHeight="50.0" prefWidth="240.0"
-                    style="-fx-background-color: #8b6fa1;" text="Profile" textFill="WHITE"/>
-        </children>
-    </AnchorPane>
+    <!-- TOP TABS & MAIN CONTENT WRAPPER -->
+    <center>
+        <AnchorPane>
 
-    <!-- Top Tabs -->
-    <HBox layoutX="260.0" layoutY="10.0" spacing="10">
-        <children>
-            <Button fx:id="tabMetrics" prefHeight="50.0" prefWidth="220.0"
-                    style="-fx-background-color: #8b6fa1; -fx-text-fill: white;" text="Metrics"/>
-            <Button fx:id="tabUsers" prefHeight="50.0" prefWidth="220.0"
-                    style="-fx-background-color: #c2add3; -fx-text-fill: #4b355a;" text="Users"/>
-            <Button fx:id="tabProducts" prefHeight="50.0" prefWidth="220.0"
-                    style="-fx-background-color: #c2add3; -fx-text-fill: #4b355a;" text="Products"/>
-        </children>
-    </HBox>
+            <!-- Top Tabs -->
+            <HBox layoutX="10.0" layoutY="10.0" spacing="10">
+                <children>
+                    <Button fx:id="tabMetrics" prefHeight="50.0" prefWidth="220.0"
+                            style="-fx-background-color: #8b6fa1; -fx-text-fill: white;" text="Metrics"/>
+                    <Button fx:id="tabUsers" prefHeight="50.0" prefWidth="220.0"
+                            style="-fx-background-color: #c2add3; -fx-text-fill: #4b355a;" text="Users"/>
+                    <Button fx:id="tabProducts" prefHeight="50.0" prefWidth="220.0"
+                            style="-fx-background-color: #c2add3; -fx-text-fill: #4b355a;" text="Products"/>
+                </children>
+            </HBox>
 
-    <!-- Main Content Area -->
-    <AnchorPane fx:id="mainContent"
-                layoutX="250"
-                AnchorPane.bottomAnchor="0.0"
-                AnchorPane.rightAnchor="0.0"
-                AnchorPane.topAnchor="60.0"
-                style="-fx-background-color: #d7e3ee;">
-        <children>
-            <!-- Metrics Section -->
-            <Text fx:id="txtTotalUsers" layoutX="50" layoutY="50" text="0" style="-fx-font-size: 24px;"/>
-            <Text fx:id="txtTotalOrders" layoutX="50" layoutY="100" text="0" style="-fx-font-size: 24px;"/>
-            <Text fx:id="txtTotalRevenue" layoutX="50" layoutY="150" text="0" style="-fx-font-size: 24px;"/>
-        </children>
-    </AnchorPane>
+            <!-- MAIN CONTENT AREA -->
+            <AnchorPane fx:id="mainContent"
+                        layoutY="70"
+                        AnchorPane.topAnchor="70.0"
+                        AnchorPane.bottomAnchor="0.0"
+                        AnchorPane.leftAnchor="0.0"
+                        AnchorPane.rightAnchor="0.0"
+                        style="-fx-background-color: #d7e3ee;">
+            </AnchorPane>
 
-</AnchorPane>
+        </AnchorPane>
+    </center>
+
+</BorderPane>
