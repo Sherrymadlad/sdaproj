@@ -176,12 +176,12 @@ public class LoginController {
                     adminController.setCurrentUserId(userId);
                     break;
 
-//                case "Manager":
-//                    loader = new FXMLLoader(getClass().getResource("/com/example/testing2/ManagerMainPage.fxml"));
-//                    root = loader.load();
-//                    ManagerMainPageController managerController = loader.getController();
-//                    managerController.setCurrentUserId(userId);
-//                    break;
+                case "Manager":
+                    loader = new FXMLLoader(getClass().getResource("/com/example/testing2/ManagerMainPage.fxml"));
+                    root = loader.load();
+                    ManagerMainPageController managerController = loader.getController();
+                    managerController.setCurrentUserId(userId);
+                    break;
 
                 case "Staff":
                     loader = new FXMLLoader(getClass().getResource("/com/example/testing2/StaffDashboardPage.fxml"));
@@ -203,6 +203,7 @@ public class LoginController {
             primaryStage.setScene(scene);
             primaryStage.setMinHeight(600);
             primaryStage.setMinWidth(800);
+            primaryStage.setMaximized(false);
             primaryStage.setMaximized(true);
             primaryStage.show();
 

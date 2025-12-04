@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Text?>
 
@@ -26,6 +27,7 @@
                   text="Message goes here"
                   layoutX="20" layoutY="50" />
 
+            <!-- OK Button for normal messages -->
             <Button fx:id="btnOk" text="OK"
                     prefWidth="120" prefHeight="40"
                     style="-fx-background-color: linear-gradient(to bottom, #8b6fa1, #b694c4);
@@ -36,6 +38,32 @@
                            -fx-cursor: hand;
                            -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 4,0,0,2);"
                     layoutX="140" layoutY="130" />
+
+            <!-- Confirmation Buttons for Yes/No -->
+            <HBox fx:id="confirmationButtons" spacing="20"
+                  layoutX="90" layoutY="130" visible="false" alignment="CENTER">
+                <children>
+                    <Button fx:id="btnYes" text="Yes"
+                            prefWidth="120" prefHeight="40"
+                            style="-fx-background-color: linear-gradient(to bottom, #4CAF50, #66BB6A);
+                                   -fx-text-fill: white;
+                                   -fx-font-weight: bold;
+                                   -fx-font-size: 16px;
+                                   -fx-background-radius: 15;
+                                   -fx-cursor: hand;
+                                   -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 4,0,0,2);" />
+                    <Button fx:id="btnNo" text="No"
+                            prefWidth="120" prefHeight="40"
+                            style="-fx-background-color: linear-gradient(to bottom, #F44336, #E57373);
+                                   -fx-text-fill: white;
+                                   -fx-font-weight: bold;
+                                   -fx-font-size: 16px;
+                                   -fx-background-radius: 15;
+                                   -fx-cursor: hand;
+                                   -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 4,0,0,2);" />
+                </children>
+            </HBox>
+
         </children>
     </AnchorPane>
 </StackPane>
