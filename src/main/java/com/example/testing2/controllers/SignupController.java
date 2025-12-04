@@ -10,7 +10,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-
+import javafx.scene.control.PasswordField;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -21,7 +21,7 @@ public class SignupController {
     @FXML private AnchorPane mainRoot; // Root to overlay modal
 
     @FXML private TextField txtName;
-    @FXML private TextField txtPassword;
+    @FXML private PasswordField txtPassword;
     @FXML private TextField txtEmail;
     @FXML private TextField txtPhoneNo;
     @FXML private TextField txtAddress;
@@ -113,12 +113,33 @@ public class SignupController {
         String phone = txtPhoneNo.getText().trim();
         String address = txtAddress.getText().trim();
 
-        // Validate fields
+        // 🔒 FRONTEND VALIDATION CHECKS
+
+        // Empty fields
         if (name.isEmpty() || password.isEmpty() || email.isEmpty() || phone.isEmpty() || address.isEmpty()) {
             showCustomModal("Please fill in all fields.");
             return;
         }
 
+        // Email format
+        if (!email.matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
+            showCustomModal("Invalid email format.");
+            return;
+        }
+
+        // Phone number digits only (10–15 length)
+        if (!phone.matches("\\d{10,15}")) {
+            showCustomModal("Phone number must be 10–15 digits.");
+            return;
+        }
+
+        // Password length only
+        if (password.length() < 8) {
+            showCustomModal("Password must be at least 8 characters long.");
+            return;
+        }
+
+        // Role selection
         String role = null;
         if (btnAdmin.isSelected()) role = "Admin";
         else if (btnManager.isSelected()) role = "Manager";
@@ -130,7 +151,7 @@ public class SignupController {
             return;
         }
 
-        // Hash the password
+        // ✅ If all checks pass → continue signup
         String hashedPassword = hashPassword(password);
 
         try {

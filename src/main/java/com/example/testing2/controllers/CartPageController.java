@@ -16,6 +16,11 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 import javafx.stage.Stage;
 import java.math.BigDecimal;
+import javafx.scene.layout.StackPane;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.AnchorPane;
 
 
 import java.net.URL;
@@ -32,6 +37,8 @@ public class CartPageController implements Initializable {
     @FXML private CheckBox chkCard;
     @FXML private CheckBox chkCash;
     @FXML private Button btnPlaceOrder;
+    private CustomModalController customModalController;
+    @FXML private StackPane mainRoot;
 
     private Map<Integer, Integer> cart;        // productId -> quantity
     private Map<Integer, String> productNames; // productId -> product name
@@ -43,6 +50,23 @@ public class CartPageController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         btnPlaceOrder.setOnAction(e -> handlePlaceOrder());
+        // Load Custom Modal
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/testing2/CustomModal.fxml"));
+            StackPane modalRoot = loader.load();
+            customModalController = loader.getController();
+
+            // Add modal to main root and anchor it to fill the parent
+            mainRoot.getChildren().add(modalRoot);
+            AnchorPane.setTopAnchor(modalRoot, 0.0);
+            AnchorPane.setBottomAnchor(modalRoot, 0.0);
+            AnchorPane.setLeftAnchor(modalRoot, 0.0);
+            AnchorPane.setRightAnchor(modalRoot, 0.0);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     public void setParentController(CustomerMainPageController controller) {
@@ -98,23 +122,51 @@ public class CartPageController implements Initializable {
             int quantity = entry.getValue();
             String name = productNames.get(productId);
             double price = productPrices.get(productId);
-
-            HBox itemRow = new HBox(15);
-            itemRow.setStyle("-fx-background-color:white; -fx-padding:10; -fx-border-radius:5; -fx-background-radius:5;");
+            HBox itemRow = new HBox(20);
+            itemRow.setStyle("-fx-background-color: #f5e6ff; -fx-padding: 15; -fx-background-radius: 12;");
             itemRow.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
 
+            Pane spacer = new Pane();
+            HBox.setHgrow(spacer, javafx.scene.layout.Priority.ALWAYS);
+
+
+            // Product name - Bigger & bolder
             Text nameText = new Text(name);
-            nameText.setFont(Font.font("System", FontWeight.BOLD, 16));
+            nameText.setFont(Font.font("System", FontWeight.BOLD, 20));
+            nameText.setStyle("-fx-fill: #4b0082;"); // dark purple shade (looks premium)
 
+
+// - Button (Bigger, Rounded)
             Button btnDecrease = new Button("-");
-            btnDecrease.setStyle("-fx-font-size:18; -fx-background-color:#d3d3d3;");
-            Text qtyText = new Text(String.valueOf(quantity));
-            qtyText.setFont(Font.font("System", FontWeight.BOLD, 16));
-            Button btnIncrease = new Button("+");
-            btnIncrease.setStyle("-fx-font-size:18; -fx-background-color:#d3d3d3;");
+            btnDecrease.setStyle(
+                    "-fx-font-size: 22;" +
+                            "-fx-background-color: #ffcccc;" +   // soft red
+                            "-fx-background-radius: 8;" +
+                            "-fx-padding: 5 12;"
+            );
 
+
+// Quantity text - Bigger
+            Text qtyText = new Text(String.valueOf(quantity));
+            qtyText.setFont(Font.font("System", FontWeight.BOLD, 20));
+            qtyText.setStyle("-fx-fill: #000000;");
+
+
+// + Button (Bigger, Rounded)
+            Button btnIncrease = new Button("+");
+            btnIncrease.setStyle(
+                    "-fx-font-size: 22;" +
+                            "-fx-background-color: #ccffcc;" +   // soft green
+                            "-fx-background-radius: 8;" +
+                            "-fx-padding: 5 12;"
+            );
+
+
+// Price text - Eye catchy (Pinkish gradient feel)
             Text priceText = new Text("Rs " + (price * quantity));
-            priceText.setFont(Font.font("System", FontWeight.BOLD, 16));
+            priceText.setFont(Font.font("System", FontWeight.BOLD, 22));
+            priceText.setStyle("-fx-fill: #e60073;");   // hot pink
+
 
             // Handlers for +/- buttons
             btnIncrease.setOnAction(e -> {
@@ -139,7 +191,15 @@ public class CartPageController implements Initializable {
                 if (parentController != null) parentController.updateCartBadge();
             });
 
-            itemRow.getChildren().addAll(nameText, btnDecrease, qtyText, btnIncrease, priceText);
+            itemRow.getChildren().addAll(
+                    nameText,
+                    btnDecrease,
+                    qtyText,
+                    btnIncrease,
+                    spacer,      // <-- pushes price to the extreme right
+                    priceText
+            );
+
             cartItemsContainer.getChildren().add(itemRow);
 
             total += price * quantity;
@@ -160,15 +220,16 @@ public class CartPageController implements Initializable {
 
     private void handlePlaceOrder() {
         if (cart == null || cart.isEmpty()) {
-            showAlert(AlertType.WARNING, "Cart is empty", "Please add items before placing an order.");
+            showCustomModal("Cart is empty, Please add items before placing an order.");
             return;
         }
+
 
         String paymentMethod;
         if (chkCard.isSelected()) paymentMethod = "Card";
         else if (chkCash.isSelected()) paymentMethod = "Cash";
         else {
-            showAlert(AlertType.WARNING, "Payment Method", "Please select a payment method!");
+            showCustomModal("Please select a payment method!");
             return;
         }
 
@@ -217,7 +278,7 @@ public class CartPageController implements Initializable {
             conn.commit();
 
             // Success alert
-            showAlert(Alert.AlertType.INFORMATION, "Order Placed", "Your order has been placed successfully!");
+            showCustomModal("Your order has been placed successfully!");
 
             // Clear cart locally and update UI
             cart.clear();
@@ -251,6 +312,14 @@ public class CartPageController implements Initializable {
     private void updateParentCartBadge() {
         if (parentController != null) {
             parentController.updateCartBadge();
+        }
+    }
+
+    private void showCustomModal(String message) {
+        if (customModalController != null) {
+            customModalController.showMessage(message);
+        } else {
+            System.err.println("Custom modal not initialized: " + message);
         }
     }
 

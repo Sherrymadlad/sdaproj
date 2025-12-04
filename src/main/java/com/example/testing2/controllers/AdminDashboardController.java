@@ -20,6 +20,8 @@ public class AdminDashboardController implements Initializable {
     @FXML private Button btnReports;
     @FXML private Button btnAudit;
     @FXML private Button btnAdminProfile;
+    private int currentUserId;
+
 
     @FXML private AnchorPane mainContent;
 
@@ -85,4 +87,10 @@ public class AdminDashboardController implements Initializable {
         return "-fx-background-color: #8b6fa1; -fx-text-fill: white; "
                 + "-fx-font-size: 16px; -fx-background-radius: 5;";
     }
+    public void setCurrentUserId(int userId) {
+        this.currentUserId = userId;
+        System.out.println("✅ AdminDashboard loaded for userId: " + userId);
+        // You can also use this ID to load user-specific data if needed
+    }
+
 }

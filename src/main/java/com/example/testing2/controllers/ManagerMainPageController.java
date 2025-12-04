@@ -30,6 +30,8 @@ public class ManagerMainPageController implements Initializable {
     @FXML private TableColumn<Product, Integer> colStock;
     @FXML private TableColumn<Product, String> colSupplier;
     @FXML private TableColumn<Product, Void> colActions;
+    private int currentUserId;
+
 
     @FXML private Button btnAddProduct, btnDeleteProduct, btnUpdateProduct, btnSaveProduct, btnCancel;
     @FXML private StackPane productModal, notificationBadge;

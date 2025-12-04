@@ -12,6 +12,10 @@ import java.security.NoSuchAlgorithmException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Optional;
+import javafx.scene.layout.StackPane;
+import javafx.fxml.FXML;
+import javafx.scene.layout.AnchorPane;
+import javafx.fxml.FXMLLoader;
 
 public class CustomerProfilePageController {
 
@@ -27,6 +31,8 @@ public class CustomerProfilePageController {
     @FXML private Button btnEditPhone;
     @FXML private Button btnEditEmail;
     private int currentUserId; // dynamic
+    @FXML private AnchorPane mainRoot; // Root of profile page
+    private CustomModalController customModalController;
 
     public void setCurrentUserId(int userId) {
         this.currentUserId = userId;
@@ -40,6 +46,20 @@ public class CustomerProfilePageController {
         btnEditAddress.setOnAction(e -> editField("address", txtAddress));
         btnEditPhone.setOnAction(e -> editField("phone", txtPhone));
         btnEditEmail.setOnAction(e -> editField("email", txtEmail));
+
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/testing2/CustomModal.fxml"));
+            StackPane modalRoot = loader.load();
+            customModalController = loader.getController();
+
+            mainRoot.getChildren().add(modalRoot);
+            AnchorPane.setTopAnchor(modalRoot, 0.0);
+            AnchorPane.setBottomAnchor(modalRoot, 0.0);
+            AnchorPane.setLeftAnchor(modalRoot, 0.0);
+            AnchorPane.setRightAnchor(modalRoot, 0.0);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void loadUserDetails() {
@@ -68,7 +88,6 @@ public class CustomerProfilePageController {
         }
     }
 
-    // Only send the values you want to update, pass null for the rest
     private void updateUserField(String username, String passwordhash, String address, String phone, String email) {
         String sql = "SELECT UpdateUserDetails(?, ?, ?, ?, ?, ?)";
         try (var conn = DBHelper.getConnection();
@@ -84,12 +103,15 @@ public class CustomerProfilePageController {
             stmt.execute();  // Use execute() for functions that return VOID
 
             loadUserDetails();
+
+            // ✅ Show success modal
+            showCustomModal("Updated successfully!");
+
         } catch (SQLException e) {
             e.printStackTrace();
-            showAlert("Error", "Could not update user details.");
+            showCustomModal("Error: Could not update user details.");
         }
     }
-
 
 
     private void editField(String fieldName, TextField field) {
@@ -100,6 +122,8 @@ public class CustomerProfilePageController {
 
         Optional<String> result = dialog.showAndWait();
         result.ifPresent(newValue -> {
+            if (!validateField(fieldName, newValue)) return;
+
             switch (fieldName.toLowerCase()) {
                 case "username" -> updateUserField(newValue, null, null, null, null);
                 case "address" -> updateUserField(null, null, newValue, null, null);
@@ -188,5 +212,42 @@ public class CustomerProfilePageController {
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
+    }
+
+    private boolean validateField(String fieldName, String value) {
+        if (value == null || value.trim().isEmpty()) {
+            showCustomModal("Please enter a valid " + fieldName + ".");
+            return false;
+        }
+
+        switch (fieldName.toLowerCase()) {
+            case "email":
+                if (!value.matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
+                    showCustomModal("Invalid email format.");
+                    return false;
+                }
+                break;
+            case "phone":
+                if (!value.matches("\\d{10,15}")) {
+                    showCustomModal("Phone number must be 10–15 digits.");
+                    return false;
+                }
+                break;
+            case "password":
+                if (value.length() < 8) {
+                    showCustomModal("Password must be at least 8 characters long.");
+                    return false;
+                }
+                break;
+        }
+        return true;
+    }
+
+    private void showCustomModal(String message) {
+        if (customModalController != null) {
+            customModalController.showMessage(message);
+        } else {
+            System.err.println("Custom modal not initialized: " + message);
+        }
     }
 }
