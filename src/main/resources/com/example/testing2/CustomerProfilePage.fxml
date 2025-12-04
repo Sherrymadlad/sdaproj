@@ -53,6 +53,17 @@
                 <Button fx:id="btnEditEmail" style="-fx-font-size: 25;" text="Edit" />
             </HBox>
 
+
+            <AnchorPane>
+                <Button fx:id="btnDeleteAccount"
+                        text="Delete Account"
+                        style="-fx-font-size: 25; -fx-font-weight: bold; -fx-text-fill: white;
+                   -fx-background-color: #d9534f; -fx-background-radius: 10;
+                   -fx-padding: 10 20 10 20;"
+                        AnchorPane.rightAnchor="20.0"
+                        AnchorPane.topAnchor="40.0" />
+            </AnchorPane>
+
         </VBox>
 
     </AnchorPane>

@@ -157,42 +157,70 @@
         </children>
     </AnchorPane>
 
-    <!-- ITEM DETAILS MODAL (VIEW-ONLY) -->
+    <!-- ITEM DETAILS MODAL (VIEW-ONLY, styled) -->
     <StackPane fx:id="itemDetailsPanel" alignment="CENTER"
                style="-fx-background-color: rgba(0,0,0,0.6);" visible="false"
                AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
                AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
 
+        <!-- Modal box -->
         <AnchorPane fx:id="modalBox" maxHeight="620" maxWidth="500"
                     prefHeight="620" prefWidth="500"
-                    style="-fx-background-color: white; -fx-background-radius: 20;">
+                    style="-fx-background-color: linear-gradient(to bottom, #ffffff, #f9f9ff);
+                       -fx-background-radius: 20;
+                       -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 20,0,0,5);">
 
             <!-- Close button -->
             <Button fx:id="btnCloseModal" layoutX="445" layoutY="15"
                     prefHeight="40" prefWidth="40"
-                    style="-fx-background-color: transparent; -fx-font-size: 22px;"
-                    text="✕"/>
+                    style="-fx-background-color: transparent;
+                       -fx-font-size: 22px;
+                       -fx-text-fill: #666;
+                       -fx-cursor: hand;"
+                    text="✕" />
 
-            <VBox layoutX="25" layoutY="60" spacing="15">
+            <!-- Content -->
+            <VBox layoutX="25" layoutY="60" spacing="20">
 
                 <!-- Product image -->
                 <ImageView fx:id="modalItemImage" fitHeight="260" fitWidth="450"
-                           preserveRatio="true"/>
+                           preserveRatio="true"
+                           style="-fx-background-radius: 15;
+                              -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10,0,0,3);" />
 
                 <!-- Name + Price -->
-                <HBox spacing="20">
-                    <Text fx:id="modalItemName" style="-fx-font-size: 26px; -fx-font-weight: bold;"/>
-                    <Text fx:id="modalItemPrice" style="-fx-font-size: 22px;"/>
+                <HBox spacing="20" alignment="CENTER_LEFT">
+                    <Text fx:id="modalItemName"
+                          style="-fx-font-size: 26px;
+                             -fx-font-weight: bold;
+                             -fx-fill: #4a2c6e;" />
+                    <Text fx:id="modalItemPrice"
+                          style="-fx-font-size: 22px;
+                             -fx-fill: #8a6699;
+                             -fx-font-weight: bold;" />
                 </HBox>
+
+                <!-- Divider line -->
+                <AnchorPane prefHeight="1" prefWidth="450"
+                            style="-fx-background-color: #ddd;" />
 
                 <!-- Description -->
                 <Text fx:id="modalItemDescription"
-                      style="-fx-font-size: 16px;" wrappingWidth="450"/>
+                      style="-fx-font-size: 16px;
+                         -fx-fill: #333;
+                         -fx-line-spacing: 4;"
+                      wrappingWidth="450" />
 
                 <!-- Warehouses Section -->
-                <VBox fx:id="warehousesContainer" spacing="5">
-                    <Text text="Available in:" style="-fx-font-weight: bold; -fx-font-size: 16px;"/>
-                    <!-- Individual warehouses will be added dynamically in controller -->
+                <VBox fx:id="warehousesContainer" spacing="8"
+                      style="-fx-background-color: #f3f0fa;
+                         -fx-background-radius: 10;
+                         -fx-padding: 10;">
+                    <Text text="Available in:"
+                          style="-fx-font-weight: bold;
+                             -fx-font-size: 16px;
+                             -fx-fill: #4a2c6e;" />
+                    <!-- Warehouse rows injected dynamically -->
                 </VBox>
 
             </VBox>

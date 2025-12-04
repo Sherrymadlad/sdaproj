@@ -33,6 +33,7 @@ public class CustomerProfilePageController {
     private int currentUserId; // dynamic
     @FXML private AnchorPane mainRoot; // Root of profile page
     private CustomModalController customModalController;
+    @FXML private Button btnDeleteAccount;
 
     public void setCurrentUserId(int userId) {
         this.currentUserId = userId;
@@ -41,12 +42,18 @@ public class CustomerProfilePageController {
 
     @FXML
     public void initialize() {
+        // Hardcode user ID
+        currentUserId = 18;
+        loadUserDetails(); // load profile for user 18
+
         btnEditUsername.setOnAction(e -> editField("username", txtUsername));
         btnEditPassword.setOnAction(e -> editPassword());
         btnEditAddress.setOnAction(e -> editField("address", txtAddress));
         btnEditPhone.setOnAction(e -> editField("phone", txtPhone));
         btnEditEmail.setOnAction(e -> editField("email", txtEmail));
+        btnDeleteAccount.setOnAction(e -> deleteUserAccount());
 
+        // Load custom modal
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/testing2/CustomModal.fxml"));
             StackPane modalRoot = loader.load();
@@ -250,4 +257,34 @@ public class CustomerProfilePageController {
             System.err.println("Custom modal not initialized: " + message);
         }
     }
+
+    private void deleteUserAccount() {
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+        confirm.setTitle("Delete Account");
+        confirm.setHeaderText(null);
+        confirm.setContentText("Are you sure you want to delete your account? This action cannot be undone.");
+
+        Optional<ButtonType> result = confirm.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            try (var conn = DBHelper.getConnection();
+                 var stmt = conn.prepareStatement("SELECT DeleteUserAccount(?)")) {
+
+                stmt.setInt(1, currentUserId);
+                stmt.execute();
+
+                showCustomModal("Account deleted successfully.");
+                redirectToLogin();
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                showCustomModal("Error: Could not delete account.");
+            }
+        }
+    }
+
+    private void redirectToLogin() {
+        // Force exit the application
+        javafx.application.Platform.exit();
+    }
+
 }

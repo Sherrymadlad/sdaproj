@@ -9,6 +9,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.TilePane;
@@ -58,7 +59,8 @@ public class StaffDashboardPageController implements Initializable {
 
     @FXML private Button btnCloseModal;
     @FXML private ComboBox<String> cmbSortBy;
-
+    @FXML private void handleCardHoverIn(MouseEvent event) { AnchorPane card = (AnchorPane) event.getSource(); card.setScaleX(1.05); card.setScaleY(1.05); }
+    @FXML private void handleCardHoverOut(MouseEvent event) { AnchorPane card = (AnchorPane) event.getSource(); card.setScaleX(1.0); card.setScaleY(1.0); }
 
     private final Image placeholderImage =
             new Image(getClass().getResource("/com/example/testing2/images/placeholder.png").toExternalForm());
@@ -145,8 +147,10 @@ public class StaffDashboardPageController implements Initializable {
                 itemsPane.setHgap(20);
                 itemsPane.setVgap(20);
                 itemsPane.setPadding(new Insets(10, 0, 10, 60));
-                itemsPane.setPrefTileWidth(210);
-                itemsPane.setPrefTileHeight(224);
+                itemsPane.setPrefTileWidth(250);
+                itemsPane.setPrefTileHeight(280);
+
+
 
                 List<AnchorPane> cards = new ArrayList<>();
 
@@ -165,6 +169,7 @@ public class StaffDashboardPageController implements Initializable {
 
                 categoryBox.getChildren().addAll(label, itemsPane);
                 categoriesContainer.getChildren().add(categoryBox);
+
             }
 
         } catch (SQLException e) {
@@ -197,7 +202,10 @@ public class StaffDashboardPageController implements Initializable {
 
         clone.getChildren().addAll(img, itemName, itemPrice);
 
+
         clone.setUserData(id);
+        clone.setOnMouseEntered(this::handleCardHoverIn);
+        clone.setOnMouseExited(this::handleCardHoverOut);
         clone.setOnMouseClicked(e -> openItemModal(id));
 
 
