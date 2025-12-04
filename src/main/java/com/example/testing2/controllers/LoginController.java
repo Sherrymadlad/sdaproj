@@ -72,7 +72,7 @@ public class LoginController {
         }
     }
 
-    private void handleLogin() {
+    private void handleLogin(ActionEvent event) {
         String username = txtLoginName.getText().trim();
         String password = txtLoginPassword.getText().trim();
 

@@ -1,14 +1,11 @@
 package com.example.testing2.controllers;
 
 import com.example.testing2.utils.DBHelper;
-import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
+import javafx.scene.text.Font;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -58,55 +55,63 @@ public class ProductsPageController {
                 double price = rs.getDouble("price");
                 String description = rs.getString("description");
 
-                // Filter by stock if needed
+                // Apply filter
                 if (!"All".equals(filter)) {
                     if (filter.startsWith("Low") && stock >= 10) continue;
                     if (filter.startsWith("Medium") && (stock < 10 || stock > 50)) continue;
                     if (filter.startsWith("High") && stock <= 50) continue;
                 }
 
-                // ===================== TITLED PANE =====================
-                TitledPane tp = new TitledPane();
-                tp.setExpanded(false);
-                tp.setStyle("-fx-background-color: #f3e6f7; -fx-border-width: 2; -fx-background-radius: 10; -fx-border-radius: 10;");
+                // ===================== PRODUCT CARD =====================
+                VBox card = new VBox(10);
+                card.setPadding(new Insets(10));
+                card.setStyle("-fx-background-color: #f3e6f7; " +
+                        "-fx-border-color: #8b6fa1; " +
+                        "-fx-border-width: 2; " +
+                        "-fx-border-radius: 10; " +
+                        "-fx-background-radius: 10;");
 
-                // ===================== HEADER =====================
+                // Header
                 HBox header = new HBox(10);
-                header.setPadding(new Insets(10));
+                header.setPadding(new Insets(5));
                 header.setStyle("-fx-background-color: #f3e6f7;");
 
                 Label lblName = new Label(name);
-                lblName.setStyle("-fx-font-size: 18; -fx-font-weight: bold;");
+                lblName.setFont(new Font("Arial Bold", 16));
+                lblName.setStyle("-fx-text-fill: #4b355a;"); // dark purple
 
                 Pane spacer = new Pane();
                 HBox.setHgrow(spacer, Priority.ALWAYS);
 
                 Label lblStock = new Label("Stock: " + stock);
+                lblStock.setStyle("-fx-text-fill: #4b355a;");
 
                 Button btnEdit = new Button("Edit");
                 btnEdit.setOnAction(e -> openEditDialog(productId));
 
                 header.getChildren().addAll(lblName, spacer, lblStock, btnEdit);
-                tp.setGraphic(header);
 
-                // ===================== CONTENT =====================
-                VBox content = new VBox(12);
-                content.setPadding(new Insets(10, 15, 10, 15));
-                content.setStyle("-fx-background-color: #f3e6f7;");
+                // Content
+                VBox content = new VBox(8);
+                content.setPadding(new Insets(5));
 
                 HBox hCategory = new HBox(10, new Label("Category:"), new Label(category));
-                hCategory.getChildren().get(0).setStyle("-fx-font-weight: bold;");
+                hCategory.getChildren().get(0).setStyle("-fx-font-weight: bold; -fx-text-fill: #4b355a;");
+                hCategory.getChildren().get(1).setStyle("-fx-text-fill: #4b355a;");
 
                 HBox hPrice = new HBox(10, new Label("Price:"), new Label(String.valueOf(price)));
-                hPrice.getChildren().get(0).setStyle("-fx-font-weight: bold;");
+                hPrice.getChildren().get(0).setStyle("-fx-font-weight: bold; -fx-text-fill: #4b355a;");
+                hPrice.getChildren().get(1).setStyle("-fx-text-fill: #4b355a;");
 
                 HBox hDesc = new HBox(10, new Label("Description:"), new Label(description != null ? description : "-"));
-                hDesc.getChildren().get(0).setStyle("-fx-font-weight: bold;");
+                hDesc.getChildren().get(0).setStyle("-fx-font-weight: bold; -fx-text-fill: #4b355a;");
+                hDesc.getChildren().get(1).setStyle("-fx-text-fill: #4b355a;");
 
                 content.getChildren().addAll(hCategory, hPrice, hDesc);
-                tp.setContent(content);
 
-                productsList.getChildren().add(tp);
+                card.getChildren().addAll(header, content);
+
+                productsList.getChildren().add(card);
             }
 
         } catch (Exception e) {
@@ -132,7 +137,6 @@ public class ProductsPageController {
             Dialog<Void> dialog = new Dialog<>();
             dialog.setTitle("Edit Product");
 
-            // Buttons
             ButtonType btnSave = new ButtonType("Save", ButtonBar.ButtonData.OK_DONE);
             dialog.getDialogPane().getButtonTypes().addAll(btnSave, ButtonType.CANCEL);
 
@@ -143,7 +147,6 @@ public class ProductsPageController {
             TextField tfPrice = new TextField(String.valueOf(currentPrice));
             TextArea taDesc = new TextArea(currentDesc);
 
-            // Load categories dynamically
             ComboBox<String> cbCategory = new ComboBox<>();
             try (Statement catStmt = conn.createStatement();
                  ResultSet catRs = catStmt.executeQuery("SELECT categoryid, name FROM category")) {

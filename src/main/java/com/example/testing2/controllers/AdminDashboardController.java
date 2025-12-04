@@ -1,108 +1,88 @@
 package com.example.testing2.controllers;
 
-import com.example.testing2.utils.DBHelper;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.text.Text;
-import javafx.stage.Stage;
+import javafx.scene.layout.AnchorPane;
 
 import java.io.IOException;
 import java.net.URL;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 public class AdminDashboardController implements Initializable {
 
-    @FXML private Text txtTotalUsers;
-    @FXML private Text txtTotalProducts;
-    @FXML private Text txtTotalSales;
-    @FXML private Text txtTotalRevenue;
-    @FXML private Button btnReports;
     @FXML private Button tabMetrics;
     @FXML private Button tabUsers;
     @FXML private Button tabProducts;
-    @FXML private Button btnAudit; // Add this if not already declared
+
+    @FXML private Button btnReports;
+    @FXML private Button btnAudit;
     @FXML private Button btnAdminProfile;
+
+    @FXML private AnchorPane mainContent;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        // Load metrics on default
-        loadDashboardMetrics();
-        highlightTab(tabMetrics); // Metrics tab highlighted by default
 
-        // Reports button uses openReportPage()
-        btnReports.setOnAction(event -> openReportPage());
-        btnAudit.setOnAction(event -> openPage("/com/example/testing2/AuditPage.fxml"));
+        // --- Load Metrics page initially ---
+        selectTab(tabMetrics, "/com/example/testing2/MetricsPage.fxml");
 
-        // Top tabs
-        tabMetrics.setOnAction(event -> {
-            // Already on AdminDashboard, just highlight tab
-            highlightTab(tabMetrics);
-        });
+        // --- Top Tab Buttons ---
+        tabMetrics.setOnAction(e -> selectTab(tabMetrics, "/com/example/testing2/MetricsPage.fxml"));
+        tabUsers.setOnAction(e -> selectTab(tabUsers, "/com/example/testing2/UsersPage.fxml"));
+        tabProducts.setOnAction(e -> selectTab(tabProducts, "/com/example/testing2/ProductPage.fxml"));
 
-        tabUsers.setOnAction(event -> {
-            highlightTab(tabUsers);
-            openPage("/com/example/testing2/UsersPage.fxml");
-        });
-
-        tabProducts.setOnAction(event -> {
-            highlightTab(tabProducts);
-            openPage("/com/example/testing2/ProductPage.fxml");
-        });
-        btnAdminProfile.setOnAction(event -> openPage("/com/example/testing2/AdminsProfilePage.fxml"));
-
+        // --- Sidebar Buttons ---
+        btnReports.setOnAction(e -> loadPageIntoMain("/com/example/testing2/ReportsPage.fxml"));
+        btnAudit.setOnAction(e -> loadPageIntoMain("/com/example/testing2/AuditPage.fxml"));
+        btnAdminProfile.setOnAction(e -> loadPageIntoMain("/com/example/testing2/AdminsProfilePage.fxml"));
     }
 
-
-
-    private void loadDashboardMetrics() {
-        try {
-            ResultSet rs = DBHelper.executeFunction("GetDashboardMetrics");
-            if (rs.next()) {
-                txtTotalUsers.setText(String.valueOf(rs.getInt("total_users")));
-                txtTotalProducts.setText(String.valueOf(rs.getInt("total_products")));
-                txtTotalSales.setText(String.valueOf(rs.getInt("total_sales_orders")));
-                txtTotalRevenue.setText("Rs " + rs.getDouble("total_revenue"));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            System.out.println("❌ Failed to load dashboard metrics");
-        }
+    // ---------------------- SELECT TAB --------------------
+    private void selectTab(Button selectedTab, String fxmlPath) {
+        highlightTab(selectedTab);
+        loadPageIntoMain(fxmlPath);
     }
 
-    private void openPage(String fxmlPath) {
+    // ---------------------- LOAD PAGES INTO mainContent --------------------
+    private void loadPageIntoMain(String fxmlPath) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
-            Parent root = loader.load();
-            Stage stage = (Stage) tabMetrics.getScene().getWindow();
-            stage.getScene().setRoot(root);
+            Node page = loader.load();
+
+            // Clear previous content before adding new
+            mainContent.getChildren().clear();
+            mainContent.getChildren().add(page);
+
+            // Anchor the page to fill mainContent completely
+            AnchorPane.setTopAnchor(page, 0.0);
+            AnchorPane.setBottomAnchor(page, 0.0);
+            AnchorPane.setLeftAnchor(page, 0.0);
+            AnchorPane.setRightAnchor(page, 0.0);
+
         } catch (IOException e) {
             e.printStackTrace();
-            System.out.println("❌ Failed to load page: " + fxmlPath);
         }
     }
 
-    private void highlightTab(Button selectedTab) {
-        tabMetrics.setStyle("-fx-background-color: #c2add3; -fx-text-fill: #4b355a; -fx-font-size: 16px; -fx-background-radius: 5;");
-        tabUsers.setStyle("-fx-background-color: #c2add3; -fx-text-fill: #4b355a; -fx-font-size: 16px; -fx-background-radius: 5;");
-        tabProducts.setStyle("-fx-background-color: #c2add3; -fx-text-fill: #4b355a; -fx-font-size: 16px; -fx-background-radius: 5;");
+    // ---------------------- HIGHLIGHT ACTIVE TAB --------------------
+    private void highlightTab(Button selected) {
+        tabMetrics.setStyle(defaultStyle());
+        tabUsers.setStyle(defaultStyle());
+        tabProducts.setStyle(defaultStyle());
 
-        selectedTab.setStyle("-fx-background-color: #8b6fa1; -fx-text-fill: white; -fx-font-size: 16px; -fx-background-radius: 5;");
+        selected.setStyle(activeStyle());
     }
-    // Method to open reports page
-    private void openReportPage() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/testing2/ReportsPage.fxml"));
-            Parent root = loader.load();
-            Stage stage = (Stage) btnReports.getScene().getWindow(); // get current window
-            stage.getScene().setRoot(root); // replace current scene content
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.out.println("❌ Failed to load Report Page");
-        }
+
+    private String defaultStyle() {
+        return "-fx-background-color: #c2add3; -fx-text-fill: #4b355a; "
+                + "-fx-font-size: 16px; -fx-background-radius: 5;";
+    }
+
+    private String activeStyle() {
+        return "-fx-background-color: #8b6fa1; -fx-text-fill: white; "
+                + "-fx-font-size: 16px; -fx-background-radius: 5;";
     }
 }

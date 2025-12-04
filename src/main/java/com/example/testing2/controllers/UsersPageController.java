@@ -1,32 +1,17 @@
 package com.example.testing2.controllers;
 
-import com.example.testing2.utils.DBHelper; // your DB helper class
+import com.example.testing2.utils.DBHelper;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TitledPane;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.VBox;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.*;
+import javafx.scene.layout.*;
 import javafx.scene.text.Font;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
-
-import javafx.scene.Scene;
-import javafx.scene.control.TextField;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import javafx.scene.control.ComboBox;
 
 public class UsersPageController {
 
@@ -54,20 +39,18 @@ public class UsersPageController {
 
         loadUsers();
     }
+
     private void loadUsers() {
-        usersList.getChildren().clear(); // clear existing users
+        usersList.getChildren().clear();
 
         String selectedRole = cbFilterRole.getValue();
-        String sql;
-        if ("All".equals(selectedRole)) {
-            sql = "SELECT * FROM GetAllUsers()";
-        } else {
-            sql = "SELECT * FROM GetUsersByRole('" + selectedRole.replace("'", "''") + "')";
-        }
+        String sql = "All".equals(selectedRole) ? "SELECT * FROM GetAllUsers()"
+                : "SELECT * FROM GetUsersByRole('" + selectedRole.replace("'", "''") + "')";
 
         try (Connection conn = DBHelper.getConnection();
              Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) { // ✅ use dynamic SQL
+             ResultSet rs = stmt.executeQuery(sql)) {
+
             while (rs.next()) {
                 int userid = rs.getInt("userid");
                 String username = rs.getString("username");
@@ -76,21 +59,23 @@ public class UsersPageController {
                 String phone = rs.getString("phone") != null ? rs.getString("phone") : "-";
                 String email = rs.getString("email") != null ? rs.getString("email") : "-";
 
-                // ===================== TITLED PANE =====================
-                TitledPane tp = new TitledPane();
-                tp.setExpanded(false);
-                tp.setStyle("-fx-background-color: #f3e6f7;" +
-                        "-fx-border-width: 2;" +
-                        "-fx-background-radius: 10;" +
-                        "-fx-border-radius: 10;");
+                // ===================== USER CARD =====================
+                VBox card = new VBox(10);
+                card.setPadding(new Insets(10));
+                card.setStyle("-fx-background-color: #f3e6f7; " +
+                        "-fx-border-color: #8b6fa1; " +
+                        "-fx-border-width: 2; " +
+                        "-fx-border-radius: 10; " +
+                        "-fx-background-radius: 10;");
 
-                // ===================== HEADER =====================
+                // Header HBox
                 HBox header = new HBox(10);
-                header.setPadding(new Insets(10));
+                header.setPadding(new Insets(5));
                 header.setStyle("-fx-background-color: #f3e6f7;");
 
                 Label lblUsername = new Label(username);
-                lblUsername.setStyle("-fx-font-size: 18; -fx-font-weight: bold;");
+                lblUsername.setFont(new Font("Arial Bold", 16));
+                lblUsername.setStyle("-fx-text-fill: #4b355a;"); // dark purple
 
                 Pane spacer = new Pane();
                 HBox.setHgrow(spacer, Priority.ALWAYS);
@@ -98,7 +83,7 @@ public class UsersPageController {
                 // Role ComboBox
                 ComboBox<String> cbRole = new ComboBox<>();
                 cbRole.getItems().addAll("Admin", "Manager", "Staff", "Customer");
-                cbRole.setValue(role); // default to current role
+                cbRole.setValue(role); // current role
                 cbRole.setOnAction(e -> updateUserRole(userid, cbRole.getValue()));
 
                 // Edit Info Button
@@ -106,34 +91,34 @@ public class UsersPageController {
                 btnEdit.setOnAction(e -> openEditUserDialog(userid, username, address, phone, email));
 
                 header.getChildren().addAll(lblUsername, spacer, cbRole, btnEdit);
-                tp.setGraphic(header);
 
-                // ===================== CONTENT =====================
-                VBox content = new VBox(12);
-                content.setPadding(new Insets(10, 15, 10, 15));
-                content.setStyle("-fx-background-color: #f3e6f7;");
+                // Content VBox
+                VBox content = new VBox(8);
+                content.setPadding(new Insets(5));
 
                 HBox hAddress = new HBox(10, new Label("Address:"), new Label(address));
-                hAddress.getChildren().get(0).setStyle("-fx-font-weight: bold;");
+                hAddress.getChildren().get(0).setStyle("-fx-font-weight: bold; -fx-text-fill: #4b355a;");
+                hAddress.getChildren().get(1).setStyle("-fx-text-fill: #4b355a;");
 
                 HBox hPhone = new HBox(10, new Label("Phone:"), new Label(phone));
-                hPhone.getChildren().get(0).setStyle("-fx-font-weight: bold;");
+                hPhone.getChildren().get(0).setStyle("-fx-font-weight: bold; -fx-text-fill: #4b355a;");
+                hPhone.getChildren().get(1).setStyle("-fx-text-fill: #4b355a;");
 
                 HBox hEmail = new HBox(10, new Label("Email:"), new Label(email));
-                hEmail.getChildren().get(0).setStyle("-fx-font-weight: bold;");
+                hEmail.getChildren().get(0).setStyle("-fx-font-weight: bold; -fx-text-fill: #4b355a;");
+                hEmail.getChildren().get(1).setStyle("-fx-text-fill: #4b355a;");
 
                 content.getChildren().addAll(hAddress, hPhone, hEmail);
-                tp.setContent(content);
 
-                // Add TitledPane to VBox
-                usersList.getChildren().add(tp);
+                card.getChildren().addAll(header, content);
+
+                usersList.getChildren().add(card);
             }
 
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
 
     private void openEditUserDialog(int userid, String username, String address, String phone, String email) {
         Stage stage = new Stage();
@@ -144,16 +129,9 @@ public class UsersPageController {
         root.setPadding(new Insets(15));
 
         TextField tfUsername = new TextField(username);
-        tfUsername.setPromptText("Username");
-
         TextField tfAddress = new TextField(address);
-        tfAddress.setPromptText("Address");
-
         TextField tfPhone = new TextField(phone);
-        tfPhone.setPromptText("Phone");
-
         TextField tfEmail = new TextField(email);
-        tfEmail.setPromptText("Email");
 
         Button btnSave = new Button("Save Changes");
         btnSave.setOnAction(e -> {
@@ -163,76 +141,46 @@ public class UsersPageController {
                     tfPhone.getText(),
                     tfEmail.getText());
             stage.close();
-            usersList.getChildren().clear();
-            loadUsers(); // reload users
+            loadUsers();
         });
 
-        root.getChildren().addAll(new Label("Username:"), tfUsername,
+        root.getChildren().addAll(
+                new Label("Username:"), tfUsername,
                 new Label("Address:"), tfAddress,
                 new Label("Phone:"), tfPhone,
                 new Label("Email:"), tfEmail,
-                btnSave);
+                btnSave
+        );
 
-        Scene scene = new Scene(root);
-        stage.setScene(scene);
+        stage.setScene(new javafx.scene.Scene(root));
         stage.showAndWait();
     }
+
     private void updateUserDetails(int userid, String username, String address, String phone, String email) {
         String sql = "SELECT UpdateUserDetails(" +
-                userid + ", " +
-                "'" + username.replace("'", "''") + "', " +
-                "NULL, " + // password hash not updated here
-                "'" + address.replace("'", "''") + "', " +
-                "'" + phone.replace("'", "''") + "', " +
-                "'" + email.replace("'", "''") + "'" +
-                ");";
+                userid + ", '" + username.replace("'", "''") + "', NULL, '" +
+                address.replace("'", "''") + "', '" + phone.replace("'", "''") + "', '" +
+                email.replace("'", "''") + "');";
 
         try (Connection conn = DBHelper.getConnection();
              Statement stmt = conn.createStatement()) {
             stmt.execute(sql);
-
-            // Success alert
-            Alert alert = new Alert(AlertType.INFORMATION);
-            alert.setTitle("Success");
-            alert.setHeaderText(null);
-            alert.setContentText("User details updated successfully!");
-            alert.showAndWait();
-
+            new Alert(Alert.AlertType.INFORMATION, "User details updated successfully!").showAndWait();
         } catch (Exception ex) {
             ex.printStackTrace();
-
-            // Error alert
-            Alert alert = new Alert(AlertType.ERROR);
-            alert.setTitle("Error");
-            alert.setHeaderText(null);
-            alert.setContentText("Failed to update user details: " + ex.getMessage());
-            alert.showAndWait();
+            new Alert(Alert.AlertType.ERROR, "Failed to update user details: " + ex.getMessage()).showAndWait();
         }
     }
+
     private void updateUserRole(int userid, String role) {
         String sql = "SELECT UpdateUserRole(" + userid + ", '" + role.replace("'", "''") + "');";
         try (Connection conn = DBHelper.getConnection();
              Statement stmt = conn.createStatement()) {
             stmt.execute(sql);
-
-            // Success alert
-            Alert alert = new Alert(AlertType.INFORMATION);
-            alert.setTitle("Success");
-            alert.setHeaderText(null);
-            alert.setContentText("User role updated to " + role + " successfully!");
-            alert.showAndWait();
-
+            new Alert(Alert.AlertType.INFORMATION, "User role updated to " + role + " successfully!").showAndWait();
         } catch (Exception ex) {
             ex.printStackTrace();
-
-            // Error alert
-            Alert alert = new Alert(AlertType.ERROR);
-            alert.setTitle("Error");
-            alert.setHeaderText(null);
-            alert.setContentText("Failed to update user role: " + ex.getMessage());
-            alert.showAndWait();
+            new Alert(Alert.AlertType.ERROR, "Failed to update user role: " + ex.getMessage()).showAndWait();
         }
     }
-
-
 }
