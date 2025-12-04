@@ -11,13 +11,10 @@ import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 import javafx.stage.Stage;
 import java.math.BigDecimal;
 import javafx.scene.layout.StackPane;
-import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.AnchorPane;
@@ -224,7 +221,6 @@ public class CartPageController implements Initializable {
             return;
         }
 
-
         String paymentMethod;
         if (chkCard.isSelected()) paymentMethod = "Card";
         else if (chkCash.isSelected()) paymentMethod = "Cash";
@@ -233,81 +229,69 @@ public class CartPageController implements Initializable {
             return;
         }
 
-        // Confirmation modal
-        Alert confirm = new Alert(AlertType.CONFIRMATION);
-        confirm.setTitle("Confirm Order");
-        confirm.setHeaderText("Are you sure you want to place this order?");
-        confirm.setContentText("Total: " + txtTotal.getText() + "\nPayment: " + paymentMethod);
+        // Show confirmation modal
+        showCustomModalConfirmation(
+                "Place Order\nAre you sure you want to place the order?",
+                confirmed -> {
+                    if (!confirmed) return;
 
-        Optional<ButtonType> result = confirm.showAndWait();
-        if (result.isEmpty() || result.get() != ButtonType.OK) return;
+                    try (Connection conn = DBHelper.getConnection()) {
+                        conn.setAutoCommit(false); // start transaction
 
-        // Place order in DB
-        try (Connection conn = DBHelper.getConnection()) {
-            conn.setAutoCommit(false); // transactional
+                        // Get customer ID
+                        int customerId;
+                        String customerSql = "SELECT customerid FROM customer WHERE userid = ?";
+                        try (PreparedStatement stmt = conn.prepareStatement(customerSql)) {
+                            stmt.setInt(1, currentUserId);
+                            ResultSet rs = stmt.executeQuery();
+                            if (rs.next()) customerId = rs.getInt("customerid");
+                            else throw new SQLException("No customer found for user " + currentUserId);
+                        }
 
-            // Get customer ID
-            int customerId;
-            String customerSql = "SELECT customerid FROM customer WHERE userid = ?";
-            try (PreparedStatement stmt = conn.prepareStatement(customerSql)) {
-                stmt.setInt(1, currentUserId);
-                ResultSet rs = stmt.executeQuery();
-                if (rs.next()) customerId = rs.getInt("customerid");
-                else throw new SQLException("No customer found for user " + currentUserId);
-            }
+                        // Call AddSalesOrder stored procedure for each product in cart
+                        String procSql = "SELECT AddSalesOrder(?, ?, ?, ?, ?)";
+                        try (PreparedStatement stmt = conn.prepareStatement(procSql)) {
+                            int warehouseId = 1; // replace with actual logic if needed
+                            for (Map.Entry<Integer, Integer> entry : cart.entrySet()) {
+                                int productId = entry.getKey();
+                                int qty = entry.getValue();
+                                double price = productPrices.get(productId);
 
-            // Call AddSalesOrder stored procedure for each product in cart
-            String procSql = "SELECT AddSalesOrder(?, ?, ?, ?, ?)";
-            try (PreparedStatement stmt = conn.prepareStatement(procSql)) {
-                int warehouseId = 1; // replace with actual warehouse
-                for (Map.Entry<Integer, Integer> entry : cart.entrySet()) {
-                    int productId = entry.getKey();
-                    int qty = entry.getValue();
-                    double price = productPrices.get(productId);
+                                stmt.setInt(1, customerId);
+                                stmt.setInt(2, warehouseId);
+                                stmt.setInt(3, productId);
+                                stmt.setInt(4, qty);
+                                stmt.setBigDecimal(5, BigDecimal.valueOf(price));
 
-                    stmt.setInt(1, customerId);
-                    stmt.setInt(2, warehouseId);
-                    stmt.setInt(3, productId);
-                    stmt.setInt(4, qty);
-                    stmt.setBigDecimal(5, BigDecimal.valueOf(price)); // <- fix here
+                                stmt.execute();
+                            }
+                        }
 
-                    stmt.execute();
+                        conn.commit();
+
+                        // Success modal
+                        showCustomModal("Your order has been placed successfully!");
+
+                        // Clear cart locally and update UI
+                        cart.clear();
+                        populateCartItems();
+                        txtTotal.setText("Total: Rs 0.0");
+
+                        // Reset main page cart badge
+                        if (parentController != null) {
+                            parentController.clearCart();
+                        }
+
+                        mainRoot.getChildren().remove(mainRoot);
+
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                        showCustomModal("Failed to place order. Please try again.\n" + e.getMessage());
+                    }
                 }
-            }
-
-            conn.commit();
-
-            // Success alert
-            showCustomModal("Your order has been placed successfully!");
-
-            // Clear cart locally and update UI
-            cart.clear();
-            populateCartItems();
-            txtTotal.setText("Total: Rs 0.0");
-
-            // Reset main page cart badge
-            if (parentController != null) {
-                parentController.clearCart();
-            }
-
-            // Close cart window
-            Stage stage = (Stage) btnPlaceOrder.getScene().getWindow();
-            stage.close();
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-            showAlert(Alert.AlertType.ERROR, "Error", "Failed to place order. Please try again.");
-        }
+        );
     }
 
-
-    private void showAlert(AlertType type, String title, String msg) {
-        Alert alert = new Alert(type);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(msg);
-        alert.showAndWait();
-    }
 
     private void updateParentCartBadge() {
         if (parentController != null) {
@@ -320,6 +304,15 @@ public class CartPageController implements Initializable {
             customModalController.showMessage(message);
         } else {
             System.err.println("Custom modal not initialized: " + message);
+        }
+    }
+
+    private void showCustomModalConfirmation(String message, java.util.function.Consumer<Boolean> callback) {
+        if (customModalController != null) {
+            customModalController.showConfirmation(message, callback);
+        } else {
+            // Fallback: auto-confirm if modal not initialized
+            callback.accept(true);
         }
     }
 
