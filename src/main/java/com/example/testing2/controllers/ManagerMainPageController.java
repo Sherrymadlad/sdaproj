@@ -1,7 +1,9 @@
 package com.example.testing2.controllers;
 
 import com.example.testing2.utils.DBHelper;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -10,14 +12,13 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.beans.property.*;
 
+import java.io.IOException;
+import java.math.BigDecimal;
 import java.net.URL;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
-public class ManagerMainPageController implements Initializable {
+public class ManagerMainPageController implements Initializable, SidebarListener {
 
     @FXML private TextField txtSearch;
 
@@ -28,100 +29,141 @@ public class ManagerMainPageController implements Initializable {
     @FXML private TableColumn<Product, String> colCategory;
     @FXML private TableColumn<Product, Double> colPrice;
     @FXML private TableColumn<Product, Integer> colStock;
-    @FXML private TableColumn<Product, String> colSupplier;
-    @FXML private TableColumn<Product, Void> colActions;
+    @FXML private TableColumn<Product, String> colDescription;
     private int currentUserId;
-
 
     @FXML private Button btnAddProduct, btnDeleteProduct, btnUpdateProduct, btnSaveProduct, btnCancel;
     @FXML private StackPane productModal, notificationBadge;
     @FXML private Label lblNotificationCount;
 
-    @FXML private TextField txtProductName, txtSku, txtPrice, txtStock, txtSupplier;
+    @FXML private TextField txtProductName, txtPrice, txtStock;
     @FXML private TextArea txtDescription;
     @FXML private ComboBox<String> cmbCategory;
     @FXML private ComboBox<Integer> cmbCategoryId;
-    @FXML private ComboBox<Integer> cmbSupplierId;
-    @FXML private ImageView productImage;
+    @FXML private ComboBox<String> cmbSupplierName;
 
-    private final Image placeholderImage = new Image(Objects.requireNonNull(getClass().getResource("/com/example/testing2/images/placeholder.png")).toExternalForm());
     private Product selectedProduct;
     private final Map<Integer, Product> allProducts = new HashMap<>();
     private final Map<String, Integer> categoryNameToId = new HashMap<>();
     private final Map<String, Integer> supplierNameToId = new HashMap<>();
+    private ManagerSidebarController managerSidebarController;
+    @FXML private AnchorPane sidebarContainer;
+    @FXML private AnchorPane mainContent;
+    @FXML private TextField txtLowStock;
+    private CustomModalController customModalController;
+    @FXML AnchorPane root;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        setupSidebar();
+        setupModal();
+        setCurrentUserId(20);
         initializeTableColumns();
         setupEventHandlers();
         loadProductsFromDatabase();
         loadCategories();
         loadSuppliers();
-        checkLowStockNotifications();
     }
 
-    public void setCurrentUserId(int userId) {
-        this.currentUserId = userId;
+    private void setupModal(){
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/testing2/CustomModal.fxml"));
+            StackPane modal = loader.load();
+            customModalController = loader.getController();
+
+            root.getChildren().add(modal);
+            AnchorPane.setTopAnchor(modal, 0.0);
+            AnchorPane.setBottomAnchor(modal, 0.0);
+            AnchorPane.setLeftAnchor(modal, 0.0);
+            AnchorPane.setRightAnchor(modal, 0.0);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
+    private void setupSidebar() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/testing2/ManagerSidebar.fxml"));
+            AnchorPane sidebar = loader.load();
+            managerSidebarController = loader.getController();
+            managerSidebarController.setSidebarListener(this);
+
+            sidebarContainer.getChildren().add(sidebar);
+            AnchorPane.setTopAnchor(sidebar, 0.0);
+            AnchorPane.setBottomAnchor(sidebar, 0.0);
+            AnchorPane.setLeftAnchor(sidebar, 0.0);
+            AnchorPane.setRightAnchor(sidebar, 0.0);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onPageSelected(String pageName) {
+        try {
+            mainContent.getChildren().removeIf(node -> "overlay".equals(node.getUserData()));
+
+            switch (pageName) {
+                case "Products" -> {
+                    txtSearch.clear();
+                    productsTable.getSelectionModel().clearSelection();
+                    loadProductsFromDatabase();
+                    return;
+                }
+                case "Orders" -> loadPage("/com/example/testing2/StaffOrdersPage.fxml");
+                case "Reports" -> loadPage("/com/example/testing2/StaffReportsPage.fxml");
+                case "Notifications" -> loadPage("/com/example/testing2/NotificationsPage.fxml");
+                case "Profile" -> {
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/testing2/CustomerProfilePage.fxml"));
+                    AnchorPane page = loader.load();
+                    CustomerProfilePageController controller = loader.getController();
+                    controller.setCurrentUserId(currentUserId);
+                    addOverlay(page);
+                }
+                default -> System.out.println("Unknown page: " + pageName);
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    private void loadPage(String fxmlPath) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
+        AnchorPane page = loader.load();
+        addOverlay(page);
+    }
+
+    private void addOverlay(AnchorPane page) {
+        page.setUserData("overlay");
+        mainContent.getChildren().add(page);
+        AnchorPane.setTopAnchor(page, 0.0);
+        AnchorPane.setBottomAnchor(page, 0.0);
+        AnchorPane.setLeftAnchor(page, 0.0);
+        AnchorPane.setRightAnchor(page, 0.0);
+    }
+
+    public void setCurrentUserId(int userId) { this.currentUserId = userId; }
 
     private void initializeTableColumns() {
         try {
-            if (colId != null) {
-                colId.setCellValueFactory(cellData -> cellData.getValue().productIdProperty().asObject());
-            }
+            colId.setCellValueFactory(cellData -> cellData.getValue().productIdProperty().asObject());
+            colName.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
+            colCategory.setCellValueFactory(cellData -> cellData.getValue().categoryProperty());
+            colPrice.setCellValueFactory(cellData -> cellData.getValue().priceProperty().asObject());
+            colStock.setCellValueFactory(cellData -> cellData.getValue().stockLevelProperty().asObject());
+            colDescription.setCellValueFactory(cellData -> cellData.getValue().descriptionProperty());
+            Platform.runLater(() -> {
+                colDescription.prefWidthProperty().bind(
+                        productsTable.widthProperty()
+                                .subtract(colId.getWidth()
+                                        + colName.getWidth()
+                                        + colCategory.getWidth()
+                                        + colPrice.getWidth()
+                                        + colStock.getWidth() + 20)   // padding
+                );
+            });
 
-            if (colName != null) {
-                colName.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
-            }
-
-            if (colCategory != null) {
-                colCategory.setCellValueFactory(cellData -> cellData.getValue().categoryProperty());
-            }
-
-            if (colPrice != null) {
-                colPrice.setCellValueFactory(cellData -> cellData.getValue().priceProperty().asObject());
-            }
-
-            if (colStock != null) {
-                colStock.setCellValueFactory(cellData -> cellData.getValue().stockLevelProperty().asObject());
-            }
-
-            if (colSupplier != null) {
-                colSupplier.setCellValueFactory(cellData -> cellData.getValue().supplierProperty());
-            }
-
-            if (colActions != null) {
-                colActions.setCellFactory(param -> new TableCell<Product, Void>() {
-                    private final Button editBtn = new Button("Edit");
-                    private final Button deleteBtn = new Button("Delete");
-
-                    {
-                        editBtn.setStyle("-fx-background-color: #2196F3; -fx-text-fill: white; -fx-font-size: 12px;");
-                        deleteBtn.setStyle("-fx-background-color: #f44336; -fx-text-fill: white; -fx-font-size: 12px;");
-
-                        editBtn.setOnAction(event -> {
-                            Product product = getTableView().getItems().get(getIndex());
-                            editProduct(product);
-                        });
-
-                        deleteBtn.setOnAction(event -> {
-                            Product product = getTableView().getItems().get(getIndex());
-                            deleteProduct(product);
-                        });
-                    }
-
-                    @Override
-                    protected void updateItem(Void item, boolean empty) {
-                        super.updateItem(item, empty);
-                        if (empty) {
-                            setGraphic(null);
-                        } else {
-                            javafx.scene.layout.HBox buttons = new javafx.scene.layout.HBox(5, editBtn, deleteBtn);
-                            setGraphic(buttons);
-                        }
-                    }
-                });
-            }
         } catch (Exception e) {
             System.err.println("Error initializing table columns: " + e.getMessage());
             e.printStackTrace();
@@ -129,77 +171,61 @@ public class ManagerMainPageController implements Initializable {
     }
 
     private void setupEventHandlers() {
-        // Search functionality
-        if (txtSearch != null) {
-            txtSearch.textProperty().addListener((observable, oldValue, newValue) -> filterProducts(newValue));
-        }
+        txtSearch.textProperty().addListener((obs, oldVal, newVal) -> filterProducts(newVal));
+        productsTable.getSelectionModel().selectedItemProperty().addListener(
+                (obs, oldVal, newVal) -> {
+                    selectedProduct = newVal;
+                    btnDeleteProduct.setDisable(newVal == null);
+                    btnUpdateProduct.setDisable(newVal == null);
+                });
 
-        // Table selection
-        if (productsTable != null) {
-            productsTable.getSelectionModel().selectedItemProperty().addListener(
-                    (observable, oldValue, newValue) -> {
-                        selectedProduct = newValue;
-                        if (btnDeleteProduct != null) btnDeleteProduct.setDisable(newValue == null);
-                        if (btnUpdateProduct != null) btnUpdateProduct.setDisable(newValue == null);
-                    });
-        }
-
-        // Button actions
-        if (btnAddProduct != null) btnAddProduct.setOnAction(e -> handleAddProduct());
-        if (btnDeleteProduct != null) btnDeleteProduct.setOnAction(e -> handleDeleteProduct());
-        if (btnUpdateProduct != null) btnUpdateProduct.setOnAction(e -> handleUpdateProduct());
-        if (btnSaveProduct != null) btnSaveProduct.setOnAction(e -> handleSaveProduct());
-        if (btnCancel != null) btnCancel.setOnAction(e -> handleCancel());
+        btnAddProduct.setOnAction(e -> handleAddProduct());
+        btnDeleteProduct.setOnAction(e -> handleDeleteProduct());
+        btnUpdateProduct.setOnAction(e -> handleUpdateProduct());
+        btnSaveProduct.setOnAction(e -> handleSaveProduct());
+        btnCancel.setOnAction(e -> handleCancel());
     }
 
     private void loadProductsFromDatabase() {
-        try {
-            ResultSet rs = DBHelper.executeFunction("GetAllProducts");
+        javafx.concurrent.Task<List<Product>> task = new javafx.concurrent.Task<>() {
+            @Override
+            protected List<Product> call() throws Exception {
+                List<Product> products = new ArrayList<>();
+                // Keep DBHelper call
+                var rs = DBHelper.executeFunction("GetAllProducts");
 
-            List<Product> products = new ArrayList<>();
-            allProducts.clear();
+                allProducts.clear();
 
-            while (rs != null && rs.next()) {
-                try {
-                    int productId = rs.getInt("productid");
-                    String sku = rs.getString("sku");
-                    String productName = rs.getString("productname");
-                    String categoryName = rs.getString("categoryname");
-                    int stockLevel = rs.getInt("stocklevel");
-                    double price = rs.getDouble("price");
-                    String description = rs.getString("description");
-                    String supplierName = rs.getString("suppliername");
-                    String warehouse = rs.getString("warehouse");
-
+                while (rs != null && rs.next()) {
+                    // Populate product objects
                     Product product = new Product(
-                            productId, sku, productName, categoryName, stockLevel,
-                            price, description, supplierName, warehouse
+                            rs.getInt("productid"),
+                            rs.getString("sku"),
+                            rs.getString("productname"),
+                            rs.getString("categoryname"),
+                            rs.getInt("stocklevel"),
+                            rs.getDouble("price"),
+                            rs.getString("description"),
+                            rs.getString("suppliername"),
+                            rs.getString("warehouse")
                     );
                     products.add(product);
-                    allProducts.put(productId, product);
-
-                } catch (SQLException e) {
-                    System.err.println("Error reading product row: " + e.getMessage());
+                    allProducts.put(product.getProductId(), product);
                 }
+                return products;
             }
+        };
 
-            if (productsTable != null) {
-                productsTable.getItems().setAll(products);
-                System.out.println("Loaded " + products.size() + " products");
-            }
+        task.setOnSucceeded(e -> productsTable.getItems().setAll(task.getValue()));
+        task.setOnFailed(e -> showCustomModal("Database Error!\nFailed to load products: " + task.getException().getMessage()));
 
-        } catch (SQLException e) {
-            System.err.println("Failed to load products: " + e.getMessage());
-            showAlert("Database Error", "Failed to load products: " + e.getMessage());
-            e.printStackTrace();
-        }
+        new Thread(task).start();
     }
 
     private void loadCategories() {
         try {
-            ResultSet rs = DBHelper.executeFunction("GetAllCategories");
+            var rs = DBHelper.executeFunction("GetAllCategories");
             List<String> categories = new ArrayList<>();
-            List<Integer> categoryIds = new ArrayList<>();
             categoryNameToId.clear();
 
             while (rs != null && rs.next()) {
@@ -208,7 +234,6 @@ public class ManagerMainPageController implements Initializable {
 
                 if (categoryName != null && !categoryName.trim().isEmpty()) {
                     categories.add(categoryName);
-                    categoryIds.add(categoryId);
                     categoryNameToId.put(categoryName, categoryId);
                 }
             }
@@ -216,479 +241,303 @@ public class ManagerMainPageController implements Initializable {
             if (cmbCategory != null) {
                 cmbCategory.getItems().setAll(categories);
                 if (!categories.isEmpty()) {
-                    cmbCategory.setValue(categories.get(0));
+                    cmbCategory.setValue(categories.get(0)); // select first by default
                 }
             }
 
-            if (cmbCategoryId != null) {
-                cmbCategoryId.getItems().setAll(categoryIds);
-            }
+            System.out.println("Loaded " + categories.size() + " categories");
 
         } catch (SQLException e) {
             System.err.println("Failed to load categories: " + e.getMessage());
-            showAlert("Database Error", "Failed to load categories: " + e.getMessage());
+            showCustomModal("Database Error\nFailed to load categories: " + e.getMessage());
         }
     }
 
     private void loadSuppliers() {
         try {
-            Connection conn = DBHelper.getConnection();
-            String query = "SELECT supplierid, name FROM supplier ORDER BY name";
-            PreparedStatement stmt = conn.prepareStatement(query);
-            ResultSet rs = stmt.executeQuery();
-
+            var rs = DBHelper.executeFunction("GetAllSuppliers"); // Your PSQL function
             List<String> supplierNames = new ArrayList<>();
-            List<Integer> supplierIds = new ArrayList<>();
-            supplierNameToId.clear();
+            supplierNameToId.clear(); // reset the map
 
-            while (rs.next()) {
+            while (rs != null && rs.next()) {
                 int supplierId = rs.getInt("supplierid");
                 String supplierName = rs.getString("name");
 
                 if (supplierName != null && !supplierName.trim().isEmpty()) {
                     supplierNames.add(supplierName);
-                    supplierIds.add(supplierId);
-                    supplierNameToId.put(supplierName, supplierId);
+                    supplierNameToId.put(supplierName, supplierId); // Map name -> ID
                 }
             }
 
-            if (cmbSupplierId != null) {
-                cmbSupplierId.getItems().setAll(supplierIds);
+            if (cmbSupplierName != null) {
+                cmbSupplierName.getItems().setAll(supplierNames);
+                if (!supplierNames.isEmpty()) {
+                    cmbSupplierName.setValue(supplierNames.get(0)); // Select first by default
+                }
             }
 
             System.out.println("Loaded " + supplierNames.size() + " suppliers");
 
-            rs.close();
-            stmt.close();
-
         } catch (SQLException e) {
             System.err.println("Failed to load suppliers: " + e.getMessage());
-            showAlert("Database Error", "Failed to load suppliers: " + e.getMessage());
+            showCustomModal("Database Error\nFailed to load suppliers: " + e.getMessage());
         }
     }
 
     private void filterProducts(String query) {
         if (query == null || query.trim().isEmpty()) {
-            if (productsTable != null) {
-                productsTable.getItems().setAll(allProducts.values());
-            }
+            productsTable.getItems().setAll(allProducts.values());
             return;
         }
-
         query = query.toLowerCase();
-        List<Product> filteredProducts = new ArrayList<>();
-
-        for (Product product : allProducts.values()) {
-            if (product.getName().toLowerCase().contains(query) ||
-                    product.getSku().toLowerCase().contains(query) ||
-                    product.getCategory().toLowerCase().contains(query) ||
-                    product.getSupplier().toLowerCase().contains(query)) {
-                filteredProducts.add(product);
+        List<Product> filtered = new ArrayList<>();
+        for (Product p : allProducts.values()) {
+            if (p.getName().toLowerCase().contains(query) ||
+                    p.getSku().toLowerCase().contains(query) ||
+                    p.getCategory().toLowerCase().contains(query) ||
+                    p.getSupplier().toLowerCase().contains(query)) {
+                filtered.add(p);
             }
         }
-
-        if (productsTable != null) {
-            productsTable.getItems().setAll(filteredProducts);
-        }
+        productsTable.getItems().setAll(filtered);
     }
 
-    private void checkLowStockNotifications() {
-        try {
-            ResultSet rs = DBHelper.executeFunction("GetLowStockProducts");
-            int lowStockCount = 0;
-
-            while (rs != null && rs.next()) {
-                lowStockCount++;
-            }
-
-            if (notificationBadge != null && lblNotificationCount != null) {
-                if (lowStockCount > 0) {
-                    notificationBadge.setVisible(true);
-                    lblNotificationCount.setText(String.valueOf(lowStockCount));
-                } else {
-                    notificationBadge.setVisible(false);
-                }
-            }
-
-        } catch (SQLException e) {
-            System.err.println("Failed to check low stock: " + e.getMessage());
-        }
-    }
-
-    private void handleAddProduct() {
-        selectedProduct = null;
-        clearForm();
-        if (productModal != null) {
-            productModal.setVisible(true);
-        }
-    }
-
-    private void handleUpdateProduct() {
-        if (selectedProduct != null) {
-            editProduct(selectedProduct);
-        }
-    }
-
-    private void handleDeleteProduct() {
-        if (selectedProduct != null) {
-            deleteProduct(selectedProduct);
-        }
-    }
-
+    private void handleAddProduct() { selectedProduct = null; clearForm(); productModal.setVisible(true); }
+    private void handleUpdateProduct() { if (selectedProduct != null) editProduct(selectedProduct); }
+    private void handleDeleteProduct() { if (selectedProduct != null) deleteProduct(selectedProduct); }
     private void handleSaveProduct() {
         if (validateForm()) {
             try {
-                if (selectedProduct == null) {
-                    addProductToDatabase();
-                } else {
-                    updateProductInDatabase();
-                }
+                if (selectedProduct == null) addProductToDatabase();
+                else updateProductInDatabase();
 
-                if (productModal != null) {
-                    productModal.setVisible(false);
-                }
+                productModal.setVisible(false);
                 loadProductsFromDatabase();
-                checkLowStockNotifications();
 
-            } catch (SQLException e) {
-                System.err.println("Failed to save product: " + e.getMessage());
-                showAlert("Database Error", "Failed to save product: " + e.getMessage());
-            }
+            } catch (SQLException e) { showCustomModal("Database Error\nFailed to save product: " + e.getMessage()); }
         }
     }
+    private void handleCancel() { productModal.setVisible(false); }
 
-    private void handleCancel() {
-        if (productModal != null) {
-            productModal.setVisible(false);
-        }
+    private String generateUniqueSku() {
+        long timestamp = System.currentTimeMillis(); // current time in ms
+        int random = new Random().nextInt(900) + 100; // random 100-999
+        return "PROD" + timestamp + random;
     }
+
 
     private void addProductToDatabase() throws SQLException {
-        String sku = txtSku.getText();
-        String name = txtProductName.getText();
-        Integer categoryId = categoryNameToId.get(cmbCategory.getValue());
-        double price = Double.parseDouble(txtPrice.getText());
-        String description = txtDescription.getText();
-        Integer supplierId = null;
+        // 1. Auto-generate SKU
+        String sku = generateUniqueSku();
 
-        // Try to get supplier ID from name or use default
-        if (txtSupplier.getText() != null && !txtSupplier.getText().isEmpty()) {
-            supplierId = supplierNameToId.get(txtSupplier.getText());
-            if (supplierId == null) {
-                // Create new supplier if not exists
-                Connection conn = DBHelper.getConnection();
-                String insertSupplier = "INSERT INTO supplier (name) VALUES (?) RETURNING supplierid";
-                PreparedStatement stmt = conn.prepareStatement(insertSupplier);
-                stmt.setString(1, txtSupplier.getText());
-                ResultSet rs = stmt.executeQuery();
-                if (rs.next()) {
-                    supplierId = rs.getInt(1);
-                    supplierNameToId.put(txtSupplier.getText(), supplierId);
-                }
-                rs.close();
-                stmt.close();
-            }
+        // 2. Get other form values
+        String name = txtProductName.getText().trim();
+        String description = txtDescription.getText().trim();
+
+        // Category ID mapping
+        String categoryName = cmbCategory.getValue();
+        if (categoryName == null || !categoryNameToId.containsKey(categoryName)) {
+            showCustomModal("Validation Error\nPlease select a valid category.");
+            return;
         }
+        int categoryId = categoryNameToId.get(categoryName);
 
-        if (categoryId == null) {
-            showAlert("Error", "Please select a valid category");
+        // Supplier ID mapping
+        String supplierName = cmbSupplierName.getValue();
+        if (supplierName == null || !supplierNameToId.containsKey(supplierName)) {
+            showCustomModal("Validation Error\nPlease select a valid supplier.");
+            return;
+        }
+        int supplierId = supplierNameToId.get(supplierName);
+
+        // Price validation
+        BigDecimal price;
+        try {
+            price = new BigDecimal(txtPrice.getText().trim());
+        } catch (NumberFormatException e) {
+            showCustomModal("Validation Error\nPrice must be numeric.");
             return;
         }
 
-        if (supplierId == null) {
-            // Use first supplier as default
-            if (!supplierNameToId.isEmpty()) {
-                supplierId = supplierNameToId.values().iterator().next();
+        // Stock quantity validation
+        int stockQuantity;
+        try { stockQuantity = Integer.parseInt(txtStock.getText().trim()); }
+        catch (NumberFormatException e) { showCustomModal("Validation Error\nStock must be numeric."); return; }
+
+        // Low stock threshold validation
+        int lowStock;
+        try {
+            String lowStockText = txtLowStock.getText().trim();
+            lowStock = lowStockText.isEmpty() ? 5 : Integer.parseInt(lowStockText);
+        } catch (NumberFormatException e) { showCustomModal("Validation Error\nLow Stock must be numeric."); return; }
+
+        // 3. Call AddProductWithStock function
+        var rs = DBHelper.executeFunction("AddProduct", sku, name, categoryId, price, supplierId, description, stockQuantity, lowStock);
+
+        // 4. Read result message
+        if (rs != null && rs.next()) {
+            String result = rs.getString(1);
+            if (result.startsWith("SUCCESS")) {
+                showCustomModal("Success\n"+result);
             } else {
-                showAlert("Error", "No supplier available. Please add a supplier first.");
-                return;
+                showCustomModal("Database Error\n"+result);
             }
+        } else {
+            showCustomModal("Database Error\nNo response from AddProduct function.");
         }
-
-        DBHelper.executeProcedure(
-                "AddProduct",
-                sku,
-                name,
-                categoryId,
-                price,
-                supplierId,
-                description
-        );
-
-        System.out.println("Product added successfully!");
     }
 
     private void updateProductInDatabase() throws SQLException {
         if (selectedProduct == null) return;
 
-        String sku = txtSku.getText();
-        String name = txtProductName.getText();
-        Integer categoryId = categoryNameToId.get(cmbCategory.getValue());
-        double price = Double.parseDouble(txtPrice.getText());
-        String description = txtDescription.getText();
-        Integer supplierId = null;
+        int productId = selectedProduct.getProductId();
 
-        // Try to get supplier ID from name
-        if (txtSupplier.getText() != null && !txtSupplier.getText().isEmpty()) {
-            supplierId = supplierNameToId.get(txtSupplier.getText());
-        }
+        // 1. Gather form data
+        String name = txtProductName.getText().trim();
+        String description = txtDescription.getText().trim();
+        String categoryName = cmbCategory.getValue();
+        int categoryId = categoryNameToId.getOrDefault(categoryName, selectedProduct.getProductId());
 
-        if (categoryId == null) {
-            showAlert("Error", "Please select a valid category");
-            return;
-        }
+        String supplierName = cmbSupplierName.getValue();
+        int supplierId = supplierNameToId.getOrDefault(supplierName, selectedProduct.getProductId());
 
-        DBHelper.executeProcedure(
-                "UpdateProduct",
-                selectedProduct.getProductId(),
-                sku,
-                name,
-                categoryId,
-                price,
-                description,
-                supplierId,
-                true // isactive
-        );
+        BigDecimal price;
+        try { price = new BigDecimal(txtPrice.getText().trim()); }
+        catch (NumberFormatException e) { showCustomModal("Validation Error\nPrice must be numeric."); return; }
 
-        System.out.println("Product updated successfully!");
+        int stockQuantity;
+        try { stockQuantity = Integer.parseInt(txtStock.getText().trim()); }
+        catch (NumberFormatException e) { showCustomModal("Validation Error\nStock must be numeric."); return; }
+
+        int lowStock;
+        try {
+            String lowStockText = txtLowStock.getText().trim();
+            lowStock = lowStockText.isEmpty() ? 5 : Integer.parseInt(lowStockText);
+        } catch (NumberFormatException e) { showCustomModal("Validation Error\nLow Stock must be numeric."); return; }
+
+        // 2. Update Product Details
+        DBHelper.executeFunction("EditProductDetails", productId, null, name, categoryId, price, description, supplierId, null);
+
+        // 3. Calculate stock change
+        int stockChange = stockQuantity - selectedProduct.getStockLevel();
+
+        // 4. Update Stock (assuming warehouse id = 1 for simplicity)
+        DBHelper.executeFunction("UpdateStock", productId, 1, stockChange);
+
+        // 5. Update Low Stock Threshold
+        DBHelper.executeFunction("UpdateLowStockThreshold", productId, 1, lowStock);
+
+        // 6. Show success and reload products
+        showCustomModal("Success\nProduct updated successfully!");
+        loadProductsFromDatabase();
     }
 
     private void editProduct(Product product) {
         selectedProduct = product;
-        if (txtSku != null) txtSku.setText(product.getSku());
-        if (txtProductName != null) txtProductName.setText(product.getName());
-        if (cmbCategory != null) cmbCategory.setValue(product.getCategory());
-        if (txtPrice != null) txtPrice.setText(String.valueOf(product.getPrice()));
-        if (txtStock != null) txtStock.setText(String.valueOf(product.getStockLevel()));
-        if (txtDescription != null) txtDescription.setText(product.getDescription());
-        if (txtSupplier != null) txtSupplier.setText(product.getSupplier());
-        if (productModal != null) productModal.setVisible(true);
+
+        // Basic product info
+        txtProductName.setText(product.getName());
+        cmbCategory.setValue(product.getCategory());
+        txtPrice.setText(String.valueOf(product.getPrice()));
+        txtStock.setText(String.valueOf(product.getStockLevel()));
+        txtDescription.setText(product.getDescription());
+        cmbSupplierName.setValue(product.getSupplier());
+
+        // Fetch low stock threshold from DB
+        try {
+            var rs = DBHelper.executeFunction("GetProductLowStock", product.getProductId(), 1); // assuming warehouseId = 1
+            if (rs != null && rs.next()) {
+                int lowStock = rs.getInt(1);
+                txtLowStock.setText(String.valueOf(lowStock));
+            } else {
+                txtLowStock.setText("5"); // default if not found
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            txtLowStock.setText("5"); // fallback default
+        }
+
+        // Show modal
+        productModal.setVisible(true);
     }
 
     private void deleteProduct(Product product) {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Delete Product");
-        alert.setHeaderText("Delete " + product.getName());
-        alert.setContentText("Are you sure you want to permanently delete this product?\n\nWarning: This action cannot be undone and may affect related orders and stock records.");
+        if (product == null) return;
 
-        Optional<ButtonType> result = alert.showAndWait();
-        if (result.isPresent() && result.get() == ButtonType.OK) {
-            try {
-                // First, check if product can be deleted (no dependent records)
-                if (hasDependentRecords(product.getProductId())) {
-                    showAlert("Cannot Delete",
-                            "Cannot delete product because it has dependent records (orders, stock, etc.).\n" +
-                                    "Please delete related records first or use deactivate instead.");
-                    return;
+        // Show confirmation using custom modal with optional callback
+        showCustomModalConfirmation(
+                "Delete Product\nAre you sure you want to delete " + product.getName() + "?",
+                confirmed -> {
+                    if (confirmed) {
+                        try {
+                            // Call the soft delete function
+                            var rs = DBHelper.executeFunction("SoftDeleteProduct", product.getProductId());
+                            if (rs != null && rs.next()) {
+                                String message = rs.getString(1);
+                                showCustomModal(message); // regular modal for success/error message
+                            }
+
+                            // Reload products to reflect the deletion
+                            loadProductsFromDatabase();
+
+                        } catch (SQLException e) {
+                            showCustomModal("Database Error\nFailed to delete product: " + e.getMessage());
+                        }
+                    }
                 }
+        );
+    }
 
-                // Delete product using direct SQL (cascade delete)
-                deleteProductFromDatabase(product.getProductId());
 
-                // Remove from local collections
-                allProducts.remove(product.getProductId());
-                productsTable.getItems().remove(product);
-
-                checkLowStockNotifications();
-
-                // Show success message
-                Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
-                successAlert.setTitle("Success");
-                successAlert.setHeaderText("Product Deleted");
-                successAlert.setContentText(product.getName() + " has been permanently deleted from the system.");
-                successAlert.showAndWait();
-
-                System.out.println("Product deleted successfully!");
-
-            } catch (SQLException e) {
-                System.err.println("Failed to delete product: " + e.getMessage());
-                e.printStackTrace();
-                showAlert("Database Error", "Failed to delete product: " + e.getMessage());
-            }
+    private void showCustomModalConfirmation(String message, java.util.function.Consumer<Boolean> callback) {
+        if (customModalController != null) {
+            customModalController.showConfirmation(message, callback);
+        } else {
+            // Fallback: auto-confirm if modal not initialized
+            callback.accept(true);
         }
     }
 
-    private boolean hasDependentRecords(int productId) throws SQLException {
-        Connection conn = DBHelper.getConnection();
-
-        // Check if product exists in orders
-        String checkOrdersQuery = "SELECT COUNT(*) FROM orderitem WHERE productid = ?";
-        PreparedStatement stmt1 = conn.prepareStatement(checkOrdersQuery);
-        stmt1.setInt(1, productId);
-        ResultSet rs1 = stmt1.executeQuery();
-        rs1.next();
-        int orderCount = rs1.getInt(1);
-        rs1.close();
-        stmt1.close();
-
-        // Check if product exists in stock
-        String checkStockQuery = "SELECT COUNT(*) FROM stock WHERE productid = ?";
-        PreparedStatement stmt2 = conn.prepareStatement(checkStockQuery);
-        stmt2.setInt(1, productId);
-        ResultSet rs2 = stmt2.executeQuery();
-        rs2.next();
-        int stockCount = rs2.getInt(1);
-        rs2.close();
-        stmt2.close();
-
-        // Check if product exists in batchlot
-        String checkBatchQuery = "SELECT COUNT(*) FROM batchlot WHERE productid = ?";
-        PreparedStatement stmt3 = conn.prepareStatement(checkBatchQuery);
-        stmt3.setInt(1, productId);
-        ResultSet rs3 = stmt3.executeQuery();
-        rs3.next();
-        int batchCount = rs3.getInt(1);
-        rs3.close();
-        stmt3.close();
-
-        // Check if product exists in productmovement
-        String checkMovementQuery = "SELECT COUNT(*) FROM productmovement WHERE productid = ?";
-        PreparedStatement stmt4 = conn.prepareStatement(checkMovementQuery);
-        stmt4.setInt(1, productId);
-        ResultSet rs4 = stmt4.executeQuery();
-        rs4.next();
-        int movementCount = rs4.getInt(1);
-        rs4.close();
-        stmt4.close();
-
-        return (orderCount > 0 || stockCount > 0 || batchCount > 0 || movementCount > 0);
-    }
-
-    private void deleteProductFromDatabase(int productId) throws SQLException {
-        Connection conn = DBHelper.getConnection();
-
-        try {
-            conn.setAutoCommit(false); // Start transaction
-
-            // Delete from dependent tables first (in reverse order of foreign key dependencies)
-
-            // 1. Delete from batchlot
-            String deleteBatchQuery = "DELETE FROM batchlot WHERE productid = ?";
-            PreparedStatement stmt1 = conn.prepareStatement(deleteBatchQuery);
-            stmt1.setInt(1, productId);
-            stmt1.executeUpdate();
-            stmt1.close();
-
-            // 2. Delete from stock
-            String deleteStockQuery = "DELETE FROM stock WHERE productid = ?";
-            PreparedStatement stmt2 = conn.prepareStatement(deleteStockQuery);
-            stmt2.setInt(1, productId);
-            stmt2.executeUpdate();
-            stmt2.close();
-
-            // 3. Delete from orderitem (if any)
-            String deleteOrderItemQuery = "DELETE FROM orderitem WHERE productid = ?";
-            PreparedStatement stmt3 = conn.prepareStatement(deleteOrderItemQuery);
-            stmt3.setInt(1, productId);
-            stmt3.executeUpdate();
-            stmt3.close();
-
-            // 4. Delete from productmovement
-            String deleteMovementQuery = "DELETE FROM productmovement WHERE productid = ?";
-            PreparedStatement stmt4 = conn.prepareStatement(deleteMovementQuery);
-            stmt4.setInt(1, productId);
-            stmt4.executeUpdate();
-            stmt4.close();
-
-            // 5. Finally delete from product table
-            String deleteProductQuery = "DELETE FROM product WHERE productid = ?";
-            PreparedStatement stmt5 = conn.prepareStatement(deleteProductQuery);
-            stmt5.setInt(1, productId);
-            int rowsDeleted = stmt5.executeUpdate();
-            stmt5.close();
-
-            if (rowsDeleted > 0) {
-                conn.commit(); // Commit transaction
-                System.out.println("Product and all related records deleted successfully.");
-            } else {
-                conn.rollback(); // Rollback if no rows deleted
-                throw new SQLException("Product not found");
-            }
-
-        } catch (SQLException e) {
-            conn.rollback(); // Rollback on error
-            throw e;
-        } finally {
-            conn.setAutoCommit(true); // Restore auto-commit
-        }
-    }
-
-    private void tryAlternativeDeactivate(Product product) {
-        try {
-            // Alternative: Use a direct SQL update
-            Connection conn = DBHelper.getConnection();
-            String query = "UPDATE product SET isactive = false WHERE productid = ?";
-            PreparedStatement stmt = conn.prepareStatement(query);
-            stmt.setInt(1, product.getProductId());
-            stmt.executeUpdate();
-            stmt.close();
-
-            System.out.println("Product deactivated using direct SQL update!");
-
-        } catch (SQLException e) {
-            System.err.println("Alternative deactivate also failed: " + e.getMessage());
-            showAlert("Database Error", "Failed to deactivate product: " + e.getMessage());
-        }
-    }
 
     private boolean validateForm() {
-        // Validate required fields
-        if (txtSku == null || txtSku.getText().isEmpty() ||
-                txtProductName == null || txtProductName.getText().isEmpty() ||
-                cmbCategory == null || cmbCategory.getValue() == null ||
-                txtPrice == null || txtPrice.getText().isEmpty()) {
-            showAlert("Validation Error", "Please fill in all required fields (SKU, Name, Category, Price).");
+        if (txtProductName.getText().isEmpty() ||
+                cmbCategory.getValue() == null || txtPrice.getText().isEmpty()) {
+            showCustomModal("Validation Error\nPlease fill all required fields.");
             return false;
         }
 
-        // Validate numeric fields
-        try {
-            double price = Double.parseDouble(txtPrice.getText());
-            if (price <= 0) {
-                showAlert("Validation Error", "Price must be greater than 0.");
-                return false;
-            }
-        } catch (NumberFormatException e) {
-            showAlert("Validation Error", "Please enter a valid number for price.");
-            return false;
-        }
-
-        return true;
+        try { return Double.parseDouble(txtPrice.getText()) > 0; }
+        catch (NumberFormatException e) { showCustomModal("Validation Error\nPrice must be numeric."); return false; }
     }
 
     private void clearForm() {
-        if (txtSku != null) txtSku.clear();
-        if (txtProductName != null) txtProductName.clear();
-        if (cmbCategory != null && cmbCategory.getItems().size() > 0)
-            cmbCategory.setValue(cmbCategory.getItems().get(0));
-        if (txtPrice != null) txtPrice.clear();
-        if (txtStock != null) txtStock.clear();
-        if (txtSupplier != null) txtSupplier.clear();
-        if (txtDescription != null) txtDescription.clear();
+        txtProductName.clear();
+        txtPrice.clear();
+        txtStock.clear();
+        txtDescription.clear();
+        txtLowStock.clear();
+
+        if (!cmbCategory.getItems().isEmpty()) cmbCategory.setValue(cmbCategory.getItems().get(0));
+        if (!cmbSupplierName.getItems().isEmpty()) cmbSupplierName.setValue(cmbSupplierName.getItems().get(0));
     }
 
-    private void showAlert(String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle(title);
-        alert.setContentText(message);
-        alert.showAndWait();
+    private void showCustomModal(String message) {
+        if (customModalController != null) {
+            customModalController.showMessage(message);
+        } else {
+            // fallback
+            System.err.println("Modal not initialized: " + message);
+        }
     }
 
-    // Product Model Class
     public static class Product {
         private final IntegerProperty productId;
-        private final StringProperty sku;
-        private final StringProperty name;
-        private final StringProperty category;
+        private final StringProperty sku, name, category, description, supplier, warehouse;
         private final IntegerProperty stockLevel;
         private final DoubleProperty price;
-        private final StringProperty description;
-        private final StringProperty supplier;
-        private final StringProperty warehouse;
 
-        public Product(int productId, String sku, String name, String category,
-                       int stockLevel, double price, String description,
-                       String supplier, String warehouse) {
+        public Product(int productId, String sku, String name, String category, int stockLevel, double price,
+                       String description, String supplier, String warehouse) {
             this.productId = new SimpleIntegerProperty(productId);
             this.sku = new SimpleStringProperty(sku != null ? sku : "");
             this.name = new SimpleStringProperty(name != null ? name : "");
@@ -700,7 +549,6 @@ public class ManagerMainPageController implements Initializable {
             this.warehouse = new SimpleStringProperty(warehouse != null ? warehouse : "");
         }
 
-        // Getters
         public int getProductId() { return productId.get(); }
         public String getSku() { return sku.get(); }
         public String getName() { return name.get(); }
@@ -711,7 +559,6 @@ public class ManagerMainPageController implements Initializable {
         public String getSupplier() { return supplier.get(); }
         public String getWarehouse() { return warehouse.get(); }
 
-        // Property getters
         public IntegerProperty productIdProperty() { return productId; }
         public StringProperty skuProperty() { return sku; }
         public StringProperty nameProperty() { return name; }
@@ -721,57 +568,5 @@ public class ManagerMainPageController implements Initializable {
         public StringProperty descriptionProperty() { return description; }
         public StringProperty supplierProperty() { return supplier; }
         public StringProperty warehouseProperty() { return warehouse; }
-    }
-
-    // Sidebar Button Handlers (for other manager features)
-    @FXML
-    private void handleCategorizeProducts() {
-        // Open categorize products modal
-        System.out.println("Categorize Products clicked");
-    }
-
-    @FXML
-    private void handleMaintainStock() {
-        // Open stock management page
-        System.out.println("Maintain Stock clicked");
-    }
-
-    @FXML
-    private void handleApprovePurchases() {
-        // Open purchase approval page
-        System.out.println("Approve Purchases clicked");
-    }
-
-    @FXML
-    private void handleGenerateReports() {
-        // Open reports generation page
-        System.out.println("Generate Reports clicked");
-    }
-
-    @FXML
-    private void handleLowStockNotifications() {
-        // Show low stock details
-        try {
-            ResultSet rs = DBHelper.executeFunction("GetLowStockProducts");
-            StringBuilder sb = new StringBuilder();
-            sb.append("Low Stock Products:\n\n");
-
-            while (rs != null && rs.next()) {
-                String productName = rs.getString("productname");
-                int quantity = rs.getInt("quantityavailable");
-                int threshold = rs.getInt("minthreshold");
-                sb.append(productName).append(": ")
-                        .append(quantity).append(" (Threshold: ").append(threshold).append(")\n");
-            }
-
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Low Stock Details");
-            alert.setHeaderText("Low Stock Products");
-            alert.setContentText(sb.toString());
-            alert.showAndWait();
-
-        } catch (SQLException e) {
-            showAlert("Database Error", "Failed to load low stock details: " + e.getMessage());
-        }
     }
 }
