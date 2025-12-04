@@ -23,7 +23,7 @@
             <children>
                 <Pane layoutX="116.0" layoutY="250.0" prefHeight="581.0" prefWidth="670.0" style="-fx-background-color: #e5dae6; -fx-border-radius: 10; -fx-border-color: purple; -fx-border-width: 5;">
                     <children>
-                        <Text fill="#532386" layoutX="250.0" layoutY="102.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Login">
+                        <Text fill="#532386" layoutX="275.0" layoutY="102.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Login">
                             <font>
                                 <Font name="System Bold" size="48.0" />
                             </font>
@@ -38,7 +38,7 @@
                                 <Font size="16.0" />
                             </font>
                         </PasswordField>
-                        <Button fx:id="btnLogin" layoutX="264.0" layoutY="409.0" mnemonicParsing="false" prefHeight="48.0" prefWidth="143.0" style="-fx-background-color: #FFF0F5; -fx-border-color: black; -fx-border-radius: 5;" text="Login" textFill="#532386" textOverrun="CLIP">
+                        <Button fx:id="btnLogin" layoutX="264.0" layoutY="360.0" mnemonicParsing="false" prefHeight="48.0" prefWidth="143.0" style="-fx-background-color: #FFF0F5; -fx-border-color: black; -fx-border-radius: 5;" text="Login" textFill="#532386" textOverrun="CLIP">
                             <font>
                                 <Font size="23.0" />
                             </font>

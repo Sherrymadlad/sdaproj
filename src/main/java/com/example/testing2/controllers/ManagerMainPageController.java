@@ -44,7 +44,7 @@ public class ManagerMainPageController implements Initializable {
     @FXML private ComboBox<Integer> cmbSupplierId;
     @FXML private ImageView productImage;
 
-    private final Image placeholderImage = new Image(Objects.requireNonNull(getClass().getResource("/com/example/testing2/images/placeholder.jpg")).toExternalForm());
+    private final Image placeholderImage = new Image(Objects.requireNonNull(getClass().getResource("/com/example/testing2/images/placeholder.png")).toExternalForm());
     private Product selectedProduct;
     private final Map<Integer, Product> allProducts = new HashMap<>();
     private final Map<String, Integer> categoryNameToId = new HashMap<>();
@@ -58,6 +58,10 @@ public class ManagerMainPageController implements Initializable {
         loadCategories();
         loadSuppliers();
         checkLowStockNotifications();
+    }
+
+    public void setCurrentUserId(int userId) {
+        this.currentUserId = userId;
     }
 
     private void initializeTableColumns() {
