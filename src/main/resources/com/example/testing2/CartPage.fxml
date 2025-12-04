@@ -5,13 +5,13 @@
 <?import javafx.scene.text.*?>
 <?import javafx.scene.image.ImageView?>
 
-<StackPane prefHeight="900" prefWidth="1600"
+<StackPane fx:id="mainRoot" prefHeight="900" prefWidth="1600"
            style="-fx-background-color: #d7e3ee;"
            xmlns="http://javafx.com/javafx/25"
            xmlns:fx="http://javafx.com/fxml/1"
            fx:controller="com.example.testing2.controllers.CartPageController">
 
-    <VBox spacing="30" alignment="TOP_CENTER">
+<VBox spacing="30" alignment="TOP_CENTER">
 
         <!-- Heading -->
         <HBox alignment="TOP_LEFT" style="-fx-padding: 70 0 0 40;">
