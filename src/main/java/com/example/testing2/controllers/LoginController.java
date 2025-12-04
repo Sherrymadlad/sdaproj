@@ -13,6 +13,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+import java.awt.event.ActionEvent;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -31,7 +32,7 @@ public class LoginController {
 
     @FXML
     private void initialize() {
-        btnLogin.setOnAction(event -> handleLogin());
+        btnLogin.setOnAction(this::handleLogin);
         txtGoToSignup.setOnMouseClicked(e -> openSignupPage());
 
         // Load Custom Modal
@@ -72,7 +73,7 @@ public class LoginController {
         }
     }
 
-    private void handleLogin(ActionEvent event) {
+    private void handleLogin(javafx.event.ActionEvent event) {
         String username = txtLoginName.getText().trim();
         String password = txtLoginPassword.getText().trim();
 

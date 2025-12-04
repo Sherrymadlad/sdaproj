@@ -5,7 +5,7 @@
 
 <AnchorPane prefHeight="600" prefWidth="900" style="-fx-background-color: #d7e3ee;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.testing2.controllers.ProductsPageController">
 
-    <VBox alignment="TOP_CENTER" layoutX="-531.0" layoutY="92.0" spacing="20" AnchorPane.bottomAnchor="-52.0" AnchorPane.leftAnchor="-531.0" AnchorPane.rightAnchor="571.0" AnchorPane.topAnchor="92.0">
+    <VBox alignment="TOP_CENTER" layoutX="20.0" layoutY="20.0" spacing="20" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0">
 
         <!-- FILTER BAR -->
         <HBox alignment="CENTER" spacing="10">
