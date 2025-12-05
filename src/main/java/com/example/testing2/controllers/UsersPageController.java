@@ -25,11 +25,11 @@ public class UsersPageController {
     private Button btnClearFilter;
 
     public void initialize() {
-        // Populate filter dropdown
+
         cbFilterRole.getItems().addAll("All", "Admin", "Manager", "Staff", "Customer");
         cbFilterRole.setValue("All"); // default
 
-        // Reload users whenever filter changes
+
         cbFilterRole.setOnAction(e -> loadUsers());
 
         btnClearFilter.setOnAction(e -> {
@@ -59,7 +59,7 @@ public class UsersPageController {
                 String phone = rs.getString("phone") != null ? rs.getString("phone") : "-";
                 String email = rs.getString("email") != null ? rs.getString("email") : "-";
 
-                // ===================== USER CARD =====================
+
                 VBox card = new VBox(10);
                 card.setPadding(new Insets(10));
                 card.setStyle("-fx-background-color: #f3e6f7; " +
@@ -68,7 +68,7 @@ public class UsersPageController {
                         "-fx-border-radius: 10; " +
                         "-fx-background-radius: 10;");
 
-                // Header HBox
+
                 HBox header = new HBox(10);
                 header.setPadding(new Insets(5));
                 header.setStyle("-fx-background-color: #f3e6f7;");
@@ -80,19 +80,17 @@ public class UsersPageController {
                 Pane spacer = new Pane();
                 HBox.setHgrow(spacer, Priority.ALWAYS);
 
-                // Role ComboBox
+
                 ComboBox<String> cbRole = new ComboBox<>();
                 cbRole.getItems().addAll("Admin", "Manager", "Staff", "Customer");
                 cbRole.setValue(role); // current role
                 cbRole.setOnAction(e -> updateUserRole(userid, cbRole.getValue()));
 
-                // Edit Info Button
                 Button btnEdit = new Button("Edit Info");
                 btnEdit.setOnAction(e -> openEditUserDialog(userid, username, address, phone, email));
 
                 header.getChildren().addAll(lblUsername, spacer, cbRole, btnEdit);
 
-                // Content VBox
                 VBox content = new VBox(8);
                 content.setPadding(new Insets(5));
 

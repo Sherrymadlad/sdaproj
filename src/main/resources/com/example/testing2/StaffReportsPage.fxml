@@ -8,10 +8,10 @@
 
 <AnchorPane prefHeight="700.0" prefWidth="1000.0" style="-fx-background-color: #e6f0fa;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.testing2.controllers.StaffReportsController"> <!-- faint blue background -->
 
-    <!-- Main Content TabPane (centered with padding) -->
+
     <TabPane fx:id="tabPane" style="-fx-background-color: transparent; -fx-border-color: black;" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="20.0">
 
-        <!-- Products Stock Tab -->
+
         <tabs>
             <Tab text="Products Stock">
                 <AnchorPane style="-fx-background-color: transparent;">
@@ -27,7 +27,6 @@
                 </AnchorPane>
             </Tab>
 
-            <!-- Warehouse Stock Tab -->
             <Tab text="Warehouse Stock">
                 <AnchorPane style="-fx-background-color: transparent;">
                     <TableView fx:id="tblWarehouseStock" style="-fx-background-color: #f0f8ff; -fx-border-color: #cce0ff; -fx-border-radius: 5; -fx-background-radius: 5;" AnchorPane.bottomAnchor="10" AnchorPane.leftAnchor="10" AnchorPane.rightAnchor="10" AnchorPane.topAnchor="10">

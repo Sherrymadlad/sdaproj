@@ -17,10 +17,10 @@
 
 <AnchorPane maxHeight="Infinity" maxWidth="Infinity" minHeight="-Infinity" minWidth="-Infinity" style="-fx-background-color: #d7e3ee;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.testing2.controllers.StaffDashboardPageController">
 
-    <!-- Sidebar Placeholder -->
+
     <AnchorPane fx:id="sidebarContainer" layoutX="0" layoutY="0" prefWidth="339" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="0.0" />
 
-    <!-- Main Content -->
+
     <AnchorPane fx:id="mainContent" layoutX="339.0" prefHeight="620.0" prefWidth="525.0" style="-fx-background-color: #d7e3ee;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="339.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
 
         <children>
@@ -67,7 +67,7 @@
                 </content>
             </ScrollPane>
 
-            <!-- Hidden item card template -->
+
             <AnchorPane fx:id="itemCard" prefHeight="224.0" prefWidth="205.0" style="-fx-background-color: #f7ecfa;" visible="false">
 
                 <children>
@@ -89,7 +89,7 @@
         </children>
     </AnchorPane>
 
-    <!-- ITEM DETAILS MODAL (VIEW-ONLY, styled) -->
+
     <StackPane fx:id="itemDetailsPanel" alignment="CENTER" style="-fx-background-color: rgba(0,0,0,0.6);" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
 
         <!-- Modal box -->
@@ -113,10 +113,10 @@
                 <!-- Divider line -->
                 <AnchorPane prefHeight="1" prefWidth="450" style="-fx-background-color: #ddd;" />
 
-                <!-- Description -->
+
                 <Text fx:id="modalItemDescription" style="-fx-font-size: 16px;                          -fx-fill: #333;                          -fx-line-spacing: 4;" wrappingWidth="450" />
 
-                <!-- Warehouses Section -->
+
                 <VBox fx:id="warehousesContainer" spacing="8" style="-fx-background-color: #f3f0fa;                          -fx-background-radius: 10;                          -fx-padding: 10;">
                     <Text style="-fx-font-weight: bold;                              -fx-font-size: 16px;                              -fx-fill: #4a2c6e;" text="Available in:" />
                     <!-- Warehouse rows injected dynamically -->

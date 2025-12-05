@@ -34,9 +34,7 @@ public class ManagerOrdersPageController {
         btnRefundPendingOrders.setOnAction(e -> showRefundPendingOrders());
     }
 
-    // -------------------------------
-    // TAB HIGHLIGHT
-    // -------------------------------
+
     private void highlightOngoingOrders() {
         btnOngoingOrders.setStyle("-fx-background-color: #6d4c7d; -fx-text-fill: white; -fx-font-size: 20;");
         btnPastOrders.setStyle("-fx-background-color: #8b6fa1; -fx-text-fill: white; -fx-font-size: 20;");
@@ -55,9 +53,6 @@ public class ManagerOrdersPageController {
         btnPastOrders.setStyle("-fx-background-color: #8b6fa1; -fx-text-fill: white; -fx-font-size: 20;");
     }
 
-    // -------------------------------
-    // SHOW ORDERS
-    // -------------------------------
     private void showOngoingOrders() {
         highlightOngoingOrders();
         loadOrders("StaffViewOngoingSalesOrders",true);
@@ -73,10 +68,7 @@ public class ManagerOrdersPageController {
         loadOrders("StaffViewRefundPendingOrders",false);
     }
 
-    // -------------------------------
-    // LOAD ORDERS HELPER
-    // -------------------------------
-    // -------------------------------
+
     private void loadOrders(String functionName, boolean showUpdateButton) {
         ordersContainer.getChildren().clear();
 
@@ -105,9 +97,7 @@ public class ManagerOrdersPageController {
             addOrderPanel(0, "", "", "Error loading orders", 0, 0, false);
         }
     }
-    // -------------------------------
-    // CREATE ORDER PANEL
-    // -------------------------------
+
     private void addOrderPanel(int orderId, String status, String orderDate, String customerName, int customerId, double totalPrice, boolean showUpdateButton) {
         AnchorPane panel = new AnchorPane();
         panel.setPrefHeight(160);
@@ -141,17 +131,10 @@ public class ManagerOrdersPageController {
 
         panel.getChildren().addAll(lblOrderId, lblCustomer, lblStatus, lblDate, lblTotal);
 
-        // --------------------------
-        // UPDATE STATUS BUTTON for Ongoing Orders (upper-right)
-        // --------------------------
-        // --------------------------
-// UPDATE STATUS / APPROVE REFUND BUTTON
-// --------------------------
+
         if (orderId != 0) {
             if (showUpdateButton) {
-                // -----------------------------
-                // Ongoing orders: move status forward
-                // -----------------------------
+
                 String nextStatus = switch (status) {
                     case "Pending" -> "Processing";
                     case "Processing" -> "Dispatched";
@@ -208,7 +191,7 @@ public class ManagerOrdersPageController {
 
                 }
             } else if (status.equals("Refund Pending")) {
-                // Refund tab: approve refund
+
                 Button btnApproveRefund = new Button("Approve Refund → Returned");
                 btnApproveRefund.setStyle("-fx-background-color: #e24a4a; -fx-text-fill: white; -fx-font-size: 16px;");
                 AnchorPane.setTopAnchor(btnApproveRefund, 60.0);
@@ -240,7 +223,6 @@ public class ManagerOrdersPageController {
         if (customModalController != null) {
             customModalController.showConfirmation(message, callback);
         } else {
-            // Fallback: auto-confirm if modal not initialized
             callback.accept(true);
         }
     }

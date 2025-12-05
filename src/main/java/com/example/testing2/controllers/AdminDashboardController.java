@@ -28,7 +28,6 @@ public class AdminDashboardController implements Initializable, SidebarListener 
     public void initialize(URL url, ResourceBundle resourceBundle) {
         setupSidebar();
 
-        // --- Load Metrics page initially ---
         selectTab(tabMetrics, "/com/example/testing2/MetricsPage.fxml");
 
         tabMetrics.setOnAction(e -> selectTab(tabMetrics,"/com/example/testing2/MetricsPage.fxml"));

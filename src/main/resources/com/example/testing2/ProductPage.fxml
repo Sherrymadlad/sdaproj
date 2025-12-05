@@ -7,7 +7,7 @@
 
     <VBox alignment="TOP_CENTER" spacing="20" AnchorPane.bottomAnchor="30" AnchorPane.leftAnchor="30" AnchorPane.rightAnchor="30" AnchorPane.topAnchor="30">
 
-        <!-- FILTER BAR -->
+
         <HBox alignment="CENTER_LEFT" spacing="15" style="-fx-padding: 10; -fx-background-color: #d4bfed; -fx-background-radius: 8;">
             <Label style="-fx-font-weight: bold; -fx-font-size: 14px;" text="Filter by Role:" />
 
@@ -16,7 +16,7 @@
             <Button fx:id="btnClearFilter" style="-fx-background-color: #8b6fa1; -fx-text-fill: #d7e3ee; -fx-padding: 5 15;" text="Clear" />
         </HBox>
 
-        <!-- PRODUCTS LIST -->
+
         <ScrollPane fx:id="scrollProducts" fitToWidth="true" style="-fx-background: #d7e3ee;">
             <content>
                 <VBox fx:id="productsList" spacing="12" style="-fx-background-color: #d7e3ee;" />

@@ -11,14 +11,13 @@ import java.sql.ResultSet;
 public class AuditPageController {
 
     @FXML
-    private Button loadAuditButton; // optional: can keep for refresh
+    private Button loadAuditButton;
 
     @FXML
     private VBox auditList;
 
     @FXML
     public void initialize() {
-        // Automatically load audit logs when page opens
         loadAuditLogs();
 
         // Optional: allow manual refresh via button

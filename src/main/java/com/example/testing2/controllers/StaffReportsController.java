@@ -12,9 +12,7 @@ import java.sql.ResultSet;
 
 public class StaffReportsController {
 
-    // -------------------------------
-    // Products Stock Tab
-    // -------------------------------
+
     @FXML private TableView<ProductStock> tblProductsStock;
     @FXML private TableColumn<ProductStock, Integer> colProductId;
     @FXML private TableColumn<ProductStock, String> colSKU;
@@ -22,9 +20,7 @@ public class StaffReportsController {
     @FXML private TableColumn<ProductStock, Double> colPrice;
     @FXML private TableColumn<ProductStock, Integer> colTotalStock;
 
-    // -------------------------------
-    // Warehouse Stock Tab
-    // -------------------------------
+
     @FXML private TableView<WarehouseStock> tblWarehouseStock;
     @FXML private TableColumn<WarehouseStock, String> colProductNameWH;
     @FXML private TableColumn<WarehouseStock, String> colWarehouseName;
@@ -49,9 +45,7 @@ public class StaffReportsController {
 
     }
 
-    // -------------------------------
-    // Products Stock
-    // -------------------------------
+
     private void setupProductsStockTable() {
         colProductId.setCellValueFactory(new PropertyValueFactory<>("productId"));
         colSKU.setCellValueFactory(new PropertyValueFactory<>("sku"));
@@ -78,9 +72,7 @@ public class StaffReportsController {
         tblProductsStock.setItems(list);
     }
 
-    // -------------------------------
-    // Warehouse Stock
-    // -------------------------------
+
     private void setupWarehouseStockTable() {
         colProductNameWH.setCellValueFactory(new PropertyValueFactory<>("productName"));
         colWarehouseName.setCellValueFactory(new PropertyValueFactory<>("warehouseName"));
@@ -103,9 +95,6 @@ public class StaffReportsController {
         tblWarehouseStock.setItems(list);
     }
 
-    // -------------------------------
-    // Data Models
-    // -------------------------------
     public static class ProductStock {
         private final int productId;
         private final String sku;
@@ -173,9 +162,6 @@ public class StaffReportsController {
         tblBatchTracking.setItems(list);
     }
 
-    // -------------------------------
-// BatchTracking Data Model
-// -------------------------------
     public static class BatchTracking {
         private final int batchId;
         private final String lotNumber;

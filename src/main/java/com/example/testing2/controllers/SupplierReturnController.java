@@ -18,18 +18,16 @@ import java.sql.SQLException;
 
 public class SupplierReturnController {
 
-    // TableView and Columns
+
     @FXML private TableView<SupplierRefundOrder> tableSupplierRefunds;
     @FXML private TableColumn<SupplierRefundOrder, Integer> colOrderID;
     @FXML private TableColumn<SupplierRefundOrder, Integer> colSupplierID;
     @FXML private TableColumn<SupplierRefundOrder, String> colStatus;
     @FXML private TableColumn<SupplierRefundOrder, Double> colTotalPrice;
-
-    // Buttons
     @FXML private Button btnAccept;
     @FXML private Button btnReject;
 
-    // Initialize TableView
+
     @FXML
     private void initialize() {
         colOrderID.setCellValueFactory(new PropertyValueFactory<>("orderid"));
@@ -40,7 +38,7 @@ public class SupplierReturnController {
         loadSupplierRefunds();
     }
 
-    // Load pending supplier refunds from DB
+
     private void loadSupplierRefunds() {
         ObservableList<SupplierRefundOrder> list = FXCollections.observableArrayList();
         try {
@@ -60,7 +58,7 @@ public class SupplierReturnController {
         }
     }
 
-    // Accept selected refund
+
     @FXML
     private void acceptRefund() {
         SupplierRefundOrder selected = tableSupplierRefunds.getSelectionModel().getSelectedItem();
@@ -79,7 +77,7 @@ public class SupplierReturnController {
         }
     }
 
-    // Reject selected refund
+
     @FXML
     private void rejectRefund() {
         SupplierRefundOrder selected = tableSupplierRefunds.getSelectionModel().getSelectedItem();
@@ -98,7 +96,7 @@ public class SupplierReturnController {
         }
     }
 
-    // Go back to HandleReturn page
+
     @FXML
     private void goBack(ActionEvent event) {
         loadFXML(event, "HandleReturn.fxml");
@@ -126,7 +124,7 @@ public class SupplierReturnController {
         a.showAndWait();
     }
 
-    // Inner class for table data
+
     public static class SupplierRefundOrder {
         private final int orderid;
         private final int supplierid;

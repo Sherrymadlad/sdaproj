@@ -261,7 +261,7 @@ public class ManagerMainPageController implements Initializable, SidebarListener
 
     private void loadSuppliers() {
         try {
-            var rs = DBHelper.executeFunction("GetAllSuppliers"); // Your PSQL function
+            var rs = DBHelper.executeFunction("GetAllSuppliers");
             List<String> supplierNames = new ArrayList<>();
             supplierNameToId.clear(); // reset the map
 
@@ -271,14 +271,14 @@ public class ManagerMainPageController implements Initializable, SidebarListener
 
                 if (supplierName != null && !supplierName.trim().isEmpty()) {
                     supplierNames.add(supplierName);
-                    supplierNameToId.put(supplierName, supplierId); // Map name -> ID
+                    supplierNameToId.put(supplierName, supplierId);
                 }
             }
 
             if (cmbSupplierName != null) {
                 cmbSupplierName.getItems().setAll(supplierNames);
                 if (!supplierNames.isEmpty()) {
-                    cmbSupplierName.setValue(supplierNames.get(0)); // Select first by default
+                    cmbSupplierName.setValue(supplierNames.get(0));
                 }
             }
 
@@ -333,14 +333,13 @@ public class ManagerMainPageController implements Initializable, SidebarListener
 
 
     private void addProductToDatabase() throws SQLException {
-        // 1. Auto-generate SKU
         String sku = generateUniqueSku();
 
-        // 2. Get other form values
+
         String name = txtProductName.getText().trim();
         String description = txtDescription.getText().trim();
 
-        // Category ID mapping
+
         String categoryName = cmbCategory.getValue();
         if (categoryName == null || !categoryNameToId.containsKey(categoryName)) {
             showCustomModal("Validation Error\nPlease select a valid category.");
@@ -348,7 +347,7 @@ public class ManagerMainPageController implements Initializable, SidebarListener
         }
         int categoryId = categoryNameToId.get(categoryName);
 
-        // Supplier ID mapping
+
         String supplierName = cmbSupplierName.getValue();
         if (supplierName == null || !supplierNameToId.containsKey(supplierName)) {
             showCustomModal("Validation Error\nPlease select a valid supplier.");
@@ -356,7 +355,7 @@ public class ManagerMainPageController implements Initializable, SidebarListener
         }
         int supplierId = supplierNameToId.get(supplierName);
 
-        // Price validation
+
         BigDecimal price;
         try {
             price = new BigDecimal(txtPrice.getText().trim());
@@ -365,22 +364,22 @@ public class ManagerMainPageController implements Initializable, SidebarListener
             return;
         }
 
-        // Stock quantity validation
+
         int stockQuantity;
         try { stockQuantity = Integer.parseInt(txtStock.getText().trim()); }
         catch (NumberFormatException e) { showCustomModal("Validation Error\nStock must be numeric."); return; }
 
-        // Low stock threshold validation
+
         int lowStock;
         try {
             String lowStockText = txtLowStock.getText().trim();
             lowStock = lowStockText.isEmpty() ? 5 : Integer.parseInt(lowStockText);
         } catch (NumberFormatException e) { showCustomModal("Validation Error\nLow Stock must be numeric."); return; }
 
-        // 3. Call AddProductWithStock function
+
         var rs = DBHelper.executeFunction("AddProduct", sku, name, categoryId, price, supplierId, description, stockQuantity, lowStock);
 
-        // 4. Read result message
+
         if (rs != null && rs.next()) {
             String result = rs.getString(1);
             if (result.startsWith("SUCCESS")) {
@@ -398,7 +397,7 @@ public class ManagerMainPageController implements Initializable, SidebarListener
 
         int productId = selectedProduct.getProductId();
 
-        // 1. Gather form data
+
         String name = txtProductName.getText().trim();
         String description = txtDescription.getText().trim();
         String categoryName = cmbCategory.getValue();
@@ -421,19 +420,19 @@ public class ManagerMainPageController implements Initializable, SidebarListener
             lowStock = lowStockText.isEmpty() ? 5 : Integer.parseInt(lowStockText);
         } catch (NumberFormatException e) { showCustomModal("Validation Error\nLow Stock must be numeric."); return; }
 
-        // 2. Update Product Details
+
         DBHelper.executeFunction("EditProductDetails", productId, null, name, categoryId, price, description, supplierId, null);
 
-        // 3. Calculate stock change
+
         int stockChange = stockQuantity - selectedProduct.getStockLevel();
 
-        // 4. Update Stock (assuming warehouse id = 1 for simplicity)
+
         DBHelper.executeFunction("UpdateStock", productId, 1, stockChange);
 
-        // 5. Update Low Stock Threshold
+
         DBHelper.executeFunction("UpdateLowStockThreshold", productId, 1, lowStock);
 
-        // 6. Show success and reload products
+
         showCustomModal("Success\nProduct updated successfully!");
         loadProductsFromDatabase();
     }
@@ -441,7 +440,7 @@ public class ManagerMainPageController implements Initializable, SidebarListener
     private void editProduct(Product product) {
         selectedProduct = product;
 
-        // Basic product info
+
         txtProductName.setText(product.getName());
         cmbCategory.setValue(product.getCategory());
         txtPrice.setText(String.valueOf(product.getPrice()));
@@ -449,28 +448,27 @@ public class ManagerMainPageController implements Initializable, SidebarListener
         txtDescription.setText(product.getDescription());
         cmbSupplierName.setValue(product.getSupplier());
 
-        // Fetch low stock threshold from DB
         try {
             var rs = DBHelper.executeFunction("GetProductLowStock", product.getProductId(), 1); // assuming warehouseId = 1
             if (rs != null && rs.next()) {
                 int lowStock = rs.getInt(1);
                 txtLowStock.setText(String.valueOf(lowStock));
             } else {
-                txtLowStock.setText("5"); // default if not found
+                txtLowStock.setText("5");
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            txtLowStock.setText("5"); // fallback default
+            txtLowStock.setText("5");
         }
 
-        // Show modal
+
         productModal.setVisible(true);
     }
 
     private void deleteProduct(Product product) {
         if (product == null) return;
 
-        // Show confirmation using custom modal with optional callback
+
         showCustomModalConfirmation(
                 "Delete Product\nAre you sure you want to delete " + product.getName() + "?",
                 confirmed -> {
@@ -480,10 +478,10 @@ public class ManagerMainPageController implements Initializable, SidebarListener
                             var rs = DBHelper.executeFunction("SoftDeleteProduct", product.getProductId());
                             if (rs != null && rs.next()) {
                                 String message = rs.getString(1);
-                                showCustomModal(message); // regular modal for success/error message
+                                showCustomModal(message);
                             }
 
-                            // Reload products to reflect the deletion
+
                             loadProductsFromDatabase();
 
                         } catch (SQLException e) {
@@ -499,7 +497,7 @@ public class ManagerMainPageController implements Initializable, SidebarListener
         if (customModalController != null) {
             customModalController.showConfirmation(message, callback);
         } else {
-            // Fallback: auto-confirm if modal not initialized
+
             callback.accept(true);
         }
     }
@@ -513,9 +511,6 @@ public class ManagerMainPageController implements Initializable, SidebarListener
         String category = cmbCategory.getValue();
         String supplier = cmbSupplierName.getValue();
 
-        // -------------------------
-        // Name validation
-        // -------------------------
         if (name.isEmpty()) {
             showCustomModal("Validation Error\nProduct name is required.");
             return false;
@@ -529,9 +524,7 @@ public class ManagerMainPageController implements Initializable, SidebarListener
             return false;
         }
 
-        // -------------------------
-        // Category & Supplier
-        // -------------------------
+
         if (category == null || !categoryNameToId.containsKey(category)) {
             showCustomModal("Validation Error\nPlease select a valid category.");
             return false;
@@ -541,9 +534,7 @@ public class ManagerMainPageController implements Initializable, SidebarListener
             return false;
         }
 
-        // -------------------------
-        // Price validation
-        // -------------------------
+
         double price;
         try {
             price = Double.parseDouble(priceText);
@@ -556,9 +547,7 @@ public class ManagerMainPageController implements Initializable, SidebarListener
             return false;
         }
 
-        // -------------------------
-        // Stock validation
-        // -------------------------
+
         int stock;
         try {
             stock = Integer.parseInt(stockText);
@@ -571,9 +560,6 @@ public class ManagerMainPageController implements Initializable, SidebarListener
             return false;
         }
 
-        // -------------------------
-        // Low Stock Threshold
-        // -------------------------
         if (!lowStockText.isEmpty()) {
             try {
                 int lowStock = Integer.parseInt(lowStockText);
@@ -587,15 +573,12 @@ public class ManagerMainPageController implements Initializable, SidebarListener
             }
         }
 
-        // -------------------------
-        // Description length check
-        // -------------------------
+
         if (description.length() > 500) {
             showCustomModal("Validation Error\nDescription cannot exceed 500 characters.");
             return false;
         }
 
-        // All validations passed
         return true;
     }
 
@@ -615,7 +598,7 @@ public class ManagerMainPageController implements Initializable, SidebarListener
         if (customModalController != null) {
             customModalController.showMessage(message);
         } else {
-            // fallback
+
             System.err.println("Modal not initialized: " + message);
         }
     }

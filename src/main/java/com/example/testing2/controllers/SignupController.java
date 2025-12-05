@@ -18,8 +18,7 @@ import java.sql.SQLException;
 
 public class SignupController {
 
-    @FXML private AnchorPane mainRoot; // Root to overlay modal
-
+    @FXML private AnchorPane mainRoot;
     @FXML private TextField txtName;
     @FXML private PasswordField txtPassword;
     @FXML private TextField txtEmail;
@@ -44,13 +43,12 @@ public class SignupController {
         btnStaff.setOnAction(e -> deselectOthers(btnStaff));
         btnCustomer.setOnAction(e -> deselectOthers(btnCustomer));
 
-        // Load custom modal
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/testing2/CustomModal.fxml"));
             StackPane modalRoot = loader.load();
             customModalController = loader.getController();
 
-            // Add modal to main root
+
             mainRoot.getChildren().add(modalRoot);
             AnchorPane.setTopAnchor(modalRoot, 0.0);
             AnchorPane.setBottomAnchor(modalRoot, 0.0);
@@ -61,7 +59,7 @@ public class SignupController {
             e.printStackTrace();
         }
 
-        // Handle signup button click
+
         btnSignup.setOnAction(e -> handleSignup());
         txtGoToLogin.setOnMouseClicked(e -> openLoginPage());
     }
@@ -76,7 +74,6 @@ public class SignupController {
             stage.setTitle("Login");
             stage.show();
 
-            // Close current window
             Stage current = (Stage) txtGoToLogin.getScene().getWindow();
             current.close();
 
@@ -100,33 +97,30 @@ public class SignupController {
         String phone = txtPhoneNo.getText().trim();
         String address = txtAddress.getText().trim();
 
-        // 🔒 FRONTEND VALIDATION CHECKS
 
-        // Empty fields
         if (name.isEmpty() || password.isEmpty() || email.isEmpty() || phone.isEmpty() || address.isEmpty()) {
             showCustomModal("Please fill in all fields.");
             return;
         }
 
-        // Email format
+
         if (!email.matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
             showCustomModal("Invalid email format.");
             return;
         }
 
-        // Phone number digits only (10–15 length)
         if (!phone.matches("\\d{10,15}")) {
             showCustomModal("Phone number must be 10–15 digits.");
             return;
         }
 
-        // Password length only
+
         if (password.length() < 8) {
             showCustomModal("Password must be at least 8 characters long.");
             return;
         }
 
-        // Role selection
+
         String role = null;
         if (btnAdmin.isSelected()) role = "Admin";
         else if (btnManager.isSelected()) role = "Manager";
@@ -138,7 +132,7 @@ public class SignupController {
             return;
         }
 
-        // ✅ If all checks pass → continue signup
+
         String hashedPassword = hashPassword(password);
 
         try {

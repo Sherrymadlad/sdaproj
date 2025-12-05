@@ -16,7 +16,7 @@ public class AdminDumpPageController {
     private Button btnDownloadDump;
 
     @FXML
-    private AnchorPane rootPane; // The root pane of this FXML
+    private AnchorPane rootPane;
 
     private CustomModalController modalController;
 
@@ -30,7 +30,6 @@ public class AdminDumpPageController {
     public void initialize() {
         setupModal();
 
-        // Button style + hover
         String baseColor = "#8b6fa1";
         String hoverColor = "#a281c3";
 

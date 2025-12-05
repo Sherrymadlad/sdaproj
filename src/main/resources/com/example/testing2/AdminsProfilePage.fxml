@@ -12,7 +12,7 @@
 
 <AnchorPane prefHeight="900" prefWidth="1600" style="-fx-background-color: #d7e3ee;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.testing2.controllers.AdminsProfilePageController">
 
-    <!-- Sidebar -->
+
     <AnchorPane prefWidth="250.0" style="-fx-background-color: #f3e6f7; -fx-border-color: black;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
         <children>
             <ImageView fitHeight="150.0" fitWidth="150.0" layoutX="50.0" layoutY="20.0" pickOnBounds="true" preserveRatio="true">
@@ -53,40 +53,40 @@
 
         <VBox layoutX="170.0" layoutY="150.0" spacing="25">
 
-            <!-- Header -->
+
             <HBox alignment="CENTER_LEFT" spacing="15">
                 <Label prefHeight="46.0" prefWidth="343.0" style="-fx-font-size: 30; -fx-font-weight: bold; -fx-text-fill: #4b355a;" text="Admin Profile" />
             </HBox>
 
-            <!-- Username Field -->
+
             <HBox alignment="CENTER_LEFT" spacing="15">
                 <Label prefWidth="150" style="-fx-font-size: 25; -fx-font-weight: bold; -fx-text-fill: #826478;" text="Username:" />
                 <TextField fx:id="txtUsername" prefWidth="400" style="-fx-font-size: 20; -fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: #d0d0d0; -fx-background-color: #ffffff; -fx-padding: 6 10 6 10;" />
                 <Button fx:id="btnEditUsername" style="-fx-font-size: 18;" text="Edit" />
             </HBox>
 
-            <!-- Password Field -->
+
             <HBox alignment="CENTER_LEFT" spacing="15">
                 <Label prefWidth="150" style="-fx-font-size: 25; -fx-font-weight: bold; -fx-text-fill: #826478;" text="Password:" />
                 <TextField fx:id="txtPassword" prefWidth="400" style="-fx-font-size: 20; -fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: #d0d0d0; -fx-background-color: #ffffff; -fx-padding: 6 10 6 10;" />
                 <Button fx:id="btnEditPassword" style="-fx-font-size: 18;" text="Edit" />
             </HBox>
 
-            <!-- Address Field -->
+
             <HBox alignment="CENTER_LEFT" spacing="15">
                 <Label prefWidth="150" style="-fx-font-size: 25; -fx-font-weight: bold; -fx-text-fill: #826478;" text="Address:" />
                 <TextField fx:id="txtAddress" prefWidth="400" style="-fx-font-size: 20; -fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: #d0d0d0; -fx-background-color: #ffffff; -fx-padding: 6 10 6 10;" />
                 <Button fx:id="btnEditAddress" style="-fx-font-size: 18;" text="Edit" />
             </HBox>
 
-            <!-- Phone Field -->
+
             <HBox alignment="CENTER_LEFT" spacing="15">
                 <Label prefWidth="150" style="-fx-font-size: 25; -fx-font-weight: bold; -fx-text-fill: #826478;" text="Phone:" />
                 <TextField fx:id="txtPhone" prefWidth="400" style="-fx-font-size: 20; -fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: #d0d0d0; -fx-background-color: #ffffff; -fx-padding: 6 10 6 10;" />
                 <Button fx:id="btnEditPhone" style="-fx-font-size: 18;" text="Edit" />
             </HBox>
 
-            <!-- Email Field -->
+
             <HBox alignment="CENTER_LEFT" spacing="15">
                 <Label prefWidth="150" style="-fx-font-size: 25; -fx-font-weight: bold; -fx-text-fill: #826478;" text="Email:" />
                 <TextField fx:id="txtEmail" prefWidth="400" style="-fx-font-size: 20; -fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: #d0d0d0; -fx-background-color: #ffffff; -fx-padding: 6 10 6 10;" />

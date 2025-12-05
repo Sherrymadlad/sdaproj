@@ -13,14 +13,13 @@
 
     <children>
 
-        <!-- Sidebar Image -->
+
         <ImageView layoutX="45" layoutY="0" fitWidth="360" fitHeight="235" preserveRatio="true">
             <image>
                 <Image url="@images/cart-removebg-preview.png"/>
             </image>
         </ImageView>
 
-        <!-- Buttons -->
         <Button fx:id="btnProducts" layoutX="30" layoutY="220"
                 prefWidth="280" prefHeight="80" text="Products">
             <font><Font name="Arial Black" size="25"/></font>

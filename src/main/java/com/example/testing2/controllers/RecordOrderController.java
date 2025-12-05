@@ -25,7 +25,7 @@ public class RecordOrderController {
 
     @FXML
     private void initialize() {
-        // Auto-calculate total price when quantity or unit price changes
+
         ChangeListener<String> listener = (ObservableValue<? extends String> obs, String oldVal, String newVal) -> calculateTotal();
         txtQuantity.textProperty().addListener(listener);
         txtUnitPrice.textProperty().addListener(listener);

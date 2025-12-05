@@ -28,7 +28,6 @@ public class CustomerOrdersPageController {
     private int currentUserId; // hardcoded for testing
 
     public void setCurrentUserId(int userId) {
-        // Fetch customerid first
         int customerId = DBHelper.getCustomerIdByUserId(userId);
         this.currentUserId = customerId; // now this is the correct customerid
         System.out.println("Orders Page CustomerID: " + customerId);
@@ -42,16 +41,13 @@ public class CustomerOrdersPageController {
     public void initialize() {
         setupModal();
 
-        // Set button actions
         btnCurrentOrders.setOnAction(e -> showCurrentOrders());
         btnPastOrders.setOnAction(e -> showPastOrders());
         btnRefundedOrders.setOnAction(e -> showRefundedOrders());
     }
 
 
-    // -------------------------------
-    // TAB HIGHLIGHT
-    // -------------------------------
+
     private void highlightCurrentOrders() {
         btnCurrentOrders.setStyle("-fx-background-color: #6d4c7d; -fx-text-fill: white; -fx-font-size: 20;");
         btnPastOrders.setStyle("-fx-background-color: #8b6fa1; -fx-text-fill: white; -fx-font-size: 20;");
@@ -70,9 +66,6 @@ public class CustomerOrdersPageController {
         btnPastOrders.setStyle("-fx-background-color: #8b6fa1; -fx-text-fill: white; -fx-font-size: 20;");
     }
 
-    // -------------------------------
-    // SHOW ORDERS
-    // -------------------------------
     public void showCurrentOrders() {
         highlightCurrentOrders();
         loadOrders("ViewCurrentOrders", false); // no refund button
@@ -88,9 +81,7 @@ public class CustomerOrdersPageController {
         loadOrders("ViewRefundedOrders", false); // no refund button
     }
 
-    // -------------------------------
-    // LOAD ORDERS HELPER
-    // -------------------------------
+
     private void loadOrders(String functionName, boolean showRefundButton) {
         if (currentUserId == 0) return; // safety check
         ordersContainer.getChildren().clear();
@@ -137,9 +128,7 @@ public class CustomerOrdersPageController {
         }
     }
 
-    // -------------------------------
-// CREATE ORDER PANEL
-// -------------------------------
+
     private void addOrderPanel(String orderId, String items, String status, double totalPrice, boolean showRefundButton, int orderIdInt) {
         AnchorPane panel = new AnchorPane();
         panel.setPrefHeight(160);
@@ -163,9 +152,7 @@ public class CustomerOrdersPageController {
 
         panel.getChildren().addAll(lblOrderId, lblItems, lblStatus);
 
-        // --------------------------
-        // REFUND BUTTON for Past Orders
-        // --------------------------
+
         if (showRefundButton && status.equals("Delivered")) {
             Button btnRefund = new Button("Request Refund");
             btnRefund.setLayoutX(20);
@@ -195,17 +182,13 @@ public class CustomerOrdersPageController {
             panel.getChildren().add(btnRefund);
         }
 
-        // -------------------------------
-        // TOTAL PRICE
         Label lblTotalPrice = new Label("Total: $" + totalPrice);
         lblTotalPrice.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #6d4c7d;");
-        AnchorPane.setTopAnchor(lblTotalPrice, 95.0);   // aligns vertically with status
-        AnchorPane.setRightAnchor(lblTotalPrice, 20.0); // 20px from right edge
+        AnchorPane.setTopAnchor(lblTotalPrice, 95.0);
+        AnchorPane.setRightAnchor(lblTotalPrice, 20.0);
         panel.getChildren().add(lblTotalPrice);
 
-        // --------------------------
-// CANCEL BUTTON for Current Orders
-// --------------------------
+
         if (!showRefundButton && status.equals("Pending")) { // only current orders
             Button btnCancel = new Button("Cancel Order");
             btnCancel.setLayoutX(20);
@@ -244,7 +227,7 @@ public class CustomerOrdersPageController {
         if (customModalController != null) {
             customModalController.showConfirmation(message, callback);
         } else {
-            // Fallback: auto-confirm if modal not initialized
+
             callback.accept(true);
         }
     }
