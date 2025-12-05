@@ -98,7 +98,6 @@ public class ManagerMainPageController implements Initializable, SidebarListener
             e.printStackTrace();
         }
     }
-
     @Override
     public void onPageSelected(String pageName) {
         try {
@@ -121,12 +120,19 @@ public class ManagerMainPageController implements Initializable, SidebarListener
                     controller.setCurrentUserId(currentUserId);
                     addOverlay(page);
                 }
+                case "Logout" -> {
+                    // Handle logout here
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/testing2/LoginPage.fxml"));
+                    AnchorPane loginPage = loader.load();
+                    mainContent.getScene().setRoot(loginPage);
+                }
                 default -> System.out.println("Unknown page: " + pageName);
             }
         } catch (IOException ex) {
             ex.printStackTrace();
         }
     }
+
 
     private void loadPage(String fxmlPath) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));

@@ -148,6 +148,13 @@ public class CustomerMainPageController implements Initializable, SidebarListene
                     CustomerProfilePageController controller = loader.getController();
                     controller.setCurrentUserId(currentUserId);
                 }
+                case "Logout" -> {
+                    // Handle logout here
+                    loader = new FXMLLoader(getClass().getResource("/com/example/testing2/LoginPage.fxml"));
+                    AnchorPane loginPage = loader.load();
+                    mainContent.getScene().setRoot(loginPage);
+                }
+                default -> System.out.println("Unknown page: " + pageName);
             }
 
             if (page != null) {

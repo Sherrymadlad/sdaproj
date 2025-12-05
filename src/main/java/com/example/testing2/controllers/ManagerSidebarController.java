@@ -15,6 +15,8 @@ public class ManagerSidebarController implements Initializable {
     @FXML private Button btnReports;
     @FXML private Button btnNotifications;
     @FXML private Button btnProfile;
+    @FXML private Button btnLogout;
+
 
     private final String baseColor = "#8b6fa1";
     private final String hoverColor = "#a281c3";
@@ -34,6 +36,8 @@ public class ManagerSidebarController implements Initializable {
         setupButton(btnReports, "Reports");
         setupButton(btnNotifications, "Notifications");
         setupButton(btnProfile, "Profile");
+        setupButton(btnLogout, "Logout");  // Add this line
+
 
         setActiveButton(btnProducts); // Default active
     }

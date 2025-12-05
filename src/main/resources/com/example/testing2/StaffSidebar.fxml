@@ -41,5 +41,11 @@
             <font><Font name="Arial Black" size="25"/></font>
         </Button>
 
+        <!-- Logout Button -->
+        <Button fx:id="btnLogout" layoutX="30" layoutY="900"
+                prefWidth="280" prefHeight="80" text="Logout">
+            <font><Font name="Arial Black" size="25"/></font>
+        </Button>
+
     </children>
 </AnchorPane>
