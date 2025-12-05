@@ -35,9 +35,9 @@ public class NotificationsPageController {
             while (rs.next()) {
                 hasResults = true;
 
-                String product = rs.getString("productname");
-                int qty = rs.getInt("quantityavailable");
-                int min = rs.getInt("minthreshold");
+                String product = rs.getString("product_name");           // updated
+                int qty = rs.getInt("total_available_stock");            // updated
+                int min = rs.getInt("minthreshold");                     // same as before
 
                 VBox card = createNotificationCard(product, qty, min);
                 notificationsContainer.getChildren().add(card);
