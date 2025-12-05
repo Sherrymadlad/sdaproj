@@ -433,7 +433,7 @@ public class StaffDashboardPageController implements Initializable, SidebarListe
                 categoryBox.setPadding(new Insets(0));
 
                 Text label = new Text(categoryName);
-                label.setStyle("-fx-font-size: 34px; -fx-fill: #35597A; -fx-font-weight: bold;");
+                label.setStyle("-fx-font-size: 34px; -fx-fill: #4a2c6e; -fx-font-weight: bold;");
                 label.setTranslateX(60);
 
                 TilePane itemsPane = new TilePane();
@@ -482,7 +482,7 @@ public class StaffDashboardPageController implements Initializable, SidebarListe
 
         VBox categoryBox = new VBox(5);
         Text label = new Text(categoryName);
-        label.setStyle("-fx-font-size: 34px; -fx-fill: #35597A; -fx-font-weight: bold;");
+        label.setStyle("-fx-font-size: 34px; -fx-fill: #4a2c6e; -fx-font-weight: bold;");
         label.setTranslateX(60);
 
         TilePane pane = new TilePane();
