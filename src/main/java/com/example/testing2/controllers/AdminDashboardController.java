@@ -85,12 +85,11 @@ public class AdminDashboardController implements Initializable, SidebarListener 
                 case "Reports" -> loadPage("/com/example/testing2/ReportsPage.fxml");
                 case "Notifications" -> loadPage("/com/example/testing2/NotificationsPage.fxml");
                 case "Backup" -> loadPage("/com/example/testing2/AdminDumpPage.fxml");
-                case "Profile" -> {
-                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/testing2/CustomerProfilePage.fxml"));
-                    AnchorPane page = loader.load();
-                    CustomerProfilePageController controller = loader.getController();
-                    controller.setCurrentUserId(currentUserId);
-                    addOverlay(page);
+                case "Logout" -> {
+                    // Handle logout here
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/testing2/LoginPage.fxml"));
+                    AnchorPane loginPage = loader.load();
+                    mainContent.getScene().setRoot(loginPage);
                 }
                 default -> System.out.println("Unknown page: " + pageName);
             }
