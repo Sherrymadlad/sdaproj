@@ -98,23 +98,22 @@ public class AdminDumpPageController {
         }
     }
 
-    /**
-     * Called when user clicks Yes on confirmation modal
-     */
     private void handleBackupConfirmation(Boolean confirmed) {
         if (confirmed) {
             try {
                 String filename = generateSqlBackup();
-                modalController.showMessage("✅ Backup created successfully:\n" + filename);
+
+                // Log the backup in DB
+                logBackup(filename);
+
+                modalController.showMessage("Backup created successfully:\n" + filename);
             } catch (Exception ex) {
-                modalController.showMessage("❌ Backup failed:\n" + ex.getMessage());
+                modalController.showMessage("Backup failed:\n" + ex.getMessage());
             }
         }
     }
 
-    /**
-     * Generate SQL backup and return filename
-     */
+
     private String generateSqlBackup() throws Exception {
         String filename = "backup_" + System.currentTimeMillis() + ".sql";
 
@@ -164,4 +163,21 @@ public class AdminDumpPageController {
             throw ex;
         }
     }
+
+    private void logBackup(String filepath) {
+        String sql = "SELECT AddBackupLog(?)";
+
+        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, filepath);
+            stmt.execute(); // call the function
+            System.out.println("Backup log inserted for: " + filepath);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
 }
