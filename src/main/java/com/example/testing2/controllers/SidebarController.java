@@ -13,6 +13,7 @@ public class SidebarController implements Initializable {
     @FXML private Button btnItems;
     @FXML private Button btnOrders;
     @FXML private Button btnProfile;
+    @FXML private Button btnLogout;
 
     private final String baseColor = "#8b6fa1";
     private final String hoverColor = "#a281c3";
@@ -32,6 +33,7 @@ public class SidebarController implements Initializable {
         setupButton(btnItems, "Items");
         setupButton(btnOrders, "Orders");
         setupButton(btnProfile, "Profile");
+        setupButton(btnLogout, "Logout");
         setActiveButton(btnItems);
     }
 
@@ -83,4 +85,5 @@ public class SidebarController implements Initializable {
     public Button getItemsButton() { return btnItems; }
     public Button getOrdersButton() { return btnOrders; }
     public Button getProfileButton() { return btnProfile; }
+    public Button getLogoutButton() { return btnLogout; }
 }

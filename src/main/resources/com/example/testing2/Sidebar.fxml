@@ -29,5 +29,11 @@
         <Button fx:id="btnProfile" layoutX="30" layoutY="440" prefWidth="280" prefHeight="80" text="Profile">
             <font><Font name="Arial Black" size="25"/></font>
         </Button>
+
+        <Button fx:id="btnLogout" layoutX="30" layoutY="900"
+                prefWidth="280" prefHeight="80" text="Logout">
+            <font><Font name="Arial Black" size="25"/></font>
+        </Button>
+
     </children>
 </AnchorPane>

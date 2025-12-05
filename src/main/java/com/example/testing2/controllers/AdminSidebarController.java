@@ -16,10 +16,10 @@ public class AdminSidebarController implements Initializable {
     @FXML private Button btnNotifications;
     @FXML private Button btnBackup;
     @FXML private Button btnProfile;
+    @FXML private Button btnLogout;
 
     private final String baseColor = "#8b6fa1";
     private final String hoverColor = "#a281c3";
-    private final String activeColor = "#6d4c7d";
 
     private Button activeButton; // Track active
     private SidebarListener listener;
@@ -36,6 +36,7 @@ public class AdminSidebarController implements Initializable {
         setupButton(btnNotifications, "Notifications");
         setupButton(btnBackup, "Backup");
         setupButton(btnProfile, "Profile");
+        setupButton(btnLogout, "Logout");
 
         setActiveButton(btnMetrics); // Default active
     }
@@ -82,6 +83,7 @@ public class AdminSidebarController implements Initializable {
     }
 
     private String getActiveStyle() {
+        String activeColor = "#6d4c7d";
         return "-fx-background-color:" + activeColor + ";" +
                 "-fx-text-fill:white;-fx-font-size:25px;-fx-font-weight:bold;" +
                 "-fx-background-radius:20;-fx-cursor:hand;";

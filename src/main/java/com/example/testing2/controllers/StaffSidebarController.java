@@ -14,6 +14,7 @@ public class StaffSidebarController implements Initializable {
     @FXML private Button btnOrders;
     @FXML private Button btnReports;
     @FXML private Button btnProfile;
+    @FXML private Button btnLogout;
 
     private final String baseColor = "#8b6fa1";
     private final String hoverColor = "#a281c3";
@@ -34,6 +35,8 @@ public class StaffSidebarController implements Initializable {
         setupButton(btnProfile, "Profile");
 
         setActiveButton(btnDashboard); // Default active
+        setupButton(btnLogout, "Logout");
+
     }
 
     private void setupButton(Button button, String pageName) {
