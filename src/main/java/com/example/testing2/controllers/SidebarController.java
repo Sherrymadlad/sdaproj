@@ -19,9 +19,8 @@ public class SidebarController implements Initializable {
     private final String hoverColor = "#a281c3";
     private final String activeColor = "#6d4c7d";
 
-    private Button activeButton; // Track which button is active
+    private Button activeButton;
 
-    // Listener for page routing
     private SidebarListener listener;
 
     public void setSidebarListener(SidebarListener listener) {
@@ -40,7 +39,6 @@ public class SidebarController implements Initializable {
     private void setupButton(Button button, String pageName) {
         button.setStyle(getBaseStyle());
 
-        // Hover effects
         button.addEventHandler(MouseEvent.MOUSE_ENTERED, e -> {
             if (button != activeButton) button.setStyle(getHoverStyle());
             button.setScaleX(1.05); button.setScaleY(1.05);
@@ -51,7 +49,7 @@ public class SidebarController implements Initializable {
             button.setScaleX(1.0); button.setScaleY(1.0);
         });
 
-        // Click sets active and notifies listener
+
         button.setOnAction(e -> {
             setActiveButton(button);
             if (listener != null) listener.onPageSelected(pageName);
@@ -64,7 +62,6 @@ public class SidebarController implements Initializable {
         activeButton.setStyle(getActiveStyle());
     }
 
-    // Styles
     private String getBaseStyle() {
         return "-fx-background-color:" + baseColor + ";" +
                 "-fx-text-fill:white;-fx-font-size:25px;-fx-font-weight:bold;" +
@@ -81,7 +78,7 @@ public class SidebarController implements Initializable {
                 "-fx-background-radius:20;-fx-cursor:hand;";
     }
 
-    // Getters (optional if needed by main)
+    // Getters
     public Button getItemsButton() { return btnItems; }
     public Button getOrdersButton() { return btnOrders; }
     public Button getProfileButton() { return btnProfile; }

@@ -185,7 +185,7 @@ public class CustomerMainPageController implements Initializable, SidebarListene
         allProducts.clear();
 
         try {
-            // Single query to fetch products and categories
+
             ResultSet rs = DBHelper.executeQuery("""
                 SELECT p.productid, p.name AS product_name, p.price, c.categoryid, c.name AS category_name
                 FROM product p 

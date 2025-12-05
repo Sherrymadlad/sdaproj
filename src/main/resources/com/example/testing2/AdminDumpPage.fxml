@@ -13,7 +13,7 @@
             fx:controller="com.example.testing2.controllers.AdminDumpPageController"
             fx:id="rootPane">
 
-    <!-- CENTER CONTAINER -->
+
     <VBox alignment="CENTER" spacing="15"
           AnchorPane.topAnchor="0"
           AnchorPane.bottomAnchor="0"

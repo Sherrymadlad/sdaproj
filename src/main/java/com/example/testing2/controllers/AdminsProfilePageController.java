@@ -28,7 +28,7 @@ public class AdminsProfilePageController {
 
     private int adminId = 4; // set dynamically (replace with logged-in admin id)
 
-    // If you prefer to set adminId from outside, add a setter like in customer controller:
+
     public void setAdminId(int id) {
         this.adminId = id;
         loadAdminDetails();
@@ -43,7 +43,6 @@ public class AdminsProfilePageController {
         btnEditPhone.setOnAction(e -> editField("phone", txtPhone));
         btnEditEmail.setOnAction(e -> editField("email", txtEmail));
 
-        // load at startup (if adminId is set to non-zero default)
         loadAdminDetails();
     }
 
@@ -98,7 +97,7 @@ public class AdminsProfilePageController {
             stmt.setString(6, email);
 
             stmt.execute();
-            loadAdminDetails(); // refresh UI
+            loadAdminDetails();
 
             showAlert(Alert.AlertType.INFORMATION, "Success", "Admin details updated.");
         } catch (SQLException e) {
@@ -164,7 +163,7 @@ public class AdminsProfilePageController {
             try {
                 String oldHashed = hashPassword(oldPass);
 
-                // Verify old password: expect your DB function VerifyUserPassword(adminId, hash) -> returns is_valid boolean
+
                 ResultSet rs = DBHelper.executeFunction("VerifyUserPassword", adminId, oldHashed);
                 if (rs.next() && rs.getBoolean("is_valid")) {
                     String newHashed = hashPassword(newPass);

@@ -31,13 +31,13 @@ public class CustomerProfilePageController {
     @FXML private Button btnEditPhone;
     @FXML private Button btnEditEmail;
     private int currentUserId; // dynamic
-    @FXML private AnchorPane mainRoot; // Root of profile page
+    @FXML private AnchorPane mainRoot;
     private CustomModalController customModalController;
     @FXML private Button btnDeleteAccount;
 
     public void setCurrentUserId(int userId) {
         this.currentUserId = userId;
-        loadUserDetails(); // load profile once userId is set
+        loadUserDetails();
     }
 
     @FXML
@@ -53,7 +53,6 @@ public class CustomerProfilePageController {
         btnEditEmail.setOnAction(e -> editField("email", txtEmail));
         btnDeleteAccount.setOnAction(e -> deleteUserAccount());
 
-        // Load custom modal
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/testing2/CustomModal.fxml"));
             StackPane modalRoot = loader.load();
@@ -107,11 +106,10 @@ public class CustomerProfilePageController {
             stmt.setString(5, phone);
             stmt.setString(6, email);
 
-            stmt.execute();  // Use execute() for functions that return VOID
+            stmt.execute();
 
             loadUserDetails();
 
-            // ✅ Show success modal
             showCustomModal("Updated successfully!");
 
         } catch (SQLException e) {
@@ -179,8 +177,6 @@ public class CustomerProfilePageController {
 
             try {
                 String oldHashed = hashPassword(oldPass);
-
-                // Verify old password
                 ResultSet rs = DBHelper.executeFunction("VerifyUserPassword", currentUserId, oldHashed);
                 if (rs.next() && rs.getBoolean("is_valid")) {
                     String newHashed = hashPassword(newPass);

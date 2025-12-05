@@ -9,10 +9,10 @@
 
 <AnchorPane style="-fx-background-color: #d7e3ee;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.testing2.controllers.AdminDashboardController">
 
-    <!-- Sidebar -->
+
     <AnchorPane fx:id="sidebarContainer" prefWidth="339" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.topAnchor="0" />
 
-    <!-- Header (Top Tabs) -->
+
     <HBox fx:id="header" prefHeight="60" spacing="30.0" AnchorPane.leftAnchor="339" AnchorPane.rightAnchor="10" AnchorPane.topAnchor="10">
 
         <children>
@@ -37,11 +37,10 @@
 
     </HBox>
 
-    <!-- Main Content -->
     <AnchorPane fx:id="mainContent" style="-fx-background-color: #d7e3ee;" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="339" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="70">
 
         <children>
-            <!-- Metrics Section Example -->
+
             <Text fx:id="txtTotalUsers" layoutX="50" layoutY="50" style="-fx-font-size: 24px;" text="0" />
             <Text fx:id="txtTotalOrders" layoutX="50" layoutY="100" style="-fx-font-size: 24px;" text="0" />
             <Text fx:id="txtTotalRevenue" layoutX="50" layoutY="150" style="-fx-font-size: 24px;" text="0" />

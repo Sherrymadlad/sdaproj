@@ -17,7 +17,7 @@ public class ViewStockController {
 
     @FXML
     private void initialize() {
-        // Populate sample stock data
+
         StringBuilder sb = new StringBuilder();
         sb.append("Product A - Quantity: 50 - Status: Available\n");
         sb.append("Product B - Quantity: 20 - Status: Low Stock\n");

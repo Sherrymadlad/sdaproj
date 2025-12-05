@@ -13,11 +13,10 @@
 
     <children>
 
-        <!-- Background -->
+
         <Pane prefWidth="1920" prefHeight="1080" style="-fx-background-color: #cad6de;">
             <children>
 
-                <!-- Card -->
                 <Pane layoutX="250" layoutY="150" prefWidth="1400" prefHeight="780"
                       style="-fx-background-color: #e5dae6; -fx-border-color: purple; -fx-border-width: 5; -fx-border-radius: 10;">
                     <children>
@@ -40,7 +39,7 @@
                             </columns>
                         </TableView>
 
-                        <!-- Approve -->
+
                         <Button text="Approve"
                                 layoutX="450" layoutY="680"
                                 prefWidth="180" prefHeight="50"
@@ -50,7 +49,7 @@
                             <font><Font size="20"/></font>
                         </Button>
 
-                        <!-- Reject -->
+
                         <Button text="Reject"
                                 layoutX="750" layoutY="680"
                                 prefWidth="180" prefHeight="50"
@@ -60,7 +59,7 @@
                             <font><Font size="20"/></font>
                         </Button>
 
-                        <!-- Back -->
+
                         <Button text="Back"
                                 layoutX="1050" layoutY="680"
                                 prefWidth="180" prefHeight="50"

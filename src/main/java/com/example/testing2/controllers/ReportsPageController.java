@@ -28,7 +28,7 @@ public class ReportsPageController {
         btnSalesStockReport.setOnAction(e -> loadSalesStockReport());
         btnMovementReport.setOnAction(e -> loadMovementReport());
 
-        // Load default report
+
         loadStockReport();
         highlightButton(btnStockReport);
         addHoverEffect(btnStockReport);
@@ -73,8 +73,6 @@ public class ReportsPageController {
     private void loadSupplierReport() {
         highlightButton(btnSupplierReport);
         reportsContainer.getChildren().clear();
-
-        // Use GetSupplierPerformance() function
         populateReport("SELECT * FROM GetSupplierReport()", rs -> {
             int supplierId = rs.getInt("supplierid");
             String supplierName = rs.getString("suppliername");
@@ -91,7 +89,7 @@ public class ReportsPageController {
         highlightButton(btnSalesStockReport);
         reportsContainer.getChildren().clear();
 
-        // Call the PostgreSQL function GetSalesVsStock()
+
         populateReport("SELECT * FROM GetSalesVsStock()", rs -> {
             int productId = rs.getInt("productid");
             String productName = rs.getString("productname");

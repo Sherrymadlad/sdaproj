@@ -55,14 +55,14 @@ public class ProductsPageController {
                 double price = rs.getDouble("price");
                 String description = rs.getString("description");
 
-                // Apply filter
+                // filter
                 if (!"All".equals(filter)) {
                     if (filter.startsWith("Low") && stock >= 10) continue;
                     if (filter.startsWith("Medium") && (stock < 10 || stock > 50)) continue;
                     if (filter.startsWith("High") && stock <= 50) continue;
                 }
 
-                // ===================== PRODUCT CARD =====================
+
                 VBox card = new VBox(10);
                 card.setPadding(new Insets(10));
                 card.setStyle("-fx-background-color: #f3e6f7; " +
@@ -91,7 +91,7 @@ public class ProductsPageController {
 
                 header.getChildren().addAll(lblName, spacer, lblStock, btnEdit);
 
-                // Content
+
                 VBox content = new VBox(8);
                 content.setPadding(new Insets(5));
 

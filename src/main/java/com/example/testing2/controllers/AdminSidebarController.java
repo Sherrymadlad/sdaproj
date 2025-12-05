@@ -44,7 +44,6 @@ public class AdminSidebarController implements Initializable {
     private void setupButton(Button button, String pageName) {
         button.setStyle(getBaseStyle());
 
-        // Hover effect
         button.addEventHandler(MouseEvent.MOUSE_ENTERED, e -> {
             if (button != activeButton) button.setStyle(getHoverStyle());
             button.setScaleX(1.05);
@@ -57,7 +56,7 @@ public class AdminSidebarController implements Initializable {
             button.setScaleY(1.0);
         });
 
-        // Click
+
         button.setOnAction(e -> {
             setActiveButton(button);
             if (listener != null) listener.onPageSelected(pageName);

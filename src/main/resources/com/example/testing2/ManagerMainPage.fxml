@@ -19,13 +19,13 @@
 
 <AnchorPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" style="-fx-background-color: #d7e3ee;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.testing2.controllers.ManagerMainPageController">
 
-    <!-- Sidebar Placeholder -->
+
     <AnchorPane fx:id="sidebarContainer" layoutX="0" layoutY="0" prefWidth="339" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="0.0" />
 
-    <!-- Main Content Area -->
+
     <AnchorPane fx:id="mainContent" layoutX="338.0" prefHeight="650.0" prefWidth="654.0" style="-fx-background-color: #d7e3ee;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="338.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <children>
-            <!-- Header with Search -->
+
             <AnchorPane prefHeight="90.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                 <children>
                     <Text layoutX="30.0" layoutY="40.0" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-fill: #6d4c7d;" text="Manager Dashboard" />
@@ -44,7 +44,7 @@
                 </children>
             </AnchorPane>
 
-            <!-- Products Table -->
+
             <TableView fx:id="productsTable" style="-fx-background-color: white;" AnchorPane.bottomAnchor="100.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="100.0">
                 <columns>
                     <TableColumn fx:id="colId" prefWidth="50" text="ID" />
@@ -65,27 +65,27 @@
         </children>
     </AnchorPane>
 
-    <!-- Add/Edit Product Modal -->
+
     <StackPane fx:id="productModal" alignment="CENTER" style="-fx-background-color: rgba(0,0,0,0.6);" visible="false"
                AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
 
         <AnchorPane fx:id="modalContent" maxHeight="450" maxWidth="500" prefHeight="450" prefWidth="500"
                     style="-fx-background-color: white; -fx-background-radius: 20;">
 
-            <!-- Close Button -->
+
             <Button fx:id="btnCloseModal" layoutX="445" layoutY="15" prefHeight="40" prefWidth="40"
                     style="-fx-background-color: transparent; -fx-font-size: 22px; -fx-text-fill: #444;" text="✕" />
 
-            <!-- Modal Title -->
+
             <Text layoutX="25.0" layoutY="50.0" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-fill: #6d4c7d;" text="Add/Edit Product" />
 
-            <!-- Form Container -->
+
             <VBox layoutX="25.0" layoutY="70.0" prefWidth="450" spacing="20">
                 <padding>
                     <Insets top="20" />
                 </padding>
 
-                <!-- Product Form -->
+
                 <VBox spacing="10">
                     <HBox spacing="15">
                         <VBox spacing="5">

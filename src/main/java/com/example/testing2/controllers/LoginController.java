@@ -25,7 +25,7 @@ import javafx.scene.control.PasswordField;
 
 public class LoginController {
 
-    @FXML private AnchorPane mainRoot; // Root of login page to overlay modal
+    @FXML private AnchorPane mainRoot;
     @FXML private TextField txtLoginName;
     @FXML private PasswordField txtLoginPassword;
     @FXML private Button btnLogin;
@@ -38,13 +38,11 @@ public class LoginController {
         btnLogin.setOnAction(event -> handleLogin());
         txtGoToSignup.setOnMouseClicked(e -> openSignupPage());
 
-        // Load Custom Modal
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/testing2/CustomModal.fxml"));
             StackPane modalRoot = loader.load();
             customModalController = loader.getController();
 
-            // Add modal to main root and anchor it to fill the parent
             mainRoot.getChildren().add(modalRoot);
             AnchorPane.setTopAnchor(modalRoot, 0.0);
             AnchorPane.setBottomAnchor(modalRoot, 0.0);

@@ -18,15 +18,12 @@
 
 <AnchorPane maxHeight="Infinity" maxWidth="Infinity" minHeight="-Infinity" minWidth="-Infinity" style="-fx-background-color: #d7e3ee;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.testing2.controllers.CustomerMainPageController">
 
-    <!-- Sidebar Placeholder -->
     <AnchorPane fx:id="sidebarContainer" layoutX="0" layoutY="0" prefWidth="339" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="0.0" />
 
-    <!-- Main Content (fills remaining space) -->
     <AnchorPane fx:id="mainContent" layoutX="338.0" prefHeight="622.0" prefWidth="526.0" style="-fx-background-color: #d7e3ee;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="338.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
 
         <children>
 
-            <!-- Search bar and dropdowns container -->
             <AnchorPane fx:id="header" prefHeight="140.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                 <children>
                     <!-- Search bar -->
@@ -43,10 +40,8 @@
                         </image>
                     </ImageView>
 
-                    <!-- HBox for Filter & Sort dropdowns -->
                     <HBox spacing="15" AnchorPane.leftAnchor="120.0" AnchorPane.rightAnchor="80.0" AnchorPane.topAnchor="80.0">
                         <children>
-                            <!-- Filter by Category -->
                             <ComboBox fx:id="cmbFilterCategory" prefWidth="200.0" promptText="Filter by Category">
                                 <items>
                                     <FXCollections fx:factory="observableArrayList">
@@ -75,7 +70,6 @@
             </AnchorPane>
 
 
-            <!-- Scrollable container -->
             <ScrollPane fx:id="scrollPane" fitToHeight="true" fitToWidth="true" layoutY="127.2" pannable="true" prefHeight="495.0" prefWidth="615.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="127.0">
 
                 <content>
@@ -84,11 +78,11 @@
             </ScrollPane>
 
 
-            <!-- Hidden template card (updated) -->
+
             <AnchorPane fx:id="itemCard" onMouseEntered="#handleCardHoverIn" onMouseExited="#handleCardHoverOut" prefHeight="224.0" prefWidth="205.0" style="-fx-background-color: #fff0f5;                    -fx-background-radius: 15;                    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10,0,0,3);                    -fx-cursor: hand;" visible="false" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0">
 
                 <children>
-                    <!-- Item Image -->
+
                     <ImageView fx:id="imgItem" fitHeight="160.0" fitWidth="250.0" pickOnBounds="true" preserveRatio="true" style="-fx-background-radius: 15 15 0 0;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
 
                     <!-- Bottom Info Pane -->
@@ -106,10 +100,7 @@
 
         </children>
     </AnchorPane>
-    <!-- CENTERED MODAL OVERLAY -->
 
-
-    <!-- CENTERED MODAL OVERLAY -->
     <StackPane fx:id="itemDetailsPanel" alignment="CENTER" style="-fx-background-color: rgba(0,0,0,0.6);" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
 
         <!-- White Modal Box -->

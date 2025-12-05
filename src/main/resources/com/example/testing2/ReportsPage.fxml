@@ -32,7 +32,6 @@
          </padding>
         </HBox>
 
-        <!-- Scrollable Reports Container -->
         <ScrollPane fx:id="scrollReports" fitToWidth="true" style="-fx-background-color: #d7e3ee; -fx-border-color: #d7e3ee;" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="70">
             <content>
                 <VBox fx:id="reportsContainer" spacing="15" style="-fx-background-color: #d7e3ee; -fx-border-color: #d7e3ee;">

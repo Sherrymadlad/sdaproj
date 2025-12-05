@@ -24,25 +24,24 @@
             </ImageView>
 
             <VBox layoutX="3.0" layoutY="230.0" spacing="10">
-                <!-- Items Tab -->
+
                 <Button fx:id="btnItems" prefHeight="49.0" prefWidth="243.0"
                         style="-fx-background-color: #8b6fa1;" text="Items" textFill="WHITE">
                     <font><Font name="System Bold" size="26.0" /></font>
                 </Button>
 
-                <!-- Orders Tab -->
+
                 <Button fx:id="btnOrders" prefHeight="49.0" prefWidth="243.0"
                         style="-fx-background-color: #8b6fa1;" text="Orders" textFill="WHITE">
                     <font><Font name="System Bold" size="26.0" /></font>
                 </Button>
 
-                <!-- Reports Tab -->
                 <Button fx:id="btnReports" prefHeight="49.0" prefWidth="243.0"
                         style="-fx-background-color: #8b6fa1;" text="Reports" textFill="WHITE">
                     <font><Font name="System Bold" size="26.0" /></font>
                 </Button>
 
-                <!-- Profile Tab -->
+
                 <Button fx:id="btnProfile" prefHeight="49.0" prefWidth="243.0"
                         style="-fx-background-color: #8b6fa1;" text="Profile" textFill="WHITE">
                     <font><Font name="System Bold" size="26.0" /></font>
@@ -51,7 +50,7 @@
         </children>
     </AnchorPane>
 
-    <!-- TOP TAB BAR -->
+
     <HBox fx:id="tabBar" prefHeight="70" spacing="0" style="-fx-background-color: #d7e3ee; -fx-border-color: #c9bad6;" AnchorPane.topAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
 
         <Button fx:id="btnOngoingOrders" prefHeight="70" prefWidth="300"
@@ -68,7 +67,6 @@
 
     </HBox>
 
-    <!-- SCROLLABLE ORDER LIST -->
     <ScrollPane fx:id="scrollOrders" fitToWidth="true"  fitToHeight="true" style="-fx-background-color: #d7e3ee;"
                 AnchorPane.topAnchor="70" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
 

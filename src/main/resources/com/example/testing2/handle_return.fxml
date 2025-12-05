@@ -13,11 +13,11 @@
 
     <children>
 
-        <!-- Background -->
+
         <Pane prefWidth="1920" prefHeight="1080" style="-fx-background-color: #cad6de;">
             <children>
 
-                <!-- Center main card -->
+
                 <Pane layoutX="500" layoutY="250" prefWidth="900" prefHeight="600"
                       style="-fx-background-color: #e5dae6; -fx-border-color: purple; -fx-border-width: 5; -fx-border-radius: 10;">
                     <children>

@@ -35,7 +35,7 @@ public class StaffDashboardPageController implements Initializable, SidebarListe
     private int currentUserId;
 
 
-    @FXML private AnchorPane itemCard; // TEMPLATE card from FXML (hidden)
+    @FXML private AnchorPane itemCard;
     @FXML private StackPane productViewPanel;
 
     @FXML private ImageView viewItemImage;
@@ -72,10 +72,10 @@ public class StaffDashboardPageController implements Initializable, SidebarListe
         itemCard.setVisible(false);
         categoriesContainer.setPadding(new Insets(70, 0, 0, 0));
 
-        // SEARCH LISTENER
+
         txtSearch.textProperty().addListener((obs, oldVal, newVal) -> filterItems(newVal));
 
-        // LOAD categories in filter dropdown
+
         cmbFilterCategory.getItems().add("All");
         try {
             ResultSet rs = DBHelper.executeFunction("GetAllCategories");
@@ -86,7 +86,6 @@ public class StaffDashboardPageController implements Initializable, SidebarListe
             e.printStackTrace();
         }
 
-        // SORT OPTIONS
         cmbSortBy.getItems().addAll(
                 "Price Ascending",
                 "Price Descending",
@@ -97,7 +96,7 @@ public class StaffDashboardPageController implements Initializable, SidebarListe
         cmbFilterCategory.setOnAction(e -> applyFilterAndSort());
         cmbSortBy.setOnAction(e -> applyFilterAndSort());
 
-        // Load initial data
+
         loadCategoriesWithItems();
         btnCloseModal.setOnAction(e -> itemDetailsPanel.setVisible(false));
     }
@@ -168,34 +167,31 @@ public class StaffDashboardPageController implements Initializable, SidebarListe
     }
 
     private void resetDashboard() {
-        // Ensure UI changes happen on FX thread
+
         javafx.application.Platform.runLater(() -> {
             try {
-                // Clear search and filters
                 if (txtSearch != null) txtSearch.clear();
                 if (cmbFilterCategory != null) cmbFilterCategory.setValue("All");
                 if (cmbSortBy != null) cmbSortBy.setValue(null);
 
-                // Hide modals / detail panels
+
                 if (itemDetailsPanel != null) {
                     itemDetailsPanel.setVisible(false);
                     itemDetailsPanel.setUserData(null);
                 }
                 if (productViewPanel != null) productViewPanel.setVisible(false);
 
-                // Clear any dynamic lists / containers
                 if (warehousesContainer != null) warehousesContainer.getChildren().clear();
 
-                // Clear categories UI cache then reload fresh content
                 if (categoriesContainer != null) {
                     categoriesContainer.getChildren().clear();
                 }
                 categoryItemsMap.clear();
 
-                // Re-load categories + items (this method repopulates categoriesContainer)
+
                 loadCategoriesWithItems();
 
-                // Scroll to top of list
+
                 if (scrollPane != null) {
                     scrollPane.setVvalue(0.0);
                 }
@@ -205,9 +201,7 @@ public class StaffDashboardPageController implements Initializable, SidebarListe
         });
     }
 
-    /* ---------------------------------------------------------
-       LOAD CATEGORIES AND ITEMS
-       --------------------------------------------------------- */
+
     private void loadCategoriesWithItems() {
         categoriesContainer.getChildren().clear();
         categoryItemsMap.clear();
@@ -260,37 +254,31 @@ public class StaffDashboardPageController implements Initializable, SidebarListe
         }
     }
 
-    /* ---------------------------------------------------------
-       CREATE ITEM CARD (VIEW-ONLY)
-       --------------------------------------------------------- */
     private AnchorPane createItemCard(int id, String name, double price) {
 
         AnchorPane clone = new AnchorPane();
         clone.setPrefWidth(itemCard.getPrefWidth() * 1.5);
         clone.setPrefHeight(itemCard.getPrefHeight() * 1.5);
 
-        // Match customer card styling
         clone.setStyle("-fx-background-color: #f5f0fa; " +
                 "-fx-border-color: #c8b8d1; " +
                 "-fx-border-radius: 12; " +
                 "-fx-background-radius: 12; " +
                 "-fx-effect: dropshadow(two-pass-box, rgba(0,0,0,0.15), 6, 0, 0, 3);");
 
-        // IMAGE (same as customer)
+
         ImageView img = new ImageView(placeholderImage);
         img.setFitWidth(clone.getPrefWidth() - 10);
         img.setFitHeight(clone.getPrefHeight() * 0.6);
         img.setLayoutX(5);
         img.setLayoutY(10);
 
-        // NAME TEXT (match customer)
         Text itemName = new Text(name);
         itemName.setStyle("-fx-font-size: 24px; -fx-font-weight: bold; -fx-fill: #4a2375; -fx-font-family: 'Verdana';");
         itemName.setWrappingWidth(clone.getPrefWidth() - 20);
         itemName.setLayoutX(10);
         itemName.setLayoutY(img.getFitHeight() + 40);
 
-        // PRICE TEXT (match customer)
         Text itemPrice = new Text("Rs " + price);
         itemPrice.setStyle("-fx-font-size: 20px; -fx-font-weight: semi-bold; -fx-fill: #8b6fa1; -fx-font-family: 'Tahoma';");
         itemPrice.setLayoutX(10);
@@ -298,7 +286,7 @@ public class StaffDashboardPageController implements Initializable, SidebarListe
 
         clone.getChildren().addAll(img, itemName, itemPrice);
 
-        // Keep staff-side behavior
+
         clone.setUserData(id);
         clone.setOnMouseEntered(this::handleCardHoverIn);
         clone.setOnMouseExited(this::handleCardHoverOut);
@@ -307,9 +295,7 @@ public class StaffDashboardPageController implements Initializable, SidebarListe
         return clone;
     }
 
-    /* ---------------------------------------------------------
-       OPEN PRODUCT VIEW (VIEW-ONLY)
-       --------------------------------------------------------- */
+
     private void openProductView(int productId) {
         try {
             ResultSet rs = DBHelper.executeFunction("GetProductDetails", productId);
@@ -321,10 +307,9 @@ public class StaffDashboardPageController implements Initializable, SidebarListe
                 viewItemImage.setImage(placeholderImage); // always placeholder
             }
 
-            // Clear previous warehouses
             warehousesContainer.getChildren().removeIf(node -> node instanceof Text && node != warehousesContainer.getChildren().get(0));
 
-            // Load warehouses for this product
+
             ResultSet warehouses = DBHelper.executeFunction("GetWarehousesForProduct", productId);
             while (warehouses.next()) {
                 String warehouseName = warehouses.getString("name");
@@ -340,9 +325,7 @@ public class StaffDashboardPageController implements Initializable, SidebarListe
         }
     }
 
-    /* ---------------------------------------------------------
-       FILTER ITEMS
-       --------------------------------------------------------- */
+
     private void filterItems(String query) {
         query = query.toLowerCase(Locale.ROOT);
 
@@ -369,9 +352,7 @@ public class StaffDashboardPageController implements Initializable, SidebarListe
         }
     }
 
-    /* ---------------------------------------------------------
-       FILTER + SORT LOGIC
-       --------------------------------------------------------- */
+
     private void applyFilterAndSort() {
         String category = cmbFilterCategory.getValue();
         String sort = cmbSortBy.getValue();
@@ -390,9 +371,7 @@ public class StaffDashboardPageController implements Initializable, SidebarListe
                     products.add(new Product(id, name, price,categoryId));
                 }
 
-                // For "All", we'll group by category later
             } else {
-                // Get products for selected category
                 ResultSet rs = DBHelper.executeFunction("FilterByCategory", category);
                 while (rs.next()) {
                     int id = rs.getInt("productid");
@@ -413,9 +392,9 @@ public class StaffDashboardPageController implements Initializable, SidebarListe
                 }
             }
 
-            // Display results
+
             if (category == null || category.equals("All")) {
-                displayAllCategories(products); // NEW METHOD
+                displayAllCategories(products);
             } else {
                 displayFilteredItems(products, category);
             }
@@ -452,8 +431,7 @@ public class StaffDashboardPageController implements Initializable, SidebarListe
 
                 List<AnchorPane> cards = new ArrayList<>();
                 for (Product p : products) {
-                    // You need to get category for each product from DB if necessary
-                    // For simplicity, let's assume we have categoryId in Product (add field if needed)
+
                     if (p.categoryId == categoryId) {
                         AnchorPane card = createItemCard(p.id, p.name, p.price);
                         itemsPane.getChildren().add(card);
@@ -473,7 +451,7 @@ public class StaffDashboardPageController implements Initializable, SidebarListe
         }
     }
 
-    // Helper class for sorting
+
     private static class Product {
         int id;
         String name;
@@ -513,7 +491,6 @@ public class StaffDashboardPageController implements Initializable, SidebarListe
 
     private void openItemModal(int productId) {
         try {
-            // Load product details
             ResultSet rs = DBHelper.executeFunction("GetProductDetails", productId);
             if (rs.next()) {
                 modalItemName.setText(rs.getString("name"));
@@ -521,11 +498,9 @@ public class StaffDashboardPageController implements Initializable, SidebarListe
                 modalItemDescription.setText(rs.getString("description"));
                 modalItemImage.setImage(placeholderImage); // placeholder or actual image
             }
-
-            // Clear previous warehouse list
             warehousesContainer.getChildren().clear();
 
-            // Load warehouses for this product
+
             ResultSet warehouses = DBHelper.executeFunction("GetWarehousesForProduct", productId);
             while (warehouses.next()) {
                 String warehouseName = warehouses.getString("warehouse_name");
@@ -540,14 +515,14 @@ public class StaffDashboardPageController implements Initializable, SidebarListe
             e.printStackTrace();
         }
 
-        // Show modal
+
         itemDetailsPanel.setUserData(productId);
         itemDetailsPanel.setVisible(true);
     }
     public void setCurrentUserId(int userId) {
         this.currentUserId = userId;
         System.out.println("StaffDashboard loaded for userId: " + userId);
-        // You can use this ID to load staff-specific data if needed
+
     }
 
 }

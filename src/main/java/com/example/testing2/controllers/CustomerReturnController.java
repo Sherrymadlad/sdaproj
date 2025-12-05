@@ -18,18 +18,15 @@ import java.sql.SQLException;
 
 public class CustomerReturnController {
 
-    // TableView and Columns
     @FXML private TableView<CustomerRefundOrder> tableCustomerRefunds;
     @FXML private TableColumn<CustomerRefundOrder, Integer> colOrderID;
     @FXML private TableColumn<CustomerRefundOrder, Integer> colCustomerID;
     @FXML private TableColumn<CustomerRefundOrder, String> colStatus;
     @FXML private TableColumn<CustomerRefundOrder, Double> colTotalPrice;
 
-    // Buttons
     @FXML private Button btnAccept;
     @FXML private Button btnReject;
 
-    // Initialize TableView
     @FXML
     private void initialize() {
         colOrderID.setCellValueFactory(new PropertyValueFactory<>("orderid"));
@@ -40,7 +37,7 @@ public class CustomerReturnController {
         loadCustomerRefunds();
     }
 
-    // Load pending customer refunds from DB
+
     private void loadCustomerRefunds() {
         ObservableList<CustomerRefundOrder> list = FXCollections.observableArrayList();
         try {
@@ -60,7 +57,7 @@ public class CustomerReturnController {
         }
     }
 
-    // Accept selected refund
+
     @FXML
     private void acceptRefund() {
         CustomerRefundOrder selected = tableCustomerRefunds.getSelectionModel().getSelectedItem();
@@ -80,7 +77,7 @@ public class CustomerReturnController {
 
     }
 
-    // Reject selected refund
+
     @FXML
     private void rejectRefund() {
         CustomerRefundOrder selected = tableCustomerRefunds.getSelectionModel().getSelectedItem();
@@ -99,13 +96,11 @@ public class CustomerReturnController {
         }
     }
 
-    // Go back to HandleReturn page
     @FXML
     private void goBack(ActionEvent event) {
         loadFXML(event, "HandleReturn.fxml");
     }
 
-    // Generic method to load FXML pages
     private void loadFXML(ActionEvent event, String file) {
         try {
             Parent root = FXMLLoader.load(getClass().getResource("/com/example/testing2/" + file));
@@ -127,7 +122,7 @@ public class CustomerReturnController {
         a.showAndWait();
     }
 
-    // Inner class for table data
+
     public static class CustomerRefundOrder {
         private final int orderid;
         private final int customerid;

@@ -8,7 +8,7 @@ import javafx.event.ActionEvent;
 
 public class Router {
 
-    // Open a new window
+
     public static void openNewWindow(String fxmlFile, String title, int width, int height) throws Exception {
         FXMLLoader loader = new FXMLLoader(Router.class.getResource("/com/example/testing2/" + fxmlFile));
         Parent root = loader.load();
@@ -18,14 +18,14 @@ public class Router {
         stage.show();
     }
 
-    // Navigate by replacing the current stage's scene
+
     public static void navigate(ActionEvent event, String fxmlFile) throws Exception {
         Stage stage;
 
         if (event != null) {
             stage = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
         } else {
-            stage = new Stage(); // fallback in case event is null
+            stage = new Stage();
         }
 
         FXMLLoader loader = new FXMLLoader(Router.class.getResource("/com/example/testing2/" + fxmlFile));
@@ -34,7 +34,7 @@ public class Router {
         stage.show();
     }
 
-    // Navigate and pass integer data to controller
+
     public static void navigateWithData(ActionEvent event, String fxmlFile, int data) throws Exception {
         Stage stage;
 

@@ -26,7 +26,7 @@ public class StaffProfilePageController {
     @FXML private Button btnEditPhone;
     @FXML private Button btnEditEmail;
 
-    private int staffId = 6; // set dynamically (replace with logged-in staff id)
+    private int staffId = 6;
 
     public void setStaffId(int id) {
         this.staffId = id;
@@ -35,14 +35,14 @@ public class StaffProfilePageController {
 
     @FXML
     public void initialize() {
-        // wire buttons
+
         btnEditUsername.setOnAction(e -> editField("username", txtUsername));
         btnEditPassword.setOnAction(e -> editPassword());
         btnEditAddress.setOnAction(e -> editField("address", txtAddress));
         btnEditPhone.setOnAction(e -> editField("phone", txtPhone));
         btnEditEmail.setOnAction(e -> editField("email", txtEmail));
 
-        // load at startup if staffId is already set
+
         if (staffId != 0) loadStaffDetails();
     }
 
@@ -60,7 +60,7 @@ public class StaffProfilePageController {
             }
             rs.close();
 
-            // Make fields readonly
+
             txtUsername.setEditable(false);
             txtPassword.setEditable(false);
             txtAddress.setEditable(false);

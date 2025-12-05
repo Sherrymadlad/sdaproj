@@ -13,16 +13,16 @@
 
 <VBox spacing="30" alignment="TOP_CENTER">
 
-        <!-- Heading -->
+
         <HBox alignment="TOP_LEFT" style="-fx-padding: 70 0 0 40;">
             <Text text="My Cart"
                   style="-fx-font-size: 42px; -fx-font-weight: bold; -fx-fill: #5b3c77;" />
         </HBox>
 
-        <!-- Main Content -->
+
         <HBox spacing="50   " alignment="CENTER" style="-fx-padding: 70 0 0 0;">
 
-            <!-- Cart Items -->
+
             <ScrollPane prefWidth="900" prefHeight="600"
                         fitToWidth="true"
                         style="-fx-background:white; -fx-background-radius: 15; -fx-border-radius: 15;">
@@ -33,7 +33,7 @@
                 </content>
             </ScrollPane>
 
-            <!-- Right Column -->
+
             <VBox spacing="30" alignment="CENTER">
 
                 <!-- Payment Method -->
@@ -72,7 +72,7 @@
                     </children>
                 </AnchorPane>
 
-                <!-- Place Order Button -->
+
                 <Button fx:id="btnPlaceOrder" text="Place Order" prefWidth="300" prefHeight="60"
                         style="-fx-font-size: 26; -fx-background-color:#8b6fa1; -fx-text-fill:white; -fx-background-radius: 12;" />
             </VBox>

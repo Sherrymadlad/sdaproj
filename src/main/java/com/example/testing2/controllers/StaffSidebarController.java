@@ -20,7 +20,7 @@ public class StaffSidebarController implements Initializable {
     private final String hoverColor = "#a281c3";
     private final String activeColor = "#6d4c7d";
 
-    private Button activeButton; // Track active
+    private Button activeButton;
     private SidebarListener listener;
 
     public void setSidebarListener(SidebarListener listener) {
@@ -55,7 +55,7 @@ public class StaffSidebarController implements Initializable {
             button.setScaleY(1.0);
         });
 
-        // Click
+
         button.setOnAction(e -> {
             setActiveButton(button);
             if (listener != null) listener.onPageSelected(pageName);

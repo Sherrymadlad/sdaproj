@@ -19,13 +19,13 @@ public class CustomModalController {
 
     @FXML
     private void initialize() {
-        // Hide modal by default
+
         modalRoot.setVisible(false);
 
-        // OK button closes modal
+
         btnOk.setOnAction(e -> modalRoot.setVisible(false));
 
-        // Yes/No buttons default actions
+
         btnYes.setOnAction(e -> hideModal());
         btnNo.setOnAction(e -> hideModal());
     }
@@ -51,11 +51,11 @@ public class CustomModalController {
     public void showConfirmation(String message, Consumer<Boolean> callback) {
         modalMessage.setText(message);
 
-        // Show Yes/No, hide OK
+
         btnOk.setVisible(false);
         confirmationButtons.setVisible(true);
 
-        // Set button actions
+
         btnYes.setOnAction(e -> {
             hideModal();
             callback.accept(true);
