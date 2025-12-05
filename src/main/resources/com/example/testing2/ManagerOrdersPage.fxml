@@ -10,7 +10,7 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 
-<AnchorPane prefHeight="900" prefWidth="1351" style="-fx-background-color: #d7e3ee;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.testing2.controllers.ManagerOrdersPageController">
+<AnchorPane fx:id="Root"  prefHeight="900" prefWidth="1351" style="-fx-background-color: #d7e3ee;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.testing2.controllers.ManagerOrdersPageController">
 
     <!-- Sidebar -->
     <AnchorPane prefWidth="249.0" style="-fx-background-color: #f3e6f7; -fx-border-color: black;"

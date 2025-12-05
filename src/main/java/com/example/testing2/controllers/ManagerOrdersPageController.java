@@ -2,13 +2,16 @@ package com.example.testing2.controllers;
 
 import com.example.testing2.utils.DBHelper;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
+import java.io.IOException;
 import java.sql.ResultSet;
 
 public class ManagerOrdersPageController {
@@ -18,8 +21,11 @@ public class ManagerOrdersPageController {
     @FXML private Button btnOngoingOrders;
     @FXML private Button btnPastOrders;
     @FXML private Button btnRefundPendingOrders;
+    @FXML private CustomModalController customModalController;
+    @FXML private AnchorPane Root;
 
     public void initialize() {
+        setupModal();
         highlightOngoingOrders();
         showOngoingOrders();
 
@@ -161,13 +167,19 @@ public class ManagerOrdersPageController {
                     AnchorPane.setRightAnchor(btnUpdate, 20.0);
 
                     btnUpdate.setOnAction(e -> {
-                        try {
-                            DBHelper.executeFunction("UpdateCustomerOrderStatus", orderId, nextStatus);
-                            showOngoingOrders();
-                        } catch (Exception ex) {
-                            ex.printStackTrace();
-                        }
+                        showCustomModalConfirmation("Are you sure you want to update the status to " + nextStatus + "?", confirmed -> {
+                            if (confirmed) {
+                                try {
+                                    DBHelper.executeFunction("UpdateCustomerOrderStatus", orderId, nextStatus);
+                                    showCustomModal("Order status updated to " + nextStatus + "!");
+                                    showOngoingOrders();
+                                } catch (Exception ex) {
+                                    ex.printStackTrace();
+                                }
+                            }
+                        });
                     });
+
 
                     panel.getChildren().add(btnUpdate);
                     // Cancel Order Button
@@ -177,16 +189,19 @@ public class ManagerOrdersPageController {
                     AnchorPane.setRightAnchor(btnCancelOrder, 20.0);
 
                     btnCancelOrder.setOnAction(e -> {
-                        try {
-                            // Cancel the order (restores stock and sets status to "Cancelled")
-                            DBHelper.executeFunction("CancelCustomerOrder", orderId);
-
-                            // Refresh the ongoing orders list
-                            showOngoingOrders();
-                        } catch (Exception ex) {
-                            ex.printStackTrace();
-                        }
+                        showCustomModalConfirmation("Are you sure you want to cancel this order?", confirmed -> {
+                            if (confirmed) {
+                                try {
+                                    DBHelper.executeFunction("CancelCustomerOrder", orderId);
+                                    showCustomModal("Order has been successfully cancelled!");
+                                    showOngoingOrders();
+                                } catch (Exception ex) {
+                                    ex.printStackTrace();
+                                }
+                            }
+                        });
                     });
+
 
                     panel.getChildren().add(btnCancelOrder);
 
@@ -200,13 +215,19 @@ public class ManagerOrdersPageController {
                 AnchorPane.setRightAnchor(btnApproveRefund, 20.0);
 
                 btnApproveRefund.setOnAction(e -> {
-                    try {
-                        DBHelper.executeFunction("UpdateCustomerOrderStatus", orderId, "Returned");
-                        showRefundPendingOrders();
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                    }
+                    showCustomModalConfirmation("Are you sure you want to approve this refund?", confirmed -> {
+                        if (confirmed) {
+                            try {
+                                DBHelper.executeFunction("UpdateCustomerOrderStatus", orderId, "Returned");
+                                showCustomModal("Refund approved and order marked as Returned.");
+                                showRefundPendingOrders();
+                            } catch (Exception ex) {
+                                ex.printStackTrace();
+                            }
+                        }
+                    });
                 });
+
 
                 panel.getChildren().add(btnApproveRefund);
             }
@@ -215,5 +236,38 @@ public class ManagerOrdersPageController {
 
         ordersContainer.getChildren().add(panel);
     }
+    private void showCustomModalConfirmation(String message, java.util.function.Consumer<Boolean> callback) {
+        if (customModalController != null) {
+            customModalController.showConfirmation(message, callback);
+        } else {
+            // Fallback: auto-confirm if modal not initialized
+            callback.accept(true);
+        }
+    }
 
+    private void showCustomModal(String message) {
+        if (customModalController != null) {
+            customModalController.showMessage(message);
+        } else {
+            // fallback
+            System.err.println("Modal not initialized: " + message);
+        }
+    }
+
+    private void setupModal(){
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/testing2/CustomModal.fxml"));
+            StackPane modal = loader.load();
+            customModalController = loader.getController();
+
+            Root.getChildren().add(modal);
+            AnchorPane.setTopAnchor(modal, 0.0);
+            AnchorPane.setBottomAnchor(modal, 0.0);
+            AnchorPane.setLeftAnchor(modal, 0.0);
+            AnchorPane.setRightAnchor(modal, 0.0);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
