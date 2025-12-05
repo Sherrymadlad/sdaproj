@@ -14,6 +14,7 @@ public class AdminSidebarController implements Initializable {
     @FXML private Button btnAudits;
     @FXML private Button btnReports;
     @FXML private Button btnNotifications;
+    @FXML private Button btnBackup;
     @FXML private Button btnProfile;
 
     private final String baseColor = "#8b6fa1";
@@ -33,6 +34,7 @@ public class AdminSidebarController implements Initializable {
         setupButton(btnAudits, "Audits");
         setupButton(btnReports, "Reports");
         setupButton(btnNotifications, "Notifications");
+        setupButton(btnBackup, "Backup");
         setupButton(btnProfile, "Profile");
 
         setActiveButton(btnMetrics); // Default active
@@ -90,5 +92,6 @@ public class AdminSidebarController implements Initializable {
     public Button getAuditsButton() { return btnAudits; }
     public Button getReportsButton() { return btnReports; }
     public Button getNotificationsButton() { return btnNotifications; }
+    public Button getBackupButton() { return btnBackup; }
     public Button getProfileButton() { return btnProfile; }
 }

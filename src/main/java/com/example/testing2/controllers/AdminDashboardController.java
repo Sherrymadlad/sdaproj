@@ -84,6 +84,7 @@ public class AdminDashboardController implements Initializable, SidebarListener 
                 case "Audits" -> loadPage("/com/example/testing2/AuditPage.fxml");
                 case "Reports" -> loadPage("/com/example/testing2/ReportsPage.fxml");
                 case "Notifications" -> loadPage("/com/example/testing2/NotificationsPage.fxml");
+                case "Backup" -> loadPage("/com/example/testing2/AdminDumpPage.fxml");
                 case "Profile" -> {
                     FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/testing2/CustomerProfilePage.fxml"));
                     AnchorPane page = loader.load();

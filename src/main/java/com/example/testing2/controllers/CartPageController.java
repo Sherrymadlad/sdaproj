@@ -137,7 +137,7 @@ public class CartPageController implements Initializable {
             Button btnDecrease = new Button("-");
             btnDecrease.setStyle(
                     "-fx-font-size: 22;" +
-                            "-fx-background-color: #ffcccc;" +   // soft red
+                            "-fx-background-color: #f8f1fd;" +   // soft red ->purple
                             "-fx-background-radius: 8;" +
                             "-fx-padding: 5 12;"
             );
@@ -153,7 +153,7 @@ public class CartPageController implements Initializable {
             Button btnIncrease = new Button("+");
             btnIncrease.setStyle(
                     "-fx-font-size: 22;" +
-                            "-fx-background-color: #ccffcc;" +   // soft green
+                            "-fx-background-color: #f8f1fd;" +   // soft green->purple
                             "-fx-background-radius: 8;" +
                             "-fx-padding: 5 12;"
             );
@@ -162,7 +162,7 @@ public class CartPageController implements Initializable {
 // Price text - Eye catchy (Pinkish gradient feel)
             Text priceText = new Text("Rs " + (price * quantity));
             priceText.setFont(Font.font("System", FontWeight.BOLD, 22));
-            priceText.setStyle("-fx-fill: #e60073;");   // hot pink
+            priceText.setStyle("-fx-fill: #4b0082;");   // hot pink
 
 
             // Handlers for +/- buttons

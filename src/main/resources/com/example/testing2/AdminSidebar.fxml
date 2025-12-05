@@ -41,7 +41,12 @@
             <font><Font name="Arial Black" size="25"/></font>
         </Button>
 
-        <Button fx:id="btnProfile" layoutX="30" layoutY="660"
+        <Button fx:id="btnBackup" layoutX="30" layoutY="660"
+                prefWidth="280" prefHeight="80" text="Backup">
+            <font><Font name="Arial Black" size="25"/></font>
+        </Button>
+
+        <Button fx:id="btnProfile" layoutX="30" layoutY="770"
                 prefWidth="280" prefHeight="80" text="Profile">
             <font><Font name="Arial Black" size="25"/></font>
         </Button>

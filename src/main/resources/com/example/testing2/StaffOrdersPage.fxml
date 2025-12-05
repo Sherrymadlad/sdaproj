@@ -69,7 +69,7 @@
     </HBox>
 
     <!-- SCROLLABLE ORDER LIST -->
-    <ScrollPane fx:id="scrollOrders" fitToWidth="true" style="-fx-background-color: #d7e3ee;"
+    <ScrollPane fx:id="scrollOrders" fitToWidth="true"  fitToHeight="true" style="-fx-background-color: #d7e3ee;"
                 AnchorPane.topAnchor="70" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
 
         <content>
