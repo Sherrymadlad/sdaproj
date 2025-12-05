@@ -5,7 +5,7 @@
 
 <AnchorPane prefHeight="600" prefWidth="900" style="-fx-background-color: #d7e3ee;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.testing2.controllers.UsersPageController">
 
-    <VBox layoutX="-535.0" layoutY="117.0" spacing="20" AnchorPane.bottomAnchor="-77.0" AnchorPane.leftAnchor="-535.0" AnchorPane.rightAnchor="575.0" AnchorPane.topAnchor="117.0">
+    <VBox spacing="20" AnchorPane.bottomAnchor="30" AnchorPane.leftAnchor="30" AnchorPane.rightAnchor="30" AnchorPane.topAnchor="30">
 
         <!-- FILTER BAR -->
         <HBox alignment="CENTER_LEFT" spacing="15" style="-fx-padding: 10; -fx-background-color: #d4bfed; -fx-background-radius: 8;">
@@ -17,9 +17,9 @@
         </HBox>
 
         <!-- USERS LIST -->
-        <ScrollPane fx:id="scrollUsers" fitToWidth="true" hbarPolicy="NEVER" style="-fx-background-color: transparent;">
+        <ScrollPane fx:id="scrollUsers" fitToWidth="true" hbarPolicy="NEVER" style="-fx-background-color: #d7e3ee;">
             <content>
-                <VBox fx:id="usersList" prefWidth="Infinity" spacing="12" style="-fx-background-color: transparent;" />
+                <VBox fx:id="usersList" prefWidth="Infinity" spacing="12" style="-fx-background-color: #d7e3ee;" />
             </content>
         </ScrollPane>
 
