@@ -40,6 +40,8 @@ public class CartPageController implements Initializable {
     private Map<Integer, Integer> cart;        // productId -> quantity
     private Map<Integer, String> productNames; // productId -> product name
     private Map<Integer, Double> productPrices;// productId -> product price
+    private Map<Integer, Integer> productMaxStock; //productId -> maxStock;
+
     private int currentUserId; // set when opening cart
 
     private CustomerMainPageController parentController;
@@ -79,10 +81,12 @@ public class CartPageController implements Initializable {
 
     public void setCartData(Map<Integer, Integer> cart,
                             Map<Integer, String> productNames,
-                            Map<Integer, Double> productPrices) {
+                            Map<Integer, Double> productPrices,
+                            Map<Integer, Integer> productMaxStock) {
         this.cart = cart;
         this.productNames = productNames;
         this.productPrices = productPrices;
+        this.productMaxStock = productMaxStock;
         populateCartItems();
     }
 
@@ -167,11 +171,18 @@ public class CartPageController implements Initializable {
 
             // Handlers for +/- buttons
             btnIncrease.setOnAction(e -> {
-                cart.put(productId, cart.get(productId) + 1);
-                qtyText.setText(String.valueOf(cart.get(productId)));
-                priceText.setText("Rs " + (price * cart.get(productId)));
-                updateTotal();
-                if (parentController != null) parentController.updateCartBadge();
+                int currentQty = cart.getOrDefault(productId, 0);
+                int maxStock = productMaxStock != null ? productMaxStock.getOrDefault(productId, Integer.MAX_VALUE) : Integer.MAX_VALUE;
+
+                if (currentQty < maxStock) {
+                    cart.put(productId, currentQty + 1);
+                    qtyText.setText(String.valueOf(cart.get(productId)));
+                    priceText.setText("Rs " + (price * cart.get(productId)));
+                    updateTotal();
+                    if (parentController != null) parentController.updateCartBadge();
+                } else {
+                    showCustomModal("Cannot exceed available stock (" + maxStock + ")");
+                }
             });
 
             btnDecrease.setOnAction(e -> {

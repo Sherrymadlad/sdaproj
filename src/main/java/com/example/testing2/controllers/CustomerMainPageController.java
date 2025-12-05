@@ -55,6 +55,7 @@ public class CustomerMainPageController implements Initializable, SidebarListene
     private final Map<Integer, Integer> cart = new HashMap<>();
     private int currentQuantity = 1;
     private int currentUserId;
+    private int currentMaxStock = 0;
 
     // Cached data
     private final Map<Integer, String> categoryNames = new HashMap<>();
@@ -91,8 +92,20 @@ public class CustomerMainPageController implements Initializable, SidebarListene
         txtSearch.textProperty().addListener((obs, oldText, newText) -> applyFilterAndSort());
 
         btnCloseModal.setOnAction(e -> itemDetailsPanel.setVisible(false));
-        btnIncrease.setOnAction(e -> { currentQuantity++; txtQuantity.setText(String.valueOf(currentQuantity)); });
-        btnDecrease.setOnAction(e -> { if (currentQuantity > 1) { currentQuantity--; txtQuantity.setText(String.valueOf(currentQuantity)); } });
+        btnIncrease.setOnAction(e -> {
+            if (currentQuantity < currentMaxStock) { // limit to max stock
+                currentQuantity++;
+                txtQuantity.setText(String.valueOf(currentQuantity));
+            }
+        });
+
+        btnDecrease.setOnAction(e -> {
+            if (currentQuantity > 1) {
+                currentQuantity--;
+                txtQuantity.setText(String.valueOf(currentQuantity));
+            }
+        });
+
         btnAddToCart.setOnAction(e -> addToCart());
         btnCart.setOnAction(e -> openCartPage());
 
@@ -187,11 +200,19 @@ public class CustomerMainPageController implements Initializable, SidebarListene
         try {
 
             ResultSet rs = DBHelper.executeQuery("""
-                SELECT p.productid, p.name AS product_name, p.price, c.categoryid, c.name AS category_name
-                FROM product p 
-                JOIN category c ON p.categoryid = c.categoryid 
-                WHERE p.isactive = TRUE
-                ORDER BY c.name, p.name
+                SELECT\s
+                            p.productid,
+                            p.name AS product_name,
+                            p.price,
+                            c.categoryid,
+                            c.name AS category_name,
+                            COALESCE(SUM(s.quantityavailable), 0) AS max_stock_available
+                        FROM product p
+                        JOIN category c ON p.categoryid = c.categoryid
+                        LEFT JOIN stock s ON p.productid = s.productid
+                        WHERE p.isactive = TRUE
+                        GROUP BY p.productid, p.name, p.price, c.categoryid, c.name
+                        ORDER BY c.name, p.name;
             """);
 
             while (rs.next()) {
@@ -199,8 +220,8 @@ public class CustomerMainPageController implements Initializable, SidebarListene
                 String productName = rs.getString("product_name");
                 double price = rs.getDouble("price");
                 int categoryId = rs.getInt("categoryid");
-
-                allProducts.add(new Product(productId, productName, price, categoryId));
+                int maxStock = rs.getInt("max_stock_available");
+                allProducts.add(new Product(productId, productName, price, categoryId,maxStock));
             }
 
             applyFilterAndSort();
@@ -317,8 +338,16 @@ public class CustomerMainPageController implements Initializable, SidebarListene
                 modalItemPrice.setText("Rs " + rs.getDouble("price"));
                 modalItemDescription.setText(rs.getString("description"));
                 modalItemImage.setImage(placeholderImage);
+
+                // Get max stock from cached allProducts list
+                Optional<Product> productOpt = allProducts.stream()
+                        .filter(p -> p.id == productId)
+                        .findFirst();
+                currentMaxStock = productOpt.map(p -> p.maxStock).orElse(0);
             }
-        } catch (SQLException e) { e.printStackTrace(); }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
         itemDetailsPanel.setUserData(productId);
         currentQuantity = 1;
@@ -355,12 +384,14 @@ public class CustomerMainPageController implements Initializable, SidebarListene
         String name;
         double price;
         int categoryId;
+        int maxStock;
 
-        Product(int id, String name, double price, int categoryId) {
+        Product(int id, String name, double price, int categoryId, int maxStock) {
             this.id = id;
             this.name = name;
             this.price = price;
             this.categoryId = categoryId;
+            this.maxStock = maxStock;
         }
     }
     private void openCartPage() {
@@ -392,8 +423,13 @@ public class CustomerMainPageController implements Initializable, SidebarListene
                     if (priceText != null) productPrices.put(pid, Double.parseDouble(priceText.getText().replace("Rs ", "").trim()));
                 }
             }
-
-            controller.setCartData(cart, productNames, productPrices);
+            Map<Integer, Integer> productMaxStock = new HashMap<>();
+            for (Product p : allProducts) {
+                if (cart.containsKey(p.id)) { // only add products in cart
+                    productMaxStock.put(p.id, p.maxStock);
+                }
+            }
+            controller.setCartData(cart, productNames, productPrices, productMaxStock);
 
             // Add as overlay to main content
             cartPage.setUserData("overlay"); // mark as overlay
