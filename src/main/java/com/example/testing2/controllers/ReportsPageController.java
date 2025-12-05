@@ -31,6 +31,21 @@ public class ReportsPageController {
         // Load default report
         loadStockReport();
         highlightButton(btnStockReport);
+        addHoverEffect(btnStockReport);
+        addHoverEffect(btnSupplierReport);
+        addHoverEffect(btnSalesStockReport);
+    }
+
+    private void addHoverEffect(Button btn) {
+        btn.setOnMouseEntered(e -> {
+            btn.setScaleX(1.05);
+            btn.setScaleY(1.05);
+        });
+
+        btn.setOnMouseExited(e -> {
+            btn.setScaleX(1.0);
+            btn.setScaleY(1.0);
+        });
     }
 
     private void highlightButton(Button active) {

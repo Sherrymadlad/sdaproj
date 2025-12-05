@@ -10,65 +10,67 @@
 <AnchorPane prefHeight="600" prefWidth="900" style="-fx-background-color: #d7e3ee;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.testing2.controllers.MetricsController">
 
     <StackPane AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
-        <VBox alignment="CENTER" spacing="50" />
+        <VBox alignment="CENTER" spacing="50" StackPane.alignment="CENTER">
+         <children>
+         
+             <!-- First row -->
+             <HBox alignment="CENTER" spacing="50">
+                 <VBox alignment="CENTER" prefHeight="150.0" prefWidth="254.0" spacing="15" style="-fx-background-color: #f3e6f7; -fx-padding: 30; -fx-background-radius: 15; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10,0,0,4);">
+                     <Text fill="#4b355a" text="Total Users">
+                         <font>
+                             <Font size="24" />
+                         </font>
+                     </Text>
+                     <Text fx:id="txtTotalUsers" fill="#4b355a" text="0">
+                         <font>
+                             <Font size="32" />
+                         </font>
+                     </Text>
+                 </VBox>
+         
+                 <VBox alignment="CENTER" prefHeight="150.0" prefWidth="262.0" spacing="15" style="-fx-background-color: #f3e6f7; -fx-padding: 30; -fx-background-radius: 15; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10,0,0,4);">
+                     <Text fill="#4b355a" text="Total Products">
+                         <font>
+                             <Font size="24" />
+                         </font>
+                     </Text>
+                     <Text fx:id="txtTotalProducts" fill="#4b355a" text="0">
+                         <font>
+                             <Font size="32" />
+                         </font>
+                     </Text>
+                 </VBox>
+             </HBox>
+         
+             <!-- Second row -->
+             <HBox alignment="CENTER" spacing="50">
+                 <VBox alignment="CENTER" spacing="15" style="-fx-background-color: #f3e6f7; -fx-padding: 30; -fx-background-radius: 15; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10,0,0,4);">
+                     <Text fill="#4b355a" text="Total Sales Orders">
+                         <font>
+                             <Font size="24" />
+                         </font>
+                     </Text>
+                     <Text fx:id="txtTotalSales" fill="#4b355a" text="0">
+                         <font>
+                             <Font size="32" />
+                         </font>
+                     </Text>
+                 </VBox>
+         
+                 <VBox alignment="CENTER" prefHeight="150.0" prefWidth="262.0" spacing="15" style="-fx-background-color: #f3e6f7; -fx-padding: 30; -fx-background-radius: 15; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10,0,0,4);">
+                     <Text fill="#4b355a" text="Total Revenue">
+                         <font>
+                             <Font size="24" />
+                         </font>
+                     </Text>
+                     <Text fx:id="txtTotalRevenue" fill="#4b355a" text="Rs 0">
+                         <font>
+                             <Font size="32" />
+                         </font>
+                     </Text>
+                 </VBox>
+             </HBox>
+         </children></VBox>
     </StackPane>
-
-    <!-- First row -->
-    <HBox alignment="CENTER" layoutX="-300.0" layoutY="231.0" spacing="50">
-        <VBox alignment="CENTER" prefHeight="150.0" prefWidth="254.0" spacing="15" style="-fx-background-color: #f3e6f7; -fx-padding: 30; -fx-background-radius: 15; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10,0,0,4);">
-            <Text text="Total Users" fill="#4b355a">
-                <font>
-                    <Font size="24" />
-                </font>
-            </Text>
-            <Text fx:id="txtTotalUsers" text="0" fill="#4b355a">
-                <font>
-                    <Font size="32" />
-                </font>
-            </Text>
-        </VBox>
-
-        <VBox alignment="CENTER" prefHeight="150.0" prefWidth="262.0" spacing="15" style="-fx-background-color: #f3e6f7; -fx-padding: 30; -fx-background-radius: 15; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10,0,0,4);">
-            <Text text="Total Products" fill="#4b355a">
-                <font>
-                    <Font size="24" />
-                </font>
-            </Text>
-            <Text fx:id="txtTotalProducts" text="0" fill="#4b355a">
-                <font>
-                    <Font size="32" />
-                </font>
-            </Text>
-        </VBox>
-    </HBox>
-
-    <!-- Second row -->
-    <HBox alignment="CENTER" layoutX="-299.0" layoutY="450.0" spacing="50">
-        <VBox alignment="CENTER" spacing="15" style="-fx-background-color: #f3e6f7; -fx-padding: 30; -fx-background-radius: 15; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10,0,0,4);">
-            <Text text="Total Sales Orders" fill="#4b355a">
-                <font>
-                    <Font size="24" />
-                </font>
-            </Text>
-            <Text fx:id="txtTotalSales" text="0" fill="#4b355a">
-                <font>
-                    <Font size="32" />
-                </font>
-            </Text>
-        </VBox>
-
-        <VBox alignment="CENTER" prefHeight="150.0" prefWidth="262.0" spacing="15" style="-fx-background-color: #f3e6f7; -fx-padding: 30; -fx-background-radius: 15; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10,0,0,4);">
-            <Text text="Total Revenue" fill="#4b355a">
-                <font>
-                    <Font size="24" />
-                </font>
-            </Text>
-            <Text fx:id="txtTotalRevenue" text="Rs 0" fill="#4b355a">
-                <font>
-                    <Font size="32" />
-                </font>
-            </Text>
-        </VBox>
-    </HBox>
 
 </AnchorPane>
