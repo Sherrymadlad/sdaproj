@@ -2,13 +2,16 @@ package com.example.testing2.controllers;
 
 import com.example.testing2.utils.DBHelper;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -19,6 +22,8 @@ public class CustomerOrdersPageController {
     @FXML private Button btnCurrentOrders;
     @FXML private Button btnPastOrders;
     @FXML private Button btnRefundedOrders;
+    @FXML private CustomModalController customModalController;
+    @FXML private AnchorPane Root;
 
     private int currentUserId; // hardcoded for testing
 
@@ -35,13 +40,12 @@ public class CustomerOrdersPageController {
 
     @FXML
     public void initialize() {
+        setupModal();
+
         // Set button actions
         btnCurrentOrders.setOnAction(e -> showCurrentOrders());
         btnPastOrders.setOnAction(e -> showPastOrders());
         btnRefundedOrders.setOnAction(e -> showRefundedOrders());
-
-        // Do not call showCurrentOrders() here.
-        // Orders will load only after setCurrentUserId() is called
     }
 
 
@@ -134,8 +138,8 @@ public class CustomerOrdersPageController {
     }
 
     // -------------------------------
-    // CREATE ORDER PANEL
-    // -------------------------------
+// CREATE ORDER PANEL
+// -------------------------------
     private void addOrderPanel(String orderId, String items, String status, double totalPrice, boolean showRefundButton, int orderIdInt) {
         AnchorPane panel = new AnchorPane();
         panel.setPrefHeight(160);
@@ -169,51 +173,39 @@ public class CustomerOrdersPageController {
             btnRefund.setStyle("-fx-background-color: #d46a6a; -fx-text-fill: white; -fx-font-size: 16px;");
 
             btnRefund.setOnAction(e -> {
-                javafx.scene.control.Alert confirm = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.CONFIRMATION);
-                confirm.setTitle("Confirm Refund");
-                confirm.setHeaderText(null);
-                confirm.setContentText("Are you sure you want to request a refund for this order?");
-
-                var result = confirm.showAndWait();
-                if (result.isPresent() && result.get() == javafx.scene.control.ButtonType.OK) {
-                    try {
-                        DBHelper.executeFunction("UpdateCustomerOrderStatus", orderIdInt, "Refund Pending");
-
-                        javafx.scene.control.Dialog<Void> dialog = new javafx.scene.control.Dialog<>();
-                        dialog.setTitle("Refund Requested");
-                        dialog.getDialogPane().setContent(new Label("Hold tight while we prepare your refund :)"));
-                        dialog.getDialogPane().getButtonTypes().add(javafx.scene.control.ButtonType.OK);
-                        dialog.showAndWait();
-
-                        // Refresh past orders
-                        showPastOrders();
-
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                        javafx.scene.control.Alert error = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
-                        error.setTitle("Error");
-                        error.setHeaderText(null);
-                        error.setContentText("Could not request refund. Please try again.");
-                        error.showAndWait();
+                showCustomModalConfirmation("Are you sure you want to request a refund for this order?", confirmed -> {
+                    if (confirmed) {
+                        try {
+                            DBHelper.executeFunction("UpdateCustomerOrderStatus", orderIdInt, "Refund Pending");
+                            showCustomModal("Hold tight while we prepare your refund :)");
+                            // Refresh past orders
+                            showPastOrders();
+                        } catch (Exception ex) {
+                            ex.printStackTrace();
+                            javafx.scene.control.Alert error = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
+                            error.setTitle("Error");
+                            error.setHeaderText(null);
+                            error.setContentText("Could not request refund. Please try again.");
+                            error.showAndWait();
+                        }
                     }
-                }
+                });
             });
 
             panel.getChildren().add(btnRefund);
         }
 
         // -------------------------------
-        //TOTAL PRICE
+        // TOTAL PRICE
         Label lblTotalPrice = new Label("Total: $" + totalPrice);
         lblTotalPrice.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #6d4c7d;");
         AnchorPane.setTopAnchor(lblTotalPrice, 95.0);   // aligns vertically with status
         AnchorPane.setRightAnchor(lblTotalPrice, 20.0); // 20px from right edge
         panel.getChildren().add(lblTotalPrice);
 
-
         // --------------------------
-        // CANCEL BUTTON for Current Orders
-        // --------------------------
+// CANCEL BUTTON for Current Orders
+// --------------------------
         if (!showRefundButton && status.equals("Pending")) { // only current orders
             Button btnCancel = new Button("Cancel Order");
             btnCancel.setLayoutX(20);
@@ -221,34 +213,24 @@ public class CustomerOrdersPageController {
             btnCancel.setStyle("-fx-background-color: #d46a6a; -fx-text-fill: white; -fx-font-size: 16px;");
 
             btnCancel.setOnAction(e -> {
-                javafx.scene.control.Alert confirm = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.CONFIRMATION);
-                confirm.setTitle("Confirm Cancel");
-                confirm.setHeaderText(null);
-                confirm.setContentText("Are you sure you want to cancel this order?");
-
-                var result = confirm.showAndWait();
-                if (result.isPresent() && result.get() == javafx.scene.control.ButtonType.OK) {
-                    try {
-                        DBHelper.executeFunction("UpdateCustomerOrderStatus", orderIdInt, "Cancelled");
-
-                        javafx.scene.control.Dialog<Void> dialog = new javafx.scene.control.Dialog<>();
-                        dialog.setTitle("Order Cancelled");
-                        dialog.getDialogPane().setContent(new Label("Your order has been successfully cancelled"));
-                        dialog.getDialogPane().getButtonTypes().add(javafx.scene.control.ButtonType.OK);
-                        dialog.showAndWait();
-
-                        // Refresh current orders
-                        showCurrentOrders();
-
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                        javafx.scene.control.Alert error = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
-                        error.setTitle("Error");
-                        error.setHeaderText(null);
-                        error.setContentText("Could not cancel order. Please try again.");
-                        error.showAndWait();
+                showCustomModalConfirmation("Are you sure you want to cancel this order?", confirmed -> {
+                    if (confirmed) {
+                        try {
+                            DBHelper.executeFunction("UpdateCustomerOrderStatus", orderIdInt, "Cancelled");
+                            javafx.scene.control.Dialog<Void> dialog = new javafx.scene.control.Dialog<>();
+                            showCustomModal("Your order has been successfully cancelled!");
+                            // Refresh current orders
+                            showCurrentOrders();
+                        } catch (Exception ex) {
+                            ex.printStackTrace();
+                            javafx.scene.control.Alert error = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
+                            error.setTitle("Error");
+                            error.setHeaderText(null);
+                            error.setContentText("Could not cancel order. Please try again.");
+                            error.showAndWait();
+                        }
                     }
-                }
+                });
             });
 
             panel.getChildren().add(btnCancel);
@@ -257,5 +239,40 @@ public class CustomerOrdersPageController {
         ordersContainer.getChildren().add(panel);
     }
 
+
+    private void showCustomModalConfirmation(String message, java.util.function.Consumer<Boolean> callback) {
+        if (customModalController != null) {
+            customModalController.showConfirmation(message, callback);
+        } else {
+            // Fallback: auto-confirm if modal not initialized
+            callback.accept(true);
+        }
+    }
+
+    private void showCustomModal(String message) {
+        if (customModalController != null) {
+            customModalController.showMessage(message);
+        } else {
+            // fallback
+            System.err.println("Modal not initialized: " + message);
+        }
+    }
+
+    private void setupModal(){
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/testing2/CustomModal.fxml"));
+            StackPane modal = loader.load();
+            customModalController = loader.getController();
+
+            Root.getChildren().add(modal);
+            AnchorPane.setTopAnchor(modal, 0.0);
+            AnchorPane.setBottomAnchor(modal, 0.0);
+            AnchorPane.setLeftAnchor(modal, 0.0);
+            AnchorPane.setRightAnchor(modal, 0.0);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
 }

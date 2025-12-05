@@ -498,17 +498,101 @@ public class ManagerMainPageController implements Initializable, SidebarListener
         }
     }
 
-
     private boolean validateForm() {
-        if (txtProductName.getText().isEmpty() ||
-                cmbCategory.getValue() == null || txtPrice.getText().isEmpty()) {
-            showCustomModal("Validation Error\nPlease fill all required fields.");
+        String name = txtProductName.getText().trim();
+        String priceText = txtPrice.getText().trim();
+        String stockText = txtStock.getText().trim();
+        String lowStockText = txtLowStock.getText().trim();
+        String description = txtDescription.getText().trim();
+        String category = cmbCategory.getValue();
+        String supplier = cmbSupplierName.getValue();
+
+        // -------------------------
+        // Name validation
+        // -------------------------
+        if (name.isEmpty()) {
+            showCustomModal("Validation Error\nProduct name is required.");
+            return false;
+        }
+        if (name.length() < 3) {
+            showCustomModal("Validation Error\nProduct name must be at least 3 characters.");
+            return false;
+        }
+        if (name.length() > 100) {
+            showCustomModal("Validation Error\nProduct name cannot exceed 100 characters.");
             return false;
         }
 
-        try { return Double.parseDouble(txtPrice.getText()) > 0; }
-        catch (NumberFormatException e) { showCustomModal("Validation Error\nPrice must be numeric."); return false; }
+        // -------------------------
+        // Category & Supplier
+        // -------------------------
+        if (category == null || !categoryNameToId.containsKey(category)) {
+            showCustomModal("Validation Error\nPlease select a valid category.");
+            return false;
+        }
+        if (supplier == null || !supplierNameToId.containsKey(supplier)) {
+            showCustomModal("Validation Error\nPlease select a valid supplier.");
+            return false;
+        }
+
+        // -------------------------
+        // Price validation
+        // -------------------------
+        double price;
+        try {
+            price = Double.parseDouble(priceText);
+            if (price <= 0) {
+                showCustomModal("Validation Error\nPrice must be greater than 0.");
+                return false;
+            }
+        } catch (NumberFormatException e) {
+            showCustomModal("Validation Error\nPrice must be a valid number.");
+            return false;
+        }
+
+        // -------------------------
+        // Stock validation
+        // -------------------------
+        int stock;
+        try {
+            stock = Integer.parseInt(stockText);
+            if (stock < 0) {
+                showCustomModal("Validation Error\nStock level cannot be negative.");
+                return false;
+            }
+        } catch (NumberFormatException e) {
+            showCustomModal("Validation Error\nStock must be a valid integer.");
+            return false;
+        }
+
+        // -------------------------
+        // Low Stock Threshold
+        // -------------------------
+        if (!lowStockText.isEmpty()) {
+            try {
+                int lowStock = Integer.parseInt(lowStockText);
+                if (lowStock < 0) {
+                    showCustomModal("Validation Error\nLow stock threshold cannot be negative.");
+                    return false;
+                }
+            } catch (NumberFormatException e) {
+                showCustomModal("Validation Error\nLow stock must be a valid integer.");
+                return false;
+            }
+        }
+
+        // -------------------------
+        // Description length check
+        // -------------------------
+        if (description.length() > 500) {
+            showCustomModal("Validation Error\nDescription cannot exceed 500 characters.");
+            return false;
+        }
+
+        // All validations passed
+        return true;
     }
+
 
     private void clearForm() {
         txtProductName.clear();
