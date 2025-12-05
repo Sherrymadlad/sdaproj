@@ -24,7 +24,7 @@
     </HBox>
 
     <!-- SCROLLABLE ORDER LIST -->
-    <ScrollPane fx:id="scrollOrders" fitToWidth="true" style="-fx-background-color: #d7e3ee;" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="70">
+    <ScrollPane fx:id="scrollOrders" fitToWidth="true"  fitToHeight="true" style="-fx-background-color: #d7e3ee;" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="70">
 
         <content>
             <VBox fx:id="ordersContainer" spacing="20" style="-fx-background-color: #d7e3ee;">
